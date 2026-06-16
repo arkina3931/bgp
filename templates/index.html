@@ -2,443 +2,194 @@
 
 {% block title %}桌游助手{% endblock %}
 
+{% block tab_home_active %}active{% endblock %}
+
 {% block extra_head %}
-<style>
-
-
-    .game-card {
-        display: flex;
-        align-items: center;
-        gap: 16px;
-        text-decoration: none;
-        color: inherit;
-        background: var(--apple-white);
-        border-radius: var(--radius-lg);
-        box-shadow: var(--shadow-md);
-        padding: var(--space-lg);
-        transition: transform var(--transition-normal), box-shadow var(--transition-normal);
-    }
-
-    .game-card.disabled {
-        opacity: 0.5;
-        background: rgba(0, 0, 0, 0.02);
-        box-shadow: none;
-        cursor: not-allowed;
-    }
-    
-    @media (prefers-color-scheme: dark) {
-        .game-card.disabled {
-            background: rgba(255, 255, 255, 0.02);
-        }
-    }
-
-    .game-card.disabled:hover {
-        transform: none;
-        box-shadow: var(--shadow-md);
-    }
-
-    .game-card:not(.disabled):hover {
-        transform: translateY(-4px) scale(1.015);
-        box-shadow: var(--shadow-lg);
-        text-decoration: none;
-        color: inherit;
-    }
-
-    .game-card:not(.disabled):active {
-        transform: scale(0.985);
-    }
-
-    .game-icon {
-        width: 60px;
-        height: 60px;
-        border-radius: 16px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 2rem;
-        flex-shrink: 0;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
-    }
-
-    .game-info {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        flex: 1;
-    }
-
-    .game-card h3 {
-        font-size: 1.25rem;
-        font-weight: 700;
-        margin-bottom: 4px;
-        letter-spacing: -0.02em;
-    }
-
-    .game-card h3 .status-badge {
-        font-size: 0.7rem;
-        padding: 2px 6px;
-        border-radius: 4px;
-        background: var(--apple-gray-light);
-        color: var(--apple-gray);
-        font-weight: 600;
-        vertical-align: middle;
-        margin-left: 8px;
-    }
-
-    .game-card .desc {
-        font-size: 0.9rem;
-        color: var(--apple-gray);
-        margin-bottom: 8px;
-        font-weight: 500;
-        display: flex;
-        flex-direction: column;
-        gap: 6px;
-    }
-
-    .game-card .desc span {
-        font-weight: 600;
-        color: var(--apple-black);
-        font-size: 0.85rem;
-    }
-
-    .game-card .cta {
-        font-size: 0.9rem;
-        font-weight: 600;
-        color: var(--apple-blue);
-        display: flex;
-        align-items: center;
-        gap: 4px;
-    }
-
-    .game-card .cta i {
-        font-size: 1.2rem;
-        margin-top: 2px;
-    }
-
-    .game-grid {
-        display: grid;
-        grid-template-columns: repeat(2, minmax(0, 340px));
-        gap: var(--space-lg);
-        justify-content: center;
-    }
-
-    @media (max-width: 600px) {
-        .game-grid {
-            grid-template-columns: 1fr;
-            max-width: 400px;
-            margin: 0 auto;
-        }
-
-        .apple-hero h1 {
-            font-size: 2rem;
-        }
-    }
-
-    .nav-random-btn {
-        background: transparent;
-        border: none;
-        color: var(--apple-blue);
-        font-size: 0.9rem;
-        font-weight: 500;
-        min-height: 44px;
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-        cursor: pointer;
-        padding: 0;
-    }
-
-    .nav-random-btn:hover {
-        opacity: 0.8;
-    }
-
-    .starter-result {
-        background: linear-gradient(135deg, rgba(0, 113, 227, 0.1), rgba(90, 200, 250, 0.14));
-        border: 1px solid rgba(0, 113, 227, 0.2);
-        border-radius: var(--radius-md);
-        padding: 14px 16px;
-        margin-top: var(--space-md);
-        color: var(--apple-black);
-        font-weight: 600;
-        letter-spacing: -0.01em;
-    }
-</style>
+<script src="/static/components.js"></script>
 {% endblock %}
 
-{% block nav_left %}
-<button id="openStarterPickerBtn" class="nav-random-btn" type="button" aria-haspopup="dialog" aria-controls="starterPickerModal">
-    <i class="ph ph-shuffle" style="font-size: 1.2rem;"></i> 随机初始玩家
-</button>
-{% endblock %}
+{% block nav_left %}{% endblock %}
+{% block nav_right %}{% endblock %}
 
 {% block content %}
-<!-- Hero -->
-<div class="apple-hero">
-    <span class="apple-hero-emoji">🎲</span>
-    <h1>桌游助手</h1>
-    <p>你的桌游好搭子</p>
-</div>
+<div class="container" style="padding-top: 76px;">
 
-<div id="starterPickerModal" class="apple-modal" onclick="if(event.target === this) closeStarterPicker()">
-    <div class="apple-modal-content">
-        <div class="apple-modal-header">
-            <h2 class="apple-modal-title">随机初始玩家</h2>
-            <button class="apple-modal-close" type="button" onclick="closeStarterPicker()">
-                <i class="ph-bold ph-x"></i>
-            </button>
-        </div>
-        <div class="apple-modal-body">
-            <label for="playerCountInput" style="display:block; margin-bottom: 8px; font-weight: 600; color: var(--apple-black);">
-                选择玩家人数
-            </label>
-            <input id="playerCountInput" class="apple-input" type="number" min="2" max="12" step="1" value="6">
-            <p style="margin-top: 8px; font-size: 0.88rem;">支持 2-12 人，计算结果为“X号玩家先手”。</p>
-            <button id="calcStarterBtn" class="apple-btn apple-btn-primary apple-btn-block" type="button" style="margin-top: 16px;">
-                计算本局起始玩家
-            </button>
-            <div id="starterResult" class="starter-result" style="display:none;"></div>
-        </div>
+  <!-- Quick Action Card -->
+  <div class="quick-action" style="margin-bottom: var(--space-lg);">
+    <div class="quick-action-label">快速开局</div>
+    <div class="quick-action-title">🎲 随机初始玩家</div>
+    <div class="quick-action-desc">选择玩家人数，摇一摇决定谁先手</div>
+    <div style="margin-top: 20px; display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
+      <button id="starterMinusBtn" class="btn btn-secondary" style="background: rgba(255,255,255,0.2); color: #fff; min-width: 44px; width: 44px; height: 44px; padding: 0; border-radius: 50%; font-size: 1.3rem; line-height: 1;">−</button>
+      <span id="starterCountDisplay" style="font-size: 2rem; font-weight: 800; min-width: 40px; text-align: center;">6</span>
+      <button id="starterPlusBtn" class="btn btn-secondary" style="background: rgba(255,255,255,0.2); color: #fff; min-width: 44px; width: 44px; height: 44px; padding: 0; border-radius: 50%; font-size: 1.3rem; line-height: 1;">+</button>
+      <button id="rollStarterBtn" class="btn" style="background: rgba(255,255,255,0.2); color: #fff; font-weight: 700; margin-left: auto; backdrop-filter: blur(10px);">🎲 摇一摇</button>
     </div>
-</div>
+    <div id="starterResult" class="starter-result" style="display: none; background: rgba(255,255,255,0.15); border-color: rgba(255,255,255,0.2); color: #fff;"></div>
+  </div>
 
-<div class="game-grid">
-    <!-- Avalon -->
+  <!-- Game Grid -->
+  <div class="section-title" style="margin-top: var(--space-xl);">🎮 游戏</div>
+  <div class="game-card-grid">
     {% if 'avalon' in loaded_apps %}
-    <a href="/avalon/" class="game-card">
-        {% else %}
-        <div class="game-card disabled">
-            {% endif %}
-            <div class="game-icon bg-blue-light text-blue">
-                <i class="ph-fill ph-shield-check"></i>
-            </div>
-            <div class="game-info">
-                <h3>阿瓦隆 {% if 'avalon' not in loaded_apps %}<span class="status-badge">维护中</span>{% endif %}</h3>
-                <div class="desc">
-                    <span>阵营推理 · 身份隐藏</span>
-                </div>
-                {% if 'avalon' in loaded_apps %}
-                <span class="cta">进入游戏 <i class="ph ph-caret-right"></i></span>
-                {% endif %}
-            </div>
-            {% if 'avalon' in loaded_apps %}
-    </a>{% else %}
-</div>{% endif %}
-
-<!-- Las Vegas -->
-{% if 'lasvegas' in loaded_apps %}
-<a href="/lasvegas/" class="game-card">
+    <game-card name="阿瓦隆" icon-emoji="🛡️" color="blue" href="/avalon/" desc="阵营推理 · 身份隐藏" min-players="5" max-players="10" rec-players="8"></game-card>
     {% else %}
-    <div class="game-card disabled">
-        {% endif %}
-        <div class="game-icon bg-green-light text-green">
-            <i class="ph-fill ph-dice-three"></i>
-        </div>
-        <div class="game-info">
-            <h3>拉斯维加斯 {% if 'lasvegas' not in loaded_apps %}<span class="status-badge">维护中</span>{% endif %}</h3>
-            <div class="desc">
-                <span>欢乐掷骰 · 区域争夺</span>
-            </div>
-            {% if 'lasvegas' in loaded_apps %}
-            <span class="cta">进入游戏 <i class="ph ph-caret-right"></i></span>
-            {% endif %}
-        </div>
-        {% if 'lasvegas' in loaded_apps %}
-</a>{% else %}</div>{% endif %}
+    <game-card name="阿瓦隆" icon-emoji="🛡️" color="blue" disabled desc="阵营推理 · 身份隐藏" min-players="5" max-players="10" rec-players="8"></game-card>
+    {% endif %}
 
-<!-- Love Letters -->
-{% if 'loveletters' in loaded_apps %}
-<a href="/loveletters/" class="game-card">
+    {% if 'lasvegas' in loaded_apps %}
+    <game-card name="拉斯维加斯" icon-emoji="🎲" color="green" href="/lasvegas/" desc="欢乐掷骰 · 区域争夺" min-players="2" max-players="5" rec-players="4"></game-card>
     {% else %}
-    <div class="game-card disabled">
-        {% endif %}
-        <div class="game-icon bg-red-light text-red">
-            <i class="ph-fill ph-heart"></i>
-        </div>
-        <div class="game-info">
-            <h3>情书 {% if 'loveletters' not in loaded_apps %}<span class="status-badge">维护中</span>{% endif %}</h3>
-            <div class="desc">
-                <span>极简卡牌 · 逻辑盲猜</span>
-            </div>
-            {% if 'loveletters' in loaded_apps %}
-            <span class="cta">进入游戏 <i class="ph ph-caret-right"></i></span>
-            {% endif %}
-        </div>
-        {% if 'loveletters' in loaded_apps %}
-</a>{% else %}</div>{% endif %}
+    <game-card name="拉斯维加斯" icon-emoji="🎲" color="green" disabled desc="欢乐掷骰 · 区域争夺" min-players="2" max-players="5" rec-players="4"></game-card>
+    {% endif %}
 
-<!-- Cabo -->
-{% if 'cabo' in loaded_apps %}
-<a href="/cabo/" class="game-card">
+    {% if 'loveletters' in loaded_apps %}
+    <game-card name="情书" icon-emoji="💌" color="red" href="/loveletters/" desc="极简卡牌 · 逻辑盲猜" min-players="2" max-players="4" rec-players="3"></game-card>
     {% else %}
-    <div class="game-card disabled">
-        {% endif %}
-        <div class="game-icon bg-orange-light text-orange">
-            <i class="ph-fill ph-magic-wand"></i>
-        </div>
-        <div class="game-info">
-            <h3>卡波 {% if 'cabo' not in loaded_apps %}<span class="status-badge">维护中</span>{% endif %}</h3>
-            <div class="desc">
-                <span>记忆博弈 · 极限换牌</span>
-            </div>
-            {% if 'cabo' in loaded_apps %}
-            <span class="cta">进入游戏 <i class="ph ph-caret-right"></i></span>
-            {% endif %}
-        </div>
-        {% if 'cabo' in loaded_apps %}
-</a>{% else %}</div>{% endif %}
+    <game-card name="情书" icon-emoji="💌" color="red" disabled desc="极简卡牌 · 逻辑盲猜" min-players="2" max-players="4" rec-players="3"></game-card>
+    {% endif %}
 
-<!-- Flip7 -->
-{% if 'flip7' in loaded_apps %}
-<a href="/flip7/" class="game-card">
+    {% if 'cabo' in loaded_apps %}
+    <game-card name="卡波" icon-emoji="🪄" color="orange" href="/cabo/" desc="记忆博弈 · 极限换牌" min-players="2" max-players="4" rec-players="3"></game-card>
     {% else %}
-    <div class="game-card disabled">
-        {% endif %}
-        <div class="game-icon bg-purple-light text-purple">
-            <i class="ph-fill ph-stack"></i>
-        </div>
-        <div class="game-info">
-            <h3>7连翻 {% if 'flip7' not in loaded_apps %}<span class="status-badge">维护中</span>{% endif %}</h3>
-            <div class="desc">
-                <span>刺激翻牌 · 见好就收</span>
-            </div>
-            {% if 'flip7' in loaded_apps %}
-            <span class="cta">进入游戏 <i class="ph ph-caret-right"></i></span>
-            {% endif %}
-        </div>
-        {% if 'flip7' in loaded_apps %}
-</a>{% else %}</div>{% endif %}
+    <game-card name="卡波" icon-emoji="🪄" color="orange" disabled desc="记忆博弈 · 极限换牌" min-players="2" max-players="4" rec-players="3"></game-card>
+    {% endif %}
 
-<!-- Modern Art -->
-{% if 'modernart' in loaded_apps %}
-<a href="/modernart/" class="game-card">
+    {% if 'flip7' in loaded_apps %}
+    <game-card name="7连翻" icon-emoji="📚" color="purple" href="/flip7/" desc="刺激翻牌 · 见好就收" min-players="2" max-players="6" rec-players="4"></game-card>
     {% else %}
-    <div class="game-card disabled">
-        {% endif %}
-        <div class="game-icon bg-orange-light text-orange">
-            <i class="ph-fill ph-palette"></i>
-        </div>
-        <div class="game-info">
-            <h3>现代艺术 {% if 'modernart' not in loaded_apps %}<span class="status-badge">维护中</span>{% endif %}</h3>
-            <div class="desc">
-                <span>艺术拍卖 · 价值炒作</span>
-            </div>
-            {% if 'modernart' in loaded_apps %}
-            <span class="cta">进入游戏 <i class="ph ph-caret-right"></i></span>
-            {% endif %}
-        </div>
-        {% if 'modernart' in loaded_apps %}
-</a>{% else %}</div>{% endif %}
-</div>
+    <game-card name="7连翻" icon-emoji="📚" color="purple" disabled desc="刺激翻牌 · 见好就收" min-players="2" max-players="6" rec-players="4"></game-card>
+    {% endif %}
 
-<!-- Global Leaderboard -->
-{% if leaderboard %}
-<div class="section-title"
-    style="margin-top: var(--space-xl); margin-bottom: var(--space-md); font-size: 1.4rem; font-weight: 800; display: flex; align-items: center; gap: 8px;">
+    {% if 'modernart' in loaded_apps %}
+    <game-card name="现代艺术" icon-emoji="🎨" color="orange" href="/modernart/" desc="艺术拍卖 · 价值炒作" min-players="3" max-players="5" rec-players="4"></game-card>
+    {% else %}
+    <game-card name="现代艺术" icon-emoji="🎨" color="orange" disabled desc="艺术拍卖 · 价值炒作" min-players="3" max-players="5" rec-players="4"></game-card>
+    {% endif %}
+
+    {% if 'splendor' in loaded_apps %}
+    <game-card name="璀璨宝石" icon-emoji="💎" color="purple" href="/splendor/" desc="资源收集 · 贵族争夺" min-players="2" max-players="4" rec-players="3"></game-card>
+    {% else %}
+    <game-card name="璀璨宝石" icon-emoji="💎" color="purple" disabled desc="资源收集 · 贵族争夺" min-players="2" max-players="4" rec-players="3"></game-card>
+    {% endif %}
+
+    {% if 'explodingkittens' in loaded_apps %}
+    <game-card name="炸弹猫" icon-emoji="🐱" color="red" href="/explodingkittens/" desc="轮抽博弈 · 极限生存" min-players="2" max-players="5" rec-players="4"></game-card>
+    {% else %}
+    <game-card name="炸弹猫" icon-emoji="🐱" color="red" disabled desc="轮抽博弈 · 极限生存" min-players="2" max-players="5" rec-players="4"></game-card>
+    {% endif %}
+
+    {% if 'thegang' in loaded_apps %}
+    <game-card name="纸牌帮" icon-emoji="♠️" color="blue" href="/thegang/" desc="合作预测 · 德州变体" min-players="3" max-players="6" rec-players="4"></game-card>
+    {% else %}
+    <game-card name="纸牌帮" icon-emoji="♠️" color="blue" disabled desc="合作预测 · 德州变体" min-players="3" max-players="6" rec-players="4"></game-card>
+    {% endif %}
+  </div>
+
+  <!-- View all link -->
+  <div style="text-align: center; margin-top: var(--space-lg); margin-bottom: var(--space-lg);">
+    <a href="/gamelist" style="font-weight: 600; font-size: 0.95rem;">查看全部 9 款游戏 →</a>
+  </div>
+
+  <!-- Global Leaderboard -->
+  <div class="section-title" id="leaderboard" style="display: flex; align-items: center; gap: 8px;">
     🏆 全局成就榜
-    <i id="openInfoModalBtn" class="ph ph-info" style="font-size: 1.2rem; color: var(--apple-gray); cursor: pointer;"></i>
-</div>
-<div class="apple-list mb-xl">
-    {% for player in leaderboard %}
-    <div class="apple-list-item">
-        <div class="rank-num {% if loop.index0 == 0 %}rank-1{% elif loop.index0 == 1 %}rank-2{% elif loop.index0 == 2 %}rank-3{% else %}rank-other{% endif %}">
-            {% if loop.index0 == 0 %}👑{% else %}{{ loop.index0 + 1 }}{% endif %}
-        </div>
-        <div class="apple-list-item-content">
-            <div class="apple-list-item-title">{{ player.name }} {% if player.pvp_data_strength < 0.4 %}<span style="font-size:0.7rem;color:var(--apple-gray);font-weight:600;">⏳定级中</span>{% endif %}</div>
-            <div class="history-trail">{{ player.total_games }}局 · 胜场{{ player.total_wins }}{% if player.pve_win_rate is not none %} · PvE{{ player.pve_win_rate }}%{% endif %}</div>
-        </div>
-        <div style="text-align: right; display: flex; align-items: center; gap: 16px;">
-            <div style="text-align: right;">
-                <div class="history-trail" style="font-size: 0.7rem; margin-bottom: 2px;">胜率</div>
-                <div class="score-badge" style="font-size: 1.2rem; color: var(--apple-blue);">{{ player.weighted_win_rate }}%</div>
-            </div>
-        </div>
+  </div>
+
+  {% if leaderboard %}
+  <div class="list">
+    {% for player in leaderboard[:3] %}
+    <div class="list-item">
+      <div class="rank-badge {% if loop.index0 == 0 %}rank-1{% elif loop.index0 == 1 %}rank-2{% elif loop.index0 == 2 %}rank-3{% endif %}">
+        {% if loop.index0 == 0 %}👑{% else %}{{ loop.index0 + 1 }}{% endif %}
+      </div>
+      <div class="list-item-content">
+        <div class="list-item-title">{{ player.name }} {% if player.pvp_data_strength < 0.4 %}<span style="font-size: 0.7rem; color: var(--color-text-secondary); font-weight: 600;">⏳定级中</span>{% endif %}</div>
+        <div class="list-item-subtitle">{{ player.total_games }}局 · 胜场{{ player.total_wins }}{% if player.pve_win_rate is not none %} · PvE{{ player.pve_win_rate }}%{% endif %}</div>
+      </div>
+      <div class="list-item-trailing">{{ player.weighted_win_rate }}%</div>
     </div>
     {% endfor %}
-</div>
-{% endif %}
+  </div>
+  {% if leaderboard|length > 3 %}
+  <div style="text-align: center; margin-top: var(--space-md);">
+    <button id="expandLeaderboardBtn" class="btn btn-outline">查看完整排行 ↓</button>
+  </div>
+  {% endif %}
+  {% else %}
+  <div class="empty-state">
+    <span class="empty-state-icon">👻</span>
+    <p>还没人玩过呢，快去开一局！</p>
+  </div>
+  {% endif %}
 
-<div id="infoModal" class="apple-modal" onclick="if(event.target === this) closeInfoModal()">
-    <div class="apple-modal-content">
-        <div class="apple-modal-header">
-            <h2 class="apple-modal-title">胜率计算规则</h2>
-            <button class="apple-modal-close" type="button" onclick="closeInfoModal()">
-                <i class="ph-bold ph-x"></i>
-            </button>
-        </div>
-        <div class="apple-modal-body" style="font-size: 0.95rem; color: var(--apple-black);">
-            <p style="font-weight: 700; margin-bottom: 8px;">各子游戏目前权重：</p>
-            <ul style="padding-left: 20px; margin-bottom: 0; display: flex; flex-direction: column; gap: 8px;">
-                {% for gw in game_weights %}
-                <li><strong>{{ gw.name }}</strong>：{{ gw.weight }}</li>
-                {% endfor %}
-            </ul>
-            <br><br>
-            <div style="margin-bottom: 16px; color: var(--apple-gray); line-height: 1.5; overflow-x: auto;">
-                <p style="font-weight: 700; margin-bottom: 8px;">V3.1 静态权重计算 (Softplus 平滑)：</p>
-                $$W^* = \left[ 0.2 \times \frac{R-5}{5} + 0.8 \times \left(\frac{C}{5}\right)^2 \right] \times \log_2\left(1 + \frac{T}{15}\right)$$
-                $$W_{static} = \tau \ln(1 + e^{W^*/\tau}), \quad \tau = 0.1$$
-            </div>
-            <div style="margin-bottom: 16px; color: var(--apple-gray); line-height: 1.5; overflow-x: auto;">
-                <p style="font-weight: 700; margin-bottom: 8px;">PvP 综合胜率（对数优势模型）：</p>
-                $$\hat{p}_g = \frac{w_g + \lambda b_g}{n_g + \lambda}, \quad A_g = \text{logit}(\hat{p}_g) - \text{logit}(b_g)$$
-                $$\omega_g = W_{static} \times \frac{n_g}{n_g + k}, \quad P_{final} = \sigma\left(\text{logit}(0.25) + \frac{\sum \omega_g A_g}{\sum \omega_g}\right)$$
-            </div>
-            <div style="margin-bottom: 0; color: var(--apple-gray); line-height: 1.5; overflow-x: auto;">
-                <p style="font-weight: 700; margin-bottom: 8px;">PvE 综合通关率：</p>
-                $$P^{(pve)}_{final} = \frac{\sum \omega_g \hat{p}_g}{\sum \omega_g}, \quad k_{pve}=10$$
-            </div>
-        </div>
-    </div>
-</div>
+  <div id="fullLeaderboardContainer" style="display: none; margin-top: var(--space-md);"></div>
 
-<footer class="apple-footer">
-    <p>Board Game Portal © 2026</p>
-</footer>
+  <!-- Footer -->
+  <footer style="text-align: center; padding: var(--space-xl) 0; color: var(--color-text-secondary); font-size: 0.75rem;">
+    Board Game Portal © 2026
+  </footer>
+
+</div>
 {% endblock %}
 
 {% block extra_body %}
 <script>
-    (function () {
-        const modal = document.getElementById('starterPickerModal');
-        const openBtn = document.getElementById('openStarterPickerBtn');
-        const calcBtn = document.getElementById('calcStarterBtn');
-        const countInput = document.getElementById('playerCountInput');
-        const resultEl = document.getElementById('starterResult');
+(function () {
+  // --- Random Starter Widget ---
+  var starterCount = 6;
+  var countDisplay = document.getElementById('starterCountDisplay');
+  var resultEl = document.getElementById('starterResult');
 
-        const infoModal = document.getElementById('infoModal');
-        const openInfoBtn = document.getElementById('openInfoModalBtn');
+  document.getElementById('starterMinusBtn').addEventListener('click', function () {
+    if (starterCount > 2) {
+      starterCount--;
+      countDisplay.textContent = starterCount;
+    }
+  });
 
-        window.closeStarterPicker = function () {
-            modal.classList.remove('show');
-        };
+  document.getElementById('starterPlusBtn').addEventListener('click', function () {
+    if (starterCount < 12) {
+      starterCount++;
+      countDisplay.textContent = starterCount;
+    }
+  });
 
-        window.closeInfoModal = function () {
-            infoModal.classList.remove('show');
-        };
+  document.getElementById('rollStarterBtn').addEventListener('click', function () {
+    var starter = Math.floor(Math.random() * starterCount) + 1;
+    resultEl.style.display = 'block';
+    resultEl.innerHTML = '🎯 本次先手玩家 <strong>' + starter + '号玩家</strong>';
+  });
 
-        if (openInfoBtn && infoModal) {
-            openInfoBtn.addEventListener('click', function () {
-                infoModal.classList.add('show');
-            });
-        }
+  // --- Expand Leaderboard ---
+  var expandBtn = document.getElementById('expandLeaderboardBtn');
+  if (expandBtn) {
+    expandBtn.addEventListener('click', function () {
+      var container = document.getElementById('fullLeaderboardContainer');
+      if (!container) return;
 
-        openBtn.addEventListener('click', function () {
-            modal.classList.add('show');
-            countInput.focus();
-            countInput.select();
+      expandBtn.disabled = true;
+      expandBtn.textContent = '加载中...';
+
+      fetch('/api/leaderboard')
+        .then(function (res) { return res.json(); })
+        .then(function (data) {
+          var lb = data.leaderboard || data || [];
+          renderLeaderboard(container, lb, {
+            emptyIcon: '👻',
+            emptyText: '还没人玩过呢，快去开一局！',
+            showTotal: true
+          });
+          container.style.display = 'block';
+          expandBtn.style.display = 'none';
+        })
+        .catch(function () {
+          expandBtn.disabled = false;
+          expandBtn.textContent = '查看完整排行 ↓';
+          showToast('加载排行榜失败', 'error');
         });
-
-        calcBtn.addEventListener('click', function () {
-            const count = parseInt(countInput.value, 10);
-            if (!Number.isInteger(count) || count < 2 || count > 12) {
-                showToast('请输入 2 到 12 的玩家人数', 'error');
-                return;
-            }
-            const starter = Math.floor(Math.random() * count) + 1;
-            resultEl.style.display = 'block';
-            resultEl.innerHTML = '本次游戏起始玩家：<strong>' + starter + '号玩家</strong>';
-        });
-    })();
+    });
+  }
+})();
 </script>
 {% endblock %}
