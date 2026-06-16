@@ -1,68 +1,100 @@
 /* ============================================
-   Apple-Style Design System — Mobile First
+   Board Game Portal — Design System Foundation
+   Mobile-first, modular, dark-mode ready
    ============================================ */
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+/* ==========================================
+   1. DESIGN TOKENS (CSS Variables)
+   ========================================== */
 
 :root {
-    /* Colors */
-    --apple-bg: #f5f5f7;
-    --apple-white: #ffffff;
-    --apple-black: #1d1d1f;
-    --apple-gray: #86868b;
-    --apple-gray-light: #d2d2d7;
-    --apple-gray-bg: #fbfbfd;
-    --apple-blue: #0071e3;
-    --apple-blue-hover: #0077ed;
-    --apple-blue-light: rgba(0, 113, 227, 0.08);
-    --apple-red: #ff3b30;
-    --apple-red-light: rgba(255, 59, 48, 0.08);
-    --apple-green: #34c759;
-    --apple-green-light: rgba(52, 199, 89, 0.08);
-    --apple-orange: #ff9500;
-    --apple-orange-light: rgba(255, 149, 0, 0.08);
-    --apple-yellow: #ffcc00;
-    --apple-purple: #af52de;
-    --apple-purple-light: rgba(175, 82, 222, 0.08);
-    --apple-teal: #5ac8fa;
-    --apple-teal-light: rgba(90, 200, 250, 0.08);
+    /* ---- Core Colors ---- */
+    --color-bg: #f5f5f7;
+    --color-surface: #ffffff;
+    --color-text: #1d1d1f;
+    --color-text-secondary: #86868b;
+    --color-border: rgba(0, 0, 0, 0.08);
 
-    --hero-gradient-cabo: linear-gradient(135deg, #00b894, #00cec9, #0984e3);
+    /* ---- Semantic Colors ---- */
+    --color-blue: #0071e3;
+    --color-blue-bg: rgba(0, 113, 227, 0.08);
+    --color-green: #34c759;
+    --color-green-bg: rgba(52, 199, 89, 0.08);
+    --color-red: #ff3b30;
+    --color-red-bg: rgba(255, 59, 48, 0.08);
+    --color-orange: #ff9500;
+    --color-orange-bg: rgba(255, 149, 0, 0.08);
+    --color-purple: #af52de;
+    --color-purple-bg: rgba(175, 82, 222, 0.08);
+    --color-yellow: #ffcc00;
+    --color-teal: #5ac8fa;
+    --color-teal-bg: rgba(90, 200, 250, 0.08);
 
-    /* Typography */
-    --font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+    /* ---- Typography ---- */
+    --font-stack: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, sans-serif;
 
-    /* Shadows */
+    /* ---- Shadows ---- */
     --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.04);
     --shadow-md: 0 4px 14px rgba(0, 0, 0, 0.06);
     --shadow-lg: 0 12px 40px rgba(0, 0, 0, 0.08);
-    --shadow-card: 0 2px 12px rgba(0, 0, 0, 0.06);
 
-    /* Radius */
+    /* ---- Radii ---- */
     --radius-sm: 8px;
     --radius-md: 12px;
     --radius-lg: 18px;
-    --radius-xl: 22px;
-    --radius-pill: 980px;
+    --radius-xl: 24px;
+    --radius-full: 999px;
 
-    /* Spacing */
+    /* ---- Spacing (4px grid) ---- */
     --space-xs: 4px;
     --space-sm: 8px;
     --space-md: 16px;
     --space-lg: 24px;
     --space-xl: 40px;
     --space-2xl: 60px;
-    --space-3xl: 80px;
 
-    /* Transitions */
-    --ease-apple: cubic-bezier(0.4, 0, 0.2, 1);
-    /* ease-in-out variant */
-    --transition-fast: 0.2s var(--ease-apple);
-    --transition-normal: 0.3s var(--ease-apple);
-    --transition-slow: 0.5s var(--ease-apple);
+    /* ---- Safe Areas ---- */
+    --safe-bottom: env(safe-area-inset-bottom, 0px);
+    --safe-top: env(safe-area-inset-top, 0px);
+
+    /* ---- Transitions ---- */
+    --ease-out: cubic-bezier(0.25, 1, 0.5, 1);
+    --transition-fast: 0.2s var(--ease-out);
+    --transition-normal: 0.3s var(--ease-out);
+
+    /* ---- Legacy support (aliases) ---- */
+    --apple-bg: var(--color-bg);
+    --apple-white: var(--color-surface);
+    --apple-black: var(--color-text);
+    --apple-gray: var(--color-text-secondary);
+    --apple-gray-light: #d2d2d7;
+    --apple-gray-bg: #fbfbfd;
+    --apple-blue: var(--color-blue);
+    --apple-blue-hover: #0077ed;
+    --apple-blue-light: var(--color-blue-bg);
+    --apple-red: var(--color-red);
+    --apple-red-light: var(--color-red-bg);
+    --apple-green: var(--color-green);
+    --apple-green-light: var(--color-green-bg);
+    --apple-orange: var(--color-orange);
+    --apple-orange-light: var(--color-orange-bg);
+    --apple-yellow: var(--color-yellow);
+    --apple-purple: var(--color-purple);
+    --apple-purple-light: var(--color-purple-bg);
+    --apple-teal: var(--color-teal);
+    --apple-teal-light: var(--color-teal-bg);
+    --apple-indigo: #5856d6;
+    --font-family: var(--font-stack);
+    --shadow-card: var(--shadow-sm);
+    --radius-pill: var(--radius-full);
+    --ease-apple: var(--ease-out);
+    --hero-gradient-cabo: linear-gradient(135deg, #00b894, #00cec9, #0984e3);
 }
 
-/* ---- Reset & Base ---- */
+/* ==========================================
+   2. RESET & BASE
+   ========================================== */
+
 *,
 *::before,
 *::after {
@@ -73,6 +105,8 @@
 
 html {
     -webkit-text-size-adjust: 100%;
+    -moz-text-size-adjust: 100%;
+    text-size-adjust: 100%;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     scroll-behavior: smooth;
@@ -80,78 +114,1591 @@ html {
 }
 
 body {
-    background: var(--apple-bg);
-    color: var(--apple-black);
-    font-family: var(--font-family);
-    font-optical-sizing: auto;
-    font-size: 15px;
-    line-height: 1.47059;
+    background: var(--color-bg);
+    color: var(--color-text);
+    font-family: var(--font-stack);
+    font-size: 16px;
     font-weight: 400;
+    line-height: 1.47059;
     letter-spacing: -0.022em;
     min-height: 100vh;
-    padding-bottom: env(safe-area-inset-bottom, 20px);
+    padding-bottom: calc(64px + var(--safe-bottom));
 }
 
-/* ---- Typography ---- */
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
+body.no-tab-bar {
+    padding-bottom: var(--safe-bottom);
+}
+
+/* ==========================================
+   3. TYPOGRAPHY
+   ========================================== */
+
+h1, h2, h3, h4, h5, h6 {
     font-weight: 700;
     letter-spacing: -0.025em;
-    color: var(--apple-black);
+    color: var(--color-text);
     line-height: 1.1;
 }
 
-h1 {
-    font-size: 2rem;
-    font-weight: 800;
-}
-
-h2 {
-    font-size: 1.5rem;
-    font-weight: 700;
-}
-
-h3 {
-    font-size: 1.25rem;
-    font-weight: 600;
-}
-
-h4 {
-    font-size: 1.1rem;
-    font-weight: 600;
-}
-
-h5 {
-    font-size: 1rem;
-    font-weight: 600;
-}
-
-h6 {
-    font-size: 0.875rem;
-    font-weight: 600;
-}
+h1 { font-size: 1.75rem; font-weight: 800; }
+h2 { font-size: 1.35rem; font-weight: 700; }
+h3 { font-size: 1.15rem; font-weight: 600; }
+h4 { font-size: 1.05rem; font-weight: 600; }
+h5 { font-size: 0.95rem; font-weight: 600; }
+h6 { font-size: 0.85rem; font-weight: 600; }
 
 p {
-    color: var(--apple-gray);
-    line-height: 1.5;
+    color: var(--color-text-secondary);
+    line-height: 1.6;
 }
 
 a {
-    color: var(--apple-blue);
+    color: var(--color-blue);
     text-decoration: none;
     transition: color var(--transition-fast);
 }
 
 a:hover {
-    color: var(--apple-blue-hover);
-    text-decoration: underline;
+    opacity: 0.8;
 }
 
-/* ---- Layout ---- */
+/* ==========================================
+   4. LAYOUT
+   ========================================== */
+
+.container {
+    width: 100%;
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 0 16px;
+}
+
+.page-section {
+    padding: 24px 0;
+}
+
+.page-wrapper {
+    width: 100%;
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 0 var(--space-md);
+}
+
+/* ==========================================
+   5. TOP NAVIGATION
+   ========================================== */
+
+.top-nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    background: rgba(245, 245, 247, 0.82);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--color-border);
+    padding-top: var(--safe-top);
+}
+
+.top-nav-inner {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    height: 56px;
+    padding: 0 16px;
+    max-width: 680px;
+    margin: 0 auto;
+}
+
+.top-nav-title {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--color-text);
+    letter-spacing: -0.02em;
+}
+
+.top-nav-left {
+    position: absolute;
+    left: 16px;
+    display: flex;
+    align-items: center;
+}
+
+.top-nav-right {
+    position: absolute;
+    right: 16px;
+    display: flex;
+    align-items: center;
+}
+
+.top-nav-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    color: var(--color-blue);
+    font-size: 0.95rem;
+    font-weight: 400;
+    text-decoration: none;
+    min-height: 44px;
+    cursor: pointer;
+    transition: opacity var(--transition-fast);
+}
+
+.top-nav-back:hover {
+    opacity: 0.7;
+}
+
+/* ==========================================
+   6. BOTTOM TAB BAR
+   ========================================== */
+
+.tab-bar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    background: rgba(245, 245, 247, 0.82);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-top: 1px solid var(--color-border);
+    padding-bottom: var(--safe-bottom);
+}
+
+.tab-bar-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    min-height: 56px;
+    flex: 1;
+    color: var(--color-text-secondary);
+    text-decoration: none;
+    cursor: pointer;
+    transition: color var(--transition-fast);
+    -webkit-tap-highlight-color: transparent;
+}
+
+.tab-bar-item.active {
+    color: var(--color-blue);
+}
+
+.tab-icon {
+    font-size: 1.4rem;
+    line-height: 1;
+}
+
+.tab-label {
+    font-size: 0.65rem;
+    font-weight: 600;
+    line-height: 1;
+}
+
+/* ==========================================
+   7. BUTTONS
+   ========================================== */
+
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    font-family: var(--font-stack);
+    font-size: 0.9rem;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    border: none;
+    border-radius: var(--radius-full);
+    padding: 12px 24px;
+    min-height: 44px;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    -webkit-tap-highlight-color: transparent;
+    outline: none;
+    text-decoration: none;
+    line-height: 1.2;
+    user-select: none;
+}
+
+.btn:active {
+    transform: scale(0.96);
+}
+
+/* Variants */
+.btn-primary {
+    background: var(--color-blue);
+    color: #ffffff;
+}
+
+.btn-primary:hover {
+    background: #0077ed;
+}
+
+.btn-secondary {
+    background: rgba(0, 0, 0, 0.06);
+    color: var(--color-text);
+}
+
+.btn-secondary:hover {
+    background: rgba(0, 0, 0, 0.1);
+}
+
+.btn-danger {
+    background: var(--color-red);
+    color: #ffffff;
+}
+
+.btn-danger:hover {
+    background: #e0352b;
+}
+
+.btn-outline {
+    background: transparent;
+    border: 1.5px solid rgba(0, 0, 0, 0.12);
+    color: var(--color-blue);
+}
+
+.btn-outline:hover {
+    border-color: var(--color-blue);
+}
+
+.btn-block {
+    width: 100%;
+}
+
+/* Sizes */
+.btn-sm {
+    font-size: 0.82rem;
+    padding: 8px 18px;
+    min-height: 36px;
+}
+
+.btn-lg {
+    font-size: 1rem;
+    padding: 14px 28px;
+}
+
+/* ==========================================
+   8. CARDS
+   ========================================== */
+
+.card {
+    background: var(--color-surface);
+    border-radius: var(--radius-lg);
+    padding: var(--space-lg);
+    box-shadow: var(--shadow-sm);
+    margin-bottom: var(--space-md);
+    transition: transform var(--transition-normal), box-shadow var(--transition-normal);
+}
+
+.card-interactive {
+    cursor: pointer;
+}
+
+.card-interactive:hover {
+    transform: scale(1.015);
+    box-shadow: var(--shadow-md);
+}
+
+.card-interactive:active {
+    transform: scale(0.985);
+}
+
+/* ---- Game Card Grid (index page) ---- */
+.game-card-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+}
+
+@media (min-width: 500px) {
+    .game-card-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+.game-card-item {
+    background: var(--color-surface);
+    border-radius: 16px;
+    padding: var(--space-md);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    text-decoration: none;
+    color: inherit;
+    transition: transform var(--transition-fast);
+    box-shadow: var(--shadow-sm);
+}
+
+.game-card-item:active {
+    transform: scale(0.97);
+}
+
+.game-card-item.disabled {
+    opacity: 0.45;
+    pointer-events: none;
+}
+
+.gc-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem;
+    flex-shrink: 0;
+}
+
+.gc-name {
+    font-size: 0.92rem;
+    font-weight: 700;
+    color: var(--color-text);
+}
+
+.gc-desc {
+    font-size: 0.72rem;
+    color: var(--color-text-secondary);
+}
+
+.gc-meta {
+    font-size: 0.7rem;
+    color: var(--color-text-secondary);
+}
+
+/* ---- Game Detail Cards (gamelist page) ---- */
+.game-detail-card {
+    background: var(--color-surface);
+    border-radius: var(--radius-lg);
+    padding: 20px;
+    margin-bottom: 12px;
+    text-decoration: none;
+    color: inherit;
+    display: block;
+    box-shadow: var(--shadow-sm);
+}
+
+.gd-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: var(--space-md);
+}
+
+.gd-icon {
+    width: 52px;
+    height: 52px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    flex-shrink: 0;
+}
+
+.gd-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+    margin-bottom: var(--space-md);
+    background: rgba(142, 142, 147, 0.04);
+    padding: 16px;
+    border-radius: 12px;
+}
+
+.gd-stat {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.8rem;
+    color: var(--color-text-secondary);
+    font-weight: 500;
+}
+
+.gd-desc {
+    font-size: 0.85rem;
+    color: #48484a;
+    line-height: 1.6;
+    margin-bottom: var(--space-md);
+}
+
+.gd-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+/* ---- Legacy Card Styles ---- */
+.game-card {
+    display: flex;
+    flex-direction: column;
+    background: var(--color-surface);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm);
+    padding: var(--space-lg);
+    margin-bottom: var(--space-md);
+    transition: transform var(--transition-normal), box-shadow var(--transition-normal);
+    text-decoration: none;
+    color: inherit;
+}
+
+.game-card:hover {
+    transform: translateY(-4px) scale(1.015);
+    box-shadow: var(--shadow-md);
+}
+
+.game-card:active {
+    transform: scale(0.985);
+}
+
+.game-card.disabled {
+    opacity: 0.45;
+    pointer-events: none;
+    box-shadow: none;
+    background: rgba(0, 0, 0, 0.02);
+}
+
+.game-card.hidden {
+    display: none !important;
+}
+
+/* ==========================================
+   9. INPUTS
+   ========================================== */
+
+.input {
+    width: 100%;
+    font-family: var(--font-stack);
+    font-size: 1rem;
+    font-weight: 400;
+    padding: 12px 16px;
+    border: 1.5px solid rgba(0, 0, 0, 0.12);
+    border-radius: var(--radius-md);
+    background: var(--color-surface);
+    color: var(--color-text);
+    outline: none;
+    transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+    -webkit-appearance: none;
+    appearance: none;
+}
+
+.input:focus {
+    border-color: var(--color-blue);
+    box-shadow: 0 0 0 3px rgba(0, 113, 227, 0.15);
+}
+
+.input::placeholder {
+    color: var(--color-text-secondary);
+}
+
+.input-field {
+    width: 100%;
+    font-family: var(--font-stack);
+    font-size: 1rem;
+    font-weight: 400;
+    padding: 12px 16px;
+    border: 1.5px solid rgba(0, 0, 0, 0.12);
+    border-radius: var(--radius-md);
+    background: var(--color-surface);
+    color: var(--color-text);
+    outline: none;
+    transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+    -webkit-appearance: none;
+    appearance: none;
+}
+
+.input-field:focus {
+    border-color: var(--color-blue);
+    box-shadow: 0 0 0 3px rgba(0, 113, 227, 0.15);
+}
+
+/* ==========================================
+   10. LISTS
+   ========================================== */
+
+.list {
+    background: var(--color-surface);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+}
+
+.list-item {
+    display: flex;
+    align-items: center;
+    padding: 14px 16px;
+    border-bottom: 0.5px solid var(--color-border);
+    gap: 16px;
+    transition: background var(--transition-fast);
+}
+
+.list-item:last-child {
+    border-bottom: none;
+}
+
+.list-item:active {
+    background: rgba(0, 0, 0, 0.02);
+}
+
+.list-item-content {
+    flex: 1;
+    min-width: 0;
+}
+
+.list-item-title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--color-text);
+}
+
+.list-item-subtitle {
+    font-size: 0.8rem;
+    color: var(--color-text-secondary);
+    margin-top: 2px;
+}
+
+.list-item-trailing {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--color-text);
+    text-align: right;
+    flex-shrink: 0;
+    margin-left: var(--space-md);
+}
+
+.list-header {
+    padding: 14px var(--space-lg);
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--color-text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    background: var(--color-bg);
+}
+
+/* ==========================================
+   11. RANK BADGES
+   ========================================== */
+
+.rank-badge {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #ffffff;
+    flex-shrink: 0;
+    margin-right: var(--space-md);
+}
+
+.rank-1 {
+    background: var(--color-orange);
+    box-shadow: 0 4px 12px rgba(255, 149, 0, 0.3);
+}
+
+.rank-2 {
+    background: #a0aec0;
+}
+
+.rank-3 {
+    background: #cd7f32;
+}
+
+.rank-other {
+    background: rgba(0, 0, 0, 0.12);
+    color: var(--color-text-secondary);
+    box-shadow: none;
+}
+
+.rank-num {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #ffffff;
+    flex-shrink: 0;
+    margin-right: var(--space-md);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* ==========================================
+   12. TAGS
+   ========================================== */
+
+.tag {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 10px;
+    border-radius: 6px;
+    background: rgba(0, 0, 0, 0.04);
+    color: var(--color-text-secondary);
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+}
+
+.tag-mech {
+    background: var(--color-blue-bg);
+    color: var(--color-blue);
+}
+
+/* ==========================================
+   13. FILTER CHIPS
+   ========================================== */
+
+.filter-scroll {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    padding: 4px 16px 12px;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+}
+
+.filter-scroll::-webkit-scrollbar {
+    display: none;
+}
+
+.filter-chip {
+    flex-shrink: 0;
+    padding: 8px 18px;
+    border-radius: var(--radius-full);
+    background: rgba(0, 0, 0, 0.06);
+    color: var(--color-text);
+    font-size: 0.85rem;
+    font-weight: 600;
+    min-height: 38px;
+    border: none;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    scroll-snap-align: center;
+    -webkit-tap-highlight-color: transparent;
+    white-space: nowrap;
+    font-family: var(--font-stack);
+}
+
+.filter-chip.active {
+    background: var(--color-blue);
+    color: #ffffff;
+    box-shadow: 0 4px 12px rgba(0, 113, 227, 0.3);
+}
+
+.filter-chip:hover:not(.active) {
+    background: rgba(0, 0, 0, 0.1);
+}
+
+/* Legacy alias */
+.filter-btn {
+    flex-shrink: 0;
+    padding: 10px 20px;
+    border-radius: 22px;
+    min-height: 44px;
+    background: rgba(142, 142, 147, 0.08);
+    color: var(--color-text);
+    font-size: 1rem;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    scroll-snap-align: center;
+    -webkit-tap-highlight-color: transparent;
+    font-family: var(--font-stack);
+}
+
+.filter-btn.active {
+    background: var(--color-blue);
+    color: #ffffff;
+    box-shadow: 0 4px 12px rgba(0, 113, 227, 0.3);
+}
+
+.filter-btn:hover:not(.active) {
+    background: rgba(142, 142, 147, 0.15);
+}
+
+/* ==========================================
+   14. MODAL
+   ========================================== */
+
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--transition-normal);
+    padding: var(--space-lg);
+}
+
+.modal-overlay.show {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.modal-content {
+    background: var(--color-surface);
+    border-radius: var(--radius-xl);
+    width: 100%;
+    max-width: 400px;
+    max-height: 80vh;
+    display: flex;
+    flex-direction: column;
+    box-shadow: var(--shadow-lg);
+    transform: scale(0.95);
+    transition: transform var(--transition-normal);
+    overflow: hidden;
+}
+
+.modal-overlay.show .modal-content {
+    transform: scale(1);
+}
+
+.modal-header {
+    padding: var(--space-lg);
+    border-bottom: 1px solid var(--color-border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+.modal-title {
+    margin: 0;
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--color-text);
+}
+
+.modal-close {
+    background: rgba(0, 0, 0, 0.06);
+    border: none;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: var(--color-text-secondary);
+    font-size: 1rem;
+    transition: background var(--transition-fast);
+    flex-shrink: 0;
+}
+
+.modal-close:hover {
+    background: rgba(0, 0, 0, 0.12);
+}
+
+.modal-body {
+    padding: var(--space-lg);
+    overflow-y: auto;
+    flex: 1;
+}
+
+.modal-footer {
+    padding: 16px var(--space-lg);
+    display: flex;
+    gap: 12px;
+    border-top: 1px solid var(--color-border);
+    flex-shrink: 0;
+}
+
+/* Legacy modal (uses .modal directly) */
+.modal {
+    display: flex;
+    visibility: hidden;
+    opacity: 0;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    z-index: 10000;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-lg);
+    transition: opacity var(--transition-normal), visibility var(--transition-normal);
+}
+
+.modal.show {
+    visibility: visible;
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.modal .modal-content {
+    transform: scale(0.95);
+}
+
+.modal.show .modal-content {
+    transform: scale(1);
+}
+
+/* ==========================================
+   15. BOTTOM SHEET
+   ========================================== */
+
+.sheet-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    z-index: 10000;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--transition-normal);
+}
+
+.sheet-overlay.show {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.sheet-content {
+    background: var(--color-surface);
+    border-radius: 22px 22px 0 0;
+    width: 100%;
+    max-width: 500px;
+    max-height: 85vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    transform: translateY(100%);
+    transition: transform var(--transition-normal);
+    padding-bottom: var(--safe-bottom);
+}
+
+.sheet-overlay.show .sheet-content {
+    transform: translateY(0);
+}
+
+.sheet-handle {
+    width: 36px;
+    height: 5px;
+    border-radius: 3px;
+    background: rgba(0, 0, 0, 0.15);
+    margin: 12px auto var(--space-md);
+    flex-shrink: 0;
+}
+
+/* ==========================================
+   16. TOAST
+   ========================================== */
+
+.toast {
+    position: fixed;
+    top: calc(20px + var(--safe-top));
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 12px 24px;
+    border-radius: 30px;
+    z-index: 20000;
+    background: var(--color-surface);
+    box-shadow: var(--shadow-lg);
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: var(--color-text);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s var(--ease-out), transform 0.3s var(--ease-out);
+    text-align: center;
+    white-space: nowrap;
+    max-width: 90vw;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.toast.show {
+    opacity: 1;
+}
+
+.toast-success {
+    background: var(--color-green);
+    color: #ffffff;
+}
+
+.toast-error {
+    background: var(--color-red);
+    color: #ffffff;
+}
+
+.toast-info {
+    background: var(--color-blue);
+    color: #ffffff;
+}
+
+/* Legacy toast class */
+.apple-toast {
+    position: fixed;
+    top: max(20px, env(safe-area-inset-top, 20px));
+    left: 50%;
+    transform: translateX(-50%) translateY(-20px);
+    background: rgba(245, 245, 247, 0.9);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    padding: 12px 24px;
+    border-radius: 30px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    z-index: 20001;
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: var(--color-text);
+    opacity: 0;
+    transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+    pointer-events: none;
+    text-align: center;
+    white-space: nowrap;
+}
+
+.apple-toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+}
+
+.apple-toast-success {
+    background: rgba(52, 199, 89, 0.9);
+    color: #ffffff;
+}
+
+.apple-toast-error {
+    background: rgba(255, 59, 48, 0.9);
+    color: #ffffff;
+}
+
+/* ==========================================
+   17. HERO
+   ========================================== */
+
+.hero {
+    text-align: center;
+    padding: 24px 0;
+}
+
+.hero-emoji {
+    font-size: 3rem;
+    display: block;
+    margin-bottom: var(--space-md);
+}
+
+.hero h1 {
+    margin-bottom: 4px;
+}
+
+.hero p {
+    font-size: 1rem;
+}
+
+.hero-eyebrow {
+    font-size: 3rem;
+    display: block;
+    margin-bottom: var(--space-md);
+}
+
+/* ==========================================
+   18. QUICK ACTION CARD
+   ========================================== */
+
+.quick-action {
+    background: linear-gradient(135deg, var(--color-blue), var(--color-teal));
+    border-radius: 20px;
+    padding: 24px 20px;
+    color: #ffffff;
+    text-decoration: none;
+    display: block;
+    transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.quick-action:active {
+    transform: scale(0.98);
+}
+
+.quick-action-label {
+    font-size: 0.8rem;
+    opacity: 0.8;
+    margin-bottom: 4px;
+}
+
+.quick-action-title {
+    font-size: 1.2rem;
+    font-weight: 800;
+    margin-bottom: 4px;
+}
+
+.quick-action-desc {
+    font-size: 0.85rem;
+    opacity: 0.85;
+}
+
+/* ==========================================
+   19. EMPTY STATE
+   ========================================== */
+
+.empty-state {
+    text-align: center;
+    padding: 60px var(--space-md);
+    color: var(--color-text-secondary);
+}
+
+.empty-state-icon {
+    font-size: 2.5rem;
+    display: block;
+    margin-bottom: var(--space-sm);
+}
+
+.empty-icon {
+    font-size: 3rem;
+    margin-bottom: var(--space-md);
+    display: block;
+    filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1));
+}
+
+/* ==========================================
+   20. SECTION TITLE
+   ========================================== */
+
+.section-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--color-text);
+    margin-top: var(--space-lg);
+    margin-bottom: var(--space-sm);
+    letter-spacing: -0.02em;
+}
+
+/* ==========================================
+   21. CHIPS (Player Badges)
+   ========================================== */
+
+.chip {
+    display: inline-flex;
+    align-items: center;
+    padding: 8px 16px;
+    border-radius: var(--radius-full);
+    font-size: 0.85rem;
+    font-weight: 600;
+    background: rgba(0, 0, 0, 0.04);
+    color: var(--color-text);
+    border: 1px solid transparent;
+    transition: all var(--transition-fast);
+}
+
+.chip.me {
+    background: var(--color-blue-bg);
+    color: var(--color-blue);
+    border-color: rgba(0, 113, 227, 0.2);
+}
+
+.chip.captain {
+    border-color: var(--color-orange);
+    background: var(--color-orange-bg);
+}
+
+.chip.approve {
+    border-color: var(--color-green);
+    background: var(--color-green-bg);
+}
+
+.chip.reject {
+    border-color: var(--color-red);
+    background: var(--color-red-bg);
+}
+
+/* Legacy chip */
+.apple-chip {
+    display: inline-flex;
+    align-items: center;
+    padding: 5px 14px;
+    border-radius: var(--radius-full);
+    font-size: 0.82rem;
+    font-weight: 500;
+    background: rgba(0, 0, 0, 0.04);
+    color: var(--color-text);
+    border: 1px solid transparent;
+    transition: all var(--transition-fast);
+}
+
+.apple-chip.me {
+    background: var(--color-blue-bg);
+    color: var(--color-blue);
+    font-weight: 600;
+    border-color: rgba(0, 113, 227, 0.2);
+}
+
+.apple-chip.captain {
+    border-color: var(--color-orange);
+    background: var(--color-orange-bg);
+}
+
+.apple-chip.approve {
+    border-color: var(--color-green);
+    background: var(--color-green-bg);
+}
+
+.apple-chip.reject {
+    border-color: var(--color-red);
+    background: var(--color-red-bg);
+}
+
+/* ==========================================
+   22. ALERTS
+   ========================================== */
+
+.alert {
+    padding: 12px 16px;
+    border-radius: var(--radius-md);
+    font-size: 0.85rem;
+    font-weight: 500;
+    text-align: center;
+}
+
+.alert-info {
+    background: var(--color-blue-bg);
+    color: var(--color-blue);
+}
+
+.alert-success {
+    background: var(--color-green-bg);
+    color: var(--color-green);
+}
+
+.alert-danger {
+    background: var(--color-red-bg);
+    color: var(--color-red);
+}
+
+.alert-warning {
+    background: var(--color-orange-bg);
+    color: var(--color-orange);
+}
+
+/* Legacy alert */
+.apple-alert {
+    padding: 12px var(--space-md);
+    border-radius: var(--radius-md);
+    font-size: 0.85rem;
+    font-weight: 500;
+    text-align: center;
+}
+
+.apple-alert-info {
+    background: var(--color-blue-bg);
+    color: var(--color-blue);
+}
+
+.apple-alert-success {
+    background: var(--color-green-bg);
+    color: var(--color-green);
+}
+
+.apple-alert-danger {
+    background: var(--color-red-bg);
+    color: var(--color-red);
+}
+
+.apple-alert-warning {
+    background: var(--color-orange-bg);
+    color: var(--color-orange);
+}
+
+/* ==========================================
+   23. UTILITY CLASSES
+   ========================================== */
+
+/* ---- Text ---- */
+.text-center { text-align: center; }
+.text-right { text-align: right; }
+.text-muted { color: var(--color-text-secondary) !important; }
+.text-blue { color: var(--color-blue) !important; }
+.text-red { color: var(--color-red) !important; }
+.text-green { color: var(--color-green) !important; }
+.text-orange { color: var(--color-orange) !important; }
+.text-purple { color: var(--color-purple) !important; }
+.text-sm { font-size: 0.82rem; }
+.text-xs { font-size: 0.72rem; }
+.text-lg { font-size: 1.15rem; }
+.text-xl { font-size: 1.4rem; }
+
+/* ---- Font Weights ---- */
+.fw-400 { font-weight: 400; }
+.fw-500 { font-weight: 500; }
+.fw-600 { font-weight: 600; }
+.fw-700 { font-weight: 700; }
+.fw-800 { font-weight: 800; }
+
+/* ---- Backgrounds ---- */
+.bg-blue { background: var(--color-blue-bg) !important; }
+.bg-green { background: var(--color-green-bg) !important; }
+.bg-red { background: var(--color-red-bg) !important; }
+.bg-orange { background: var(--color-orange-bg) !important; }
+.bg-purple { background: var(--color-purple-bg) !important; }
+
+.bg-blue-light { background: var(--color-blue-bg) !important; }
+.bg-green-light { background: var(--color-green-bg) !important; }
+.bg-red-light { background: var(--color-red-bg) !important; }
+.bg-orange-light { background: var(--color-orange-bg) !important; }
+.bg-purple-light { background: var(--color-purple-bg) !important; }
+
+/* ---- Margin ---- */
+.mt-xs { margin-top: var(--space-xs); }
+.mt-sm { margin-top: var(--space-sm); }
+.mt-md { margin-top: var(--space-md); }
+.mt-lg { margin-top: var(--space-lg); }
+.mt-xl { margin-top: var(--space-xl); }
+.mb-xs { margin-bottom: var(--space-xs); }
+.mb-sm { margin-bottom: var(--space-sm); }
+.mb-md { margin-bottom: var(--space-md); }
+.mb-lg { margin-bottom: var(--space-lg); }
+.mb-xl { margin-bottom: var(--space-xl); }
+
+/* ---- Padding ---- */
+.p-md { padding: var(--space-md); }
+.p-lg { padding: var(--space-lg); }
+
+/* ---- Display ---- */
+.d-flex { display: flex; }
+.flex-wrap { flex-wrap: wrap; }
+.flex-col { flex-direction: column; }
+.items-center { align-items: center; }
+.justify-center { justify-content: center; }
+.justify-between { justify-content: space-between; }
+.flex-1 { flex: 1; }
+.w-full { width: 100%; }
+.gap-sm { gap: var(--space-sm); }
+.gap-md { gap: var(--space-md); }
+.hidden { display: none !important; }
+.opacity-50 { opacity: 0.5; }
+
+/* ==========================================
+   24. ANIMATIONS
+   ========================================== */
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.anim-fade-in {
+    animation: fadeIn 0.4s var(--ease-out) forwards;
+}
+
+@keyframes sheetUp {
+    from {
+        transform: translateY(100%);
+    }
+    to {
+        transform: translateY(0);
+    }
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes role-card-enter {
+    0% {
+        opacity: 0;
+        transform: translateY(-50px) scale(0.9) rotateX(-90deg);
+    }
+    50% {
+        opacity: 0.8;
+        transform: translateY(10px) scale(1.05) rotateX(10deg);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0) scale(1) rotateX(0deg);
+    }
+}
+
+@keyframes text-draw {
+    100% {
+        stroke-dashoffset: 0;
+        fill: var(--theme-color, #f5f5f7);
+    }
+}
+
+/* ==========================================
+   25. DARK MODE
+   ========================================== */
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        /* Core colors inverted */
+        --color-bg: #000000;
+        --color-surface: #1c1c1e;
+        --color-text: #f5f5f7;
+        --color-text-secondary: #98989d;
+        --color-border: rgba(255, 255, 255, 0.08);
+
+        /* Semantic bg colors — more opacity for dark */
+        --color-blue-bg: rgba(10, 132, 255, 0.15);
+        --color-green-bg: rgba(48, 209, 88, 0.15);
+        --color-red-bg: rgba(255, 69, 58, 0.15);
+        --color-orange-bg: rgba(255, 159, 10, 0.15);
+        --color-purple-bg: rgba(191, 90, 242, 0.15);
+        --color-teal-bg: rgba(100, 210, 255, 0.15);
+
+        /* Shadows */
+        --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
+        --shadow-md: 0 4px 14px rgba(0, 0, 0, 0.4);
+        --shadow-lg: 0 12px 40px rgba(0, 0, 0, 0.5);
+
+        /* Legacy aliases */
+        --apple-bg: var(--color-bg);
+        --apple-white: var(--color-surface);
+        --apple-black: var(--color-text);
+        --apple-gray: var(--color-text-secondary);
+        --apple-gray-light: #3a3a3c;
+        --apple-gray-bg: #1c1c1e;
+        --apple-blue-light: var(--color-blue-bg);
+        --apple-green-light: var(--color-green-bg);
+        --apple-red-light: var(--color-red-bg);
+        --apple-orange-light: var(--color-orange-bg);
+        --apple-purple-light: var(--color-purple-bg);
+        --apple-teal-light: var(--color-teal-bg);
+        --shadow-card: var(--shadow-sm);
+
+        --hero-gradient-cabo: linear-gradient(135deg, #55efc4, #81ecec, #74b9ff);
+    }
+
+    /* ---- Navigation dark ---- */
+    .top-nav,
+    .apple-nav,
+    .nav {
+        background: rgba(0, 0, 0, 0.82);
+    }
+
+    .tab-bar {
+        background: rgba(0, 0, 0, 0.88);
+    }
+
+    /* ---- Button dark ---- */
+    .btn-secondary {
+        background: rgba(255, 255, 255, 0.1);
+        color: var(--color-text);
+    }
+
+    .btn-secondary:hover {
+        background: rgba(255, 255, 255, 0.15);
+    }
+
+    /* ---- Filter chip dark ---- */
+    .filter-chip {
+        background: rgba(255, 255, 255, 0.08);
+    }
+
+    .filter-chip:hover:not(.active) {
+        background: rgba(255, 255, 255, 0.12);
+    }
+
+    .filter-btn {
+        background: rgba(255, 255, 255, 0.08);
+    }
+
+    .filter-btn:hover:not(.active) {
+        background: rgba(255, 255, 255, 0.12);
+    }
+
+    /* ---- Tag dark ---- */
+    .tag {
+        background: rgba(255, 255, 255, 0.06);
+    }
+
+    /* ---- Chip dark ---- */
+    .chip,
+    .apple-chip {
+        background: rgba(255, 255, 255, 0.06);
+    }
+
+    /* ---- Game detail dark ---- */
+    .gd-desc {
+        color: #b0b0b5;
+    }
+
+    /* ---- Toast dark ---- */
+    .apple-toast {
+        background: rgba(44, 44, 46, 0.9);
+    }
+
+    /* ---- Game card disabled dark ---- */
+    .game-card.disabled {
+        background: rgba(255, 255, 255, 0.02);
+    }
+
+    /* ---- Misc dark overrides ---- */
+    .modal-close {
+        background: rgba(255, 255, 255, 0.1);
+    }
+
+    .modal-close:hover {
+        background: rgba(255, 255, 255, 0.18);
+    }
+
+    .sheet-handle {
+        background: rgba(255, 255, 255, 0.2);
+    }
+
+    .gd-stats {
+        background: rgba(142, 142, 147, 0.06);
+    }
+}
+
+/* ==========================================
+   26. MISC & LEGACY SUPPORT
+   ========================================== */
+
+/* ---- Navigation (legacy classes) ---- */
+.apple-nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    background: rgba(245, 245, 247, 0.82);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--color-border);
+    padding-top: var(--safe-top);
+}
+
+.apple-nav-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 0 var(--space-md);
+    min-height: 56px;
+}
+
+.apple-nav-title {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--color-text);
+    letter-spacing: -0.02em;
+}
+
+.apple-nav-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    color: var(--color-blue);
+    font-size: 0.95rem;
+    font-weight: 400;
+    text-decoration: none;
+    min-height: 44px;
+    cursor: pointer;
+    transition: opacity var(--transition-fast);
+}
+
+.apple-nav-back:hover {
+    opacity: 0.7;
+}
+
+.apple-nav-action {
+    position: absolute;
+    right: var(--space-md);
+    display: flex;
+    align-items: center;
+}
+
+/* .nav and .nav-inner — gamelist page legacy */
+.nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    background: rgba(245, 245, 247, 0.82);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--color-border);
+    padding-top: var(--safe-top);
+}
+
+.nav-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 0 16px;
+    min-height: 56px;
+}
+
+.nav-title {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--color-text);
+    letter-spacing: -0.02em;
+}
+
+/* ---- Legacy Card ---- */
+.apple-card {
+    background: var(--color-surface);
+    border-radius: var(--radius-lg);
+    padding: var(--space-lg);
+    box-shadow: var(--shadow-sm);
+    margin-bottom: var(--space-md);
+    transition: transform var(--transition-normal), box-shadow var(--transition-normal);
+}
+
+.apple-card-flat {
+    background: var(--color-surface);
+    border-radius: var(--radius-lg);
+    padding: var(--space-lg);
+    margin-bottom: var(--space-md);
+}
+
+.apple-card-interactive {
+    cursor: pointer;
+}
+
+.apple-card-interactive:hover {
+    transform: scale(1.015);
+    box-shadow: var(--shadow-md);
+}
+
+.apple-card-interactive:active {
+    transform: scale(0.985);
+}
+
+/* ---- Legacy Container ---- */
 .apple-container {
     width: 100%;
     max-width: 680px;
@@ -163,127 +1710,18 @@ a:hover {
     padding: var(--space-xl) 0;
 }
 
-/* ---- Hero ---- */
-.apple-hero {
-    text-align: center;
-    padding: var(--space-2xl) 0 var(--space-lg);
-}
-
-.apple-hero-emoji {
-    font-size: 4rem;
-    display: block;
-    margin-bottom: var(--space-md);
-}
-
-.apple-hero h1 {
-    font-size: 2.5rem;
-    font-weight: 800;
-    letter-spacing: -0.04em;
-    margin-bottom: var(--space-xs);
-}
-
-.apple-hero p {
-    font-size: 1.15rem;
-    color: var(--apple-gray);
-    font-weight: 500;
-    margin: 0;
-    margin-top: 4px;
-}
-
-/* ---- Navigation ---- */
-.apple-nav {
-    position: sticky;
-    top: 0;
-    z-index: 9999;
-    background: rgba(245, 245, 247, 0.72);
-    backdrop-filter: saturate(180%) blur(20px);
-    -webkit-backdrop-filter: saturate(180%) blur(20px);
-    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
-    padding: 12px 0;
-}
-
-.apple-nav-content {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-    max-width: 680px;
-    margin: 0 auto;
-    padding: 0 var(--space-md);
-}
-
-.apple-nav-title {
-    font-size: 1.05rem;
-    font-weight: 600;
-    color: var(--apple-black);
-    letter-spacing: -0.02em;
-}
-
-.apple-nav-back {
-    position: absolute;
-    left: var(--space-md);
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    color: var(--apple-blue);
-    font-size: 0.9rem;
-    font-weight: 400;
-    text-decoration: none;
-    transition: opacity var(--transition-fast);
-}
-
-.apple-nav-back:hover {
-    opacity: 0.7;
-    text-decoration: none;
-}
-
-.apple-nav-action {
-    position: absolute;
-    right: var(--space-md);
-}
-
-/* ---- Cards ---- */
-.apple-card {
-    background: var(--apple-white);
-    border-radius: var(--radius-lg);
-    box-shadow: var(--shadow-card);
-    padding: var(--space-lg);
-    margin-bottom: var(--space-md);
-    transition: transform var(--transition-normal), box-shadow var(--transition-normal);
-}
-
-.apple-card-interactive {
-    cursor: pointer;
-}
-
-.apple-card-interactive:hover {
-    transform: scale(1.015);
-    box-shadow: var(--shadow-lg);
-}
-
-.apple-card-interactive:active {
-    transform: scale(0.985);
-}
-
-.apple-card-flat {
-    background: var(--apple-white);
-    border-radius: var(--radius-lg);
-    padding: var(--space-lg);
-    margin-bottom: var(--space-md);
-}
-
-/* ---- Buttons ---- */
+/* ---- Legacy Button ---- */
 .apple-btn {
     display: inline-flex;
     align-items: center;
     justify-content: center;
     gap: 6px;
-    font-family: var(--font-family);
+    font-family: var(--font-stack);
     font-size: 0.9rem;
     font-weight: 500;
     letter-spacing: -0.01em;
     border: none;
-    border-radius: var(--radius-pill);
+    border-radius: var(--radius-full);
     padding: 10px 22px;
     cursor: pointer;
     transition: all var(--transition-fast);
@@ -298,19 +1736,19 @@ a:hover {
 }
 
 .apple-btn-primary {
-    background: var(--apple-blue);
-    color: white;
+    background: var(--color-blue);
+    color: #ffffff;
 }
 
 .apple-btn-primary:hover {
-    background: var(--apple-blue-hover);
-    color: white;
+    background: #0077ed;
+    color: #ffffff;
     text-decoration: none;
 }
 
 .apple-btn-secondary {
     background: rgba(0, 0, 0, 0.06);
-    color: var(--apple-black);
+    color: var(--color-text);
 }
 
 .apple-btn-secondary:hover {
@@ -319,29 +1757,27 @@ a:hover {
 }
 
 .apple-btn-danger {
-    background: var(--apple-red);
-    color: white;
+    background: var(--color-red);
+    color: #ffffff;
 }
 
 .apple-btn-success {
-    background: var(--apple-green);
-    color: white;
+    background: var(--color-green);
+    color: #ffffff;
 }
 
 .apple-btn-outline {
     background: transparent;
-    border: 1.5px solid var(--apple-gray-light);
-    color: var(--apple-blue);
+    border: 1.5px solid rgba(0, 0, 0, 0.12);
+    color: var(--color-blue);
 }
 
 .apple-btn-outline:hover {
-    border-color: var(--apple-blue);
+    border-color: var(--color-blue);
     text-decoration: none;
 }
 
-.apple-btn-block {
-    width: 100%;
-}
+.apple-btn-block { width: 100%; }
 
 .apple-btn-sm {
     font-size: 0.8rem;
@@ -362,47 +1798,11 @@ a:hover {
     font-size: 1.1rem;
 }
 
-/* ---- Inputs ---- */
-.apple-input {
-    width: 100%;
-    font-family: var(--font-family);
-    font-size: 1rem;
-    font-weight: 400;
-    padding: 12px 16px;
-    border: 1.5px solid var(--apple-gray-light);
-    border-radius: var(--radius-md);
-    background: var(--apple-white);
-    color: var(--apple-black);
-    outline: none;
-    transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
-    -webkit-appearance: none;
-    appearance: none;
-}
-
-.apple-input:focus {
-    border-color: var(--apple-blue);
-    box-shadow: 0 0 0 3px rgba(0, 113, 227, 0.15);
-}
-
-.apple-input::placeholder {
-    color: var(--apple-gray);
-}
-
-.apple-input-group {
-    display: flex;
-    gap: var(--space-sm);
-    align-items: stretch;
-}
-
-.apple-input-group .apple-input {
-    flex: 1;
-}
-
-/* ---- Lists ---- */
+/* ---- Legacy Lists ---- */
 .apple-list {
-    background: var(--apple-white);
+    background: var(--color-surface);
     border-radius: var(--radius-lg);
-    box-shadow: var(--shadow-card);
+    box-shadow: var(--shadow-sm);
     overflow: hidden;
 }
 
@@ -410,10 +1810,10 @@ a:hover {
     padding: 14px var(--space-lg);
     font-size: 0.8rem;
     font-weight: 600;
-    color: var(--apple-gray);
+    color: var(--color-text-secondary);
     text-transform: uppercase;
     letter-spacing: 0.04em;
-    background: var(--apple-bg);
+    background: var(--color-bg);
 }
 
 .apple-list-item {
@@ -421,7 +1821,7 @@ a:hover {
     align-items: center;
     justify-content: space-between;
     padding: 14px var(--space-lg);
-    border-bottom: 0.5px solid rgba(0, 0, 0, 0.06);
+    border-bottom: 0.5px solid var(--color-border);
     transition: background var(--transition-fast);
 }
 
@@ -441,19 +1841,19 @@ a:hover {
 .apple-list-item-title {
     font-size: 1rem;
     font-weight: 500;
-    color: var(--apple-black);
+    color: var(--color-text);
 }
 
 .apple-list-item-subtitle {
     font-size: 0.8rem;
-    color: var(--apple-gray);
+    color: var(--color-text-secondary);
     margin-top: 2px;
 }
 
 .apple-list-item-trailing {
     font-size: 1.2rem;
     font-weight: 700;
-    color: var(--apple-black);
+    color: var(--color-text);
     text-align: right;
     flex-shrink: 0;
     margin-left: var(--space-md);
@@ -468,49 +1868,10 @@ a:hover {
     justify-content: center;
     font-size: 0.75rem;
     font-weight: 700;
-    color: white;
-    background: var(--apple-gray);
+    color: #ffffff;
+    background: var(--color-text-secondary);
     flex-shrink: 0;
     margin-right: var(--space-md);
-}
-
-.rank-num {
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 0.85rem;
-    font-weight: 700;
-    color: white;
-    flex-shrink: 0;
-    margin-right: var(--space-md);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-.rank-1 {
-    background: var(--apple-orange);
-    color: white;
-    box-shadow: 0 4px 12px rgba(255, 149, 0, 0.3);
-}
-
-.rank-2 {
-    background: #a0aec0;
-    /* Silver */
-    color: white;
-}
-
-.rank-3 {
-    background: #cd7f32;
-    /* Bronze */
-    color: white;
-}
-
-.rank-other {
-    background: var(--apple-gray-light);
-    color: var(--apple-gray);
-    box-shadow: none;
 }
 
 .apple-list-item-icon {
@@ -525,85 +1886,114 @@ a:hover {
     margin-right: var(--space-md);
 }
 
-/* ---- Tables ---- */
-.apple-table-wrap {
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    border-radius: var(--radius-lg);
-    background: var(--apple-white);
-    box-shadow: var(--shadow-card);
-}
-
-.apple-table {
+/* ---- Legacy Input ---- */
+.apple-input {
     width: 100%;
-    border-collapse: collapse;
-    font-size: 0.9rem;
+    font-family: var(--font-stack);
+    font-size: 1rem;
+    font-weight: 400;
+    padding: 12px 16px;
+    border: 1.5px solid rgba(0, 0, 0, 0.12);
+    border-radius: var(--radius-md);
+    background: var(--color-surface);
+    color: var(--color-text);
+    outline: none;
+    transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+    -webkit-appearance: none;
+    appearance: none;
 }
 
-.apple-table th {
-    padding: 12px var(--space-md);
-    font-weight: 600;
-    font-size: 0.75rem;
-    color: var(--apple-gray);
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    text-align: left;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
-    background: var(--apple-gray-bg);
+.apple-input:focus {
+    border-color: var(--color-blue);
+    box-shadow: 0 0 0 3px rgba(0, 113, 227, 0.15);
 }
 
-.apple-table td {
-    padding: 12px var(--space-md);
-    border-bottom: 0.5px solid rgba(0, 0, 0, 0.06);
-    color: var(--apple-black);
+.apple-input::placeholder {
+    color: var(--color-text-secondary);
 }
 
-.apple-table tr:last-child td {
-    border-bottom: none;
+.apple-input-group {
+    display: flex;
+    gap: var(--space-sm);
+    align-items: stretch;
 }
 
-.apple-table th:first-child,
-.apple-table td:first-child {
-    padding-left: var(--space-lg);
+.apple-input-group .apple-input {
+    flex: 1;
 }
 
-/* ---- Tags / Badges ---- */
+/* ---- Legacy Tags ---- */
 .apple-tag {
     display: inline-flex;
     align-items: center;
     font-size: 0.72rem;
     font-weight: 600;
     padding: 3px 10px;
-    border-radius: var(--radius-pill);
+    border-radius: var(--radius-full);
     letter-spacing: 0.01em;
 }
 
 .apple-tag-blue {
     background: rgba(0, 113, 227, 0.1);
-    color: var(--apple-blue);
+    color: var(--color-blue);
 }
 
 .apple-tag-red {
     background: rgba(255, 59, 48, 0.1);
-    color: var(--apple-red);
+    color: var(--color-red);
 }
 
 .apple-tag-green {
     background: rgba(52, 199, 89, 0.1);
-    color: var(--apple-green);
+    color: var(--color-green);
 }
 
 .apple-tag-orange {
     background: rgba(255, 149, 0, 0.1);
-    color: var(--apple-orange);
+    color: var(--color-orange);
 }
 
 .apple-tag-gray {
     background: rgba(0, 0, 0, 0.05);
-    color: var(--apple-gray);
+    color: var(--color-text-secondary);
 }
 
-/* ---- Segmented Control ---- */
+/* ---- Legacy Hero ---- */
+.apple-hero {
+    text-align: center;
+    padding: var(--space-2xl) 0 var(--space-lg);
+}
+
+.apple-hero-emoji {
+    font-size: 4rem;
+    display: block;
+    margin-bottom: var(--space-md);
+}
+
+.apple-hero h1 {
+    font-size: 2.5rem;
+    font-weight: 800;
+    letter-spacing: -0.04em;
+    margin-bottom: var(--space-xs);
+}
+
+.apple-hero p {
+    font-size: 1.15rem;
+    color: var(--color-text-secondary);
+    font-weight: 500;
+    margin: 0;
+    margin-top: 4px;
+}
+
+/* ---- Legacy Footer ---- */
+.apple-footer {
+    text-align: center;
+    padding: var(--space-xl) 0;
+    color: var(--color-text-secondary);
+    font-size: 0.75rem;
+}
+
+/* ---- Legacy Segmented Control ---- */
 .apple-segment {
     display: inline-flex;
     background: rgba(0, 0, 0, 0.06);
@@ -613,13 +2003,13 @@ a:hover {
 }
 
 .apple-segment-btn {
-    font-family: var(--font-family);
+    font-family: var(--font-stack);
     font-size: 0.82rem;
     font-weight: 500;
     padding: 6px 16px;
     border: none;
     background: transparent;
-    color: var(--apple-black);
+    color: var(--color-text);
     border-radius: calc(var(--radius-sm) - 2px);
     cursor: pointer;
     transition: all var(--transition-fast);
@@ -627,12 +2017,12 @@ a:hover {
 }
 
 .apple-segment-btn.active {
-    background: var(--apple-white);
+    background: var(--color-surface);
     box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
     font-weight: 600;
 }
 
-/* ---- Overlay / Modal ---- */
+/* ---- Legacy Overlay ---- */
 .apple-overlay {
     position: fixed;
     inset: 0;
@@ -647,121 +2037,73 @@ a:hover {
     padding: var(--space-lg);
 }
 
-.apple-modal {
-    display: flex;
-    visibility: hidden;
-    opacity: 0;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.4);
-    backdrop-filter: blur(4px);
-    -webkit-backdrop-filter: blur(4px);
-    z-index: 10000;
-    align-items: center;
-    justify-content: center;
-    transition: opacity var(--transition-normal), visibility var(--transition-normal);
-}
-
-.apple-modal.show {
-    visibility: visible;
-    opacity: 1;
-}
-
-.apple-modal-content {
-    background: var(--apple-white);
-    border-radius: var(--radius-lg);
-    width: 90%;
-    max-width: 500px;
-    max-height: 80vh;
-    display: flex;
-    flex-direction: column;
-    box-shadow: var(--shadow-lg);
-    transform: scale(0.95);
-    transition: transform var(--transition-normal);
-    overflow: hidden;
-}
-
-.apple-modal.show .apple-modal-content {
-    transform: scale(1);
-}
-
-.apple-modal-header {
-    padding: var(--space-lg);
-    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-shrink: 0;
-}
-
-.apple-modal-title {
-    margin: 0;
-    font-size: 1.25rem;
-    font-weight: 700;
-    color: var(--apple-black);
-}
-
-.apple-modal-close {
-    background: rgba(142, 142, 147, 0.15);
-    border: none;
-    width: 44px;
-    height: 44px;
-    border-radius: 22px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    color: var(--apple-gray);
-    transition: background var(--transition-fast);
-}
-
-.apple-modal-close:hover {
-    background: rgba(142, 142, 147, 0.25);
-}
-
-.apple-modal-body {
-    padding: var(--space-lg);
-    overflow-y: auto;
-    flex-grow: 1;
-}
-
+/* ---- Legacy Sheet ---- */
 .apple-sheet {
     position: fixed;
     left: 0;
     right: 0;
     bottom: 0;
     top: 0;
-    background: var(--apple-bg);
+    background: var(--color-bg);
     z-index: 10000;
     display: flex;
     flex-direction: column;
     padding: var(--space-lg);
     padding-bottom: env(safe-area-inset-bottom, var(--space-lg));
-    animation: sheetUp 0.35s var(--ease-apple);
-}
-
-@keyframes sheetUp {
-    from {
-        transform: translateY(100%);
-    }
-
-    to {
-        transform: translateY(0);
-    }
+    animation: sheetUp 0.35s var(--ease-out);
 }
 
 .apple-sheet-handle {
     width: 36px;
     height: 5px;
     border-radius: 3px;
-    background: var(--apple-gray-light);
+    background: rgba(0, 0, 0, 0.15);
     margin: 0 auto var(--space-md);
 }
 
-/* ---- Progress Dots (Mission) ---- */
+/* ---- Legacy Table ---- */
+.apple-table-wrap {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    border-radius: var(--radius-lg);
+    background: var(--color-surface);
+    box-shadow: var(--shadow-sm);
+}
+
+.apple-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+}
+
+.apple-table th {
+    padding: 12px var(--space-md);
+    font-weight: 600;
+    font-size: 0.75rem;
+    color: var(--color-text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    text-align: left;
+    border-bottom: 1px solid var(--color-border);
+    background: var(--color-bg);
+}
+
+.apple-table td {
+    padding: 12px var(--space-md);
+    border-bottom: 0.5px solid var(--color-border);
+    color: var(--color-text);
+}
+
+.apple-table tr:last-child td {
+    border-bottom: none;
+}
+
+.apple-table th:first-child,
+.apple-table td:first-child {
+    padding-left: var(--space-lg);
+}
+
+/* ---- Legacy Dots (Mission) ---- */
 .apple-dots {
     display: flex;
     justify-content: center;
@@ -778,28 +2120,28 @@ a:hover {
     justify-content: center;
     font-size: 0.8rem;
     font-weight: 700;
-    background: var(--apple-white);
-    border: 2px solid var(--apple-gray-light);
-    color: var(--apple-gray);
+    background: var(--color-surface);
+    border: 2px solid rgba(0, 0, 0, 0.12);
+    color: var(--color-text-secondary);
     transition: all var(--transition-fast);
 }
 
 .apple-dot.success {
-    background: var(--apple-blue);
-    border-color: var(--apple-blue);
-    color: white;
+    background: var(--color-blue);
+    border-color: var(--color-blue);
+    color: #ffffff;
 }
 
 .apple-dot.fail {
-    background: var(--apple-red);
-    border-color: var(--apple-red);
-    color: white;
+    background: var(--color-red);
+    border-color: var(--color-red);
+    color: #ffffff;
 }
 
 .apple-dot.current {
-    border-color: var(--apple-orange);
+    border-color: var(--color-orange);
     border-width: 3px;
-    color: var(--apple-orange);
+    color: var(--color-orange);
 }
 
 .apple-dot .sub {
@@ -808,57 +2150,16 @@ a:hover {
     opacity: 0.8;
 }
 
-/* ---- Grid ---- */
+/* ---- Legacy Grid ---- */
 .apple-grid {
     display: grid;
     gap: var(--space-md);
 }
 
-.apple-grid-2 {
-    grid-template-columns: repeat(2, 1fr);
-}
+.apple-grid-2 { grid-template-columns: repeat(2, 1fr); }
+.apple-grid-3 { grid-template-columns: repeat(3, 1fr); }
 
-.apple-grid-3 {
-    grid-template-columns: repeat(3, 1fr);
-}
-
-/* ---- Chips (player badges) ---- */
-.apple-chip {
-    display: inline-flex;
-    align-items: center;
-    padding: 5px 14px;
-    border-radius: var(--radius-pill);
-    font-size: 0.82rem;
-    font-weight: 500;
-    background: rgba(0, 0, 0, 0.04);
-    color: var(--apple-black);
-    border: 1px solid transparent;
-    transition: all var(--transition-fast);
-}
-
-.apple-chip.me {
-    background: var(--apple-blue-light);
-    color: var(--apple-blue);
-    font-weight: 600;
-    border-color: rgba(0, 113, 227, 0.2);
-}
-
-.apple-chip.captain {
-    border-color: var(--apple-orange);
-    background: rgba(255, 149, 0, 0.08);
-}
-
-.apple-chip.approve {
-    border-color: var(--apple-green);
-    background: rgba(52, 199, 89, 0.08);
-}
-
-.apple-chip.reject {
-    border-color: var(--apple-red);
-    background: rgba(255, 59, 48, 0.08);
-}
-
-/* ---- Role Cards ---- */
+/* ---- Legacy Role Cards ---- */
 .apple-role {
     text-align: center;
     padding: var(--space-lg);
@@ -868,60 +2169,28 @@ a:hover {
 }
 
 .apple-role.good {
-    background: rgba(0, 113, 227, 0.06);
-    color: var(--apple-blue);
+    background: var(--color-blue-bg);
+    color: var(--color-blue);
     border: 1px solid rgba(0, 113, 227, 0.12);
 }
 
 .apple-role.evil {
-    background: rgba(255, 59, 48, 0.06);
-    color: var(--apple-red);
+    background: var(--color-red-bg);
+    color: var(--color-red);
     border: 1px solid rgba(255, 59, 48, 0.12);
 }
 
-/* ---- Alert ---- */
-.apple-alert {
-    padding: 12px var(--space-md);
-    border-radius: var(--radius-md);
-    font-size: 0.85rem;
-    font-weight: 500;
-    text-align: center;
-}
-
-.apple-alert-info {
-    background: rgba(0, 113, 227, 0.06);
-    color: var(--apple-blue);
-}
-
-.apple-alert-success {
-    background: rgba(52, 199, 89, 0.08);
-    color: var(--apple-green);
-}
-
-.apple-alert-danger {
-    background: rgba(255, 59, 48, 0.06);
-    color: var(--apple-red);
-}
-
-.apple-alert-warning {
-    background: rgba(255, 149, 0, 0.06);
-    color: var(--apple-orange);
-}
-
-/* ---- Status Dot ---- */
-.apple-status-dot {
-    width: 8px;
-    height: 8px;
+/* ---- Legacy Spinner ---- */
+.apple-spinner {
+    width: 24px;
+    height: 24px;
+    border: 2.5px solid rgba(0, 0, 0, 0.12);
+    border-top-color: var(--color-blue);
     border-radius: 50%;
-    background: var(--apple-gray-light);
-    display: inline-block;
+    animation: spin 0.8s linear infinite;
 }
 
-.apple-status-dot.connected {
-    background: var(--apple-green);
-}
-
-/* ---- Float Button ---- */
+/* ---- Legacy FAB & Home btn ---- */
 .apple-fab {
     position: fixed;
     bottom: max(24px, env(safe-area-inset-bottom, 24px));
@@ -937,7 +2206,7 @@ a:hover {
     width: 44px;
     height: 44px;
     border-radius: 50%;
-    background: var(--apple-white);
+    background: var(--color-surface);
     box-shadow: var(--shadow-lg);
     display: flex;
     align-items: center;
@@ -945,18 +2214,18 @@ a:hover {
     z-index: 5000;
     text-decoration: none;
     font-size: 1.1rem;
-    color: var(--apple-gray);
+    color: var(--color-text-secondary);
     border: none;
     transition: all var(--transition-fast);
 }
 
 .apple-home-btn:hover {
     box-shadow: var(--shadow-lg);
-    color: var(--apple-blue);
+    color: var(--color-blue);
     text-decoration: none;
 }
 
-/* ---- Checkbox as Toggle Btn ---- */
+/* ---- Legacy Toggle Grid ---- */
 .apple-toggle-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -970,9 +2239,9 @@ a:hover {
     font-weight: 500;
     padding: 10px 4px;
     border-radius: var(--radius-md);
-    border: 1.5px solid var(--apple-gray-light);
-    background: var(--apple-white);
-    color: var(--apple-black);
+    border: 1.5px solid rgba(0, 0, 0, 0.12);
+    background: var(--color-surface);
+    color: var(--color-text);
     cursor: pointer;
     transition: all var(--transition-fast);
     overflow: hidden;
@@ -988,405 +2257,38 @@ input.apple-toggle-input {
     display: none;
 }
 
-input.apple-toggle-input:checked+.apple-toggle-btn {
-    background: var(--apple-blue);
-    border-color: var(--apple-blue);
-    color: white;
+input.apple-toggle-input:checked + .apple-toggle-btn {
+    background: var(--color-blue);
+    border-color: var(--color-blue);
+    color: #ffffff;
     font-weight: 600;
 }
 
-/* ---- Spinner ---- */
-.apple-spinner {
-    width: 24px;
-    height: 24px;
-    border: 2.5px solid var(--apple-gray-light);
-    border-top-color: var(--apple-blue);
+/* ---- Status Dot ---- */
+.apple-status-dot {
+    width: 8px;
+    height: 8px;
     border-radius: 50%;
-    animation: spin 0.8s linear infinite;
+    background: rgba(0, 0, 0, 0.12);
+    display: inline-block;
 }
 
-@keyframes spin {
-    to {
-        transform: rotate(360deg);
-    }
+.apple-status-dot.connected {
+    background: var(--color-green);
 }
 
-/* ---- Footer ---- */
-.apple-footer {
-    text-align: center;
-    padding: var(--space-xl) 0;
-    color: var(--apple-gray);
-    font-size: 0.75rem;
-}
-
-/* ---- Utility Classes ---- */
-.text-center {
-    text-align: center;
-}
-
-.text-right {
-    text-align: right;
-}
-
-.text-muted {
-    color: var(--apple-gray) !important;
-}
-
-.text-blue {
-    color: var(--apple-blue) !important;
-}
-
-.text-red {
-    color: var(--apple-red) !important;
-}
-
-.text-green {
-    color: var(--apple-green) !important;
-}
-
-.text-orange {
-    color: var(--apple-orange) !important;
-}
-
-.text-purple {
-    color: var(--apple-purple) !important;
-}
-
-.bg-blue-light {
-    background: var(--apple-blue-light) !important;
-}
-
-.bg-green-light {
-    background: var(--apple-green-light) !important;
-}
-
-.bg-red-light {
-    background: var(--apple-red-light) !important;
-}
-
-.bg-orange-light {
-    background: var(--apple-orange-light) !important;
-}
-
-.bg-purple-light {
-    background: var(--apple-purple-light) !important;
-}
-
-.text-sm {
-    font-size: 0.82rem;
-}
-
-.text-xs {
-    font-size: 0.72rem;
-}
-
-.text-lg {
-    font-size: 1.15rem;
-}
-
-.text-xl {
-    font-size: 1.4rem;
-}
-
-.fw-400 {
-    font-weight: 400;
-}
-
-.fw-500 {
-    font-weight: 500;
-}
-
-.fw-600 {
-    font-weight: 600;
-}
-
-.fw-700 {
-    font-weight: 700;
-}
-
-.fw-800 {
-    font-weight: 800;
-}
-
-.mt-xs {
-    margin-top: var(--space-xs);
-}
-
-.mt-sm {
-    margin-top: var(--space-sm);
-}
-
-.mt-md {
-    margin-top: var(--space-md);
-}
-
-.mt-lg {
-    margin-top: var(--space-lg);
-}
-
-.mt-xl {
-    margin-top: var(--space-xl);
-}
-
-.mb-xs {
-    margin-bottom: var(--space-xs);
-}
-
-.mb-sm {
-    margin-bottom: var(--space-sm);
-}
-
-.mb-md {
-    margin-bottom: var(--space-md);
-}
-
-.mb-lg {
-    margin-bottom: var(--space-lg);
-}
-
-.mb-xl {
-    margin-bottom: var(--space-xl);
-}
-
-.p-md {
-    padding: var(--space-md);
-}
-
-.p-lg {
-    padding: var(--space-lg);
-}
-
-.gap-sm {
-    gap: var(--space-sm);
-}
-
-.gap-md {
-    gap: var(--space-md);
-}
-
-.d-flex {
-    display: flex;
-}
-
-.flex-wrap {
-    flex-wrap: wrap;
-}
-
-.flex-col {
-    flex-direction: column;
-}
-
-.items-center {
-    align-items: center;
-}
-
-.justify-center {
-    justify-content: center;
-}
-
-.justify-between {
-    justify-content: space-between;
-}
-
-.flex-1 {
-    flex: 1;
-}
-
-.w-full {
-    width: 100%;
-}
-
-.hidden {
-    display: none !important;
-}
-
-.opacity-50 {
-    opacity: 0.5;
-}
-
-/* ---- Responsive: Tablet / Desktop ---- */
-@media (min-width: 768px) {
-    h1 {
-        font-size: 2.8rem;
-    }
-
-    h2 {
-        font-size: 2rem;
-    }
-
-    h3 {
-        font-size: 1.5rem;
-    }
-
-    .apple-container {
-        max-width: 720px;
-    }
-
-    .apple-section {
-        padding: var(--space-2xl) 0;
-    }
-
-    .apple-grid-2-md {
-        grid-template-columns: repeat(2, 1fr);
-    }
-}
-
-/* Safe area for notch devices */
-@supports (padding: max(0px)) {
-    body {
-        padding-left: env(safe-area-inset-left, 0px);
-        padding-right: env(safe-area-inset-right, 0px);
-    }
-}
-
-/* Remove number input arrows */
-input[type="number"]::-webkit-outer-spin-button,
-input[type="number"]::-webkit-inner-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
-}
-
-input[type="number"] {
-    -moz-appearance: textfield;
-    appearance: textfield;
-}
-
-/* v-cloak for Vue */
-[v-cloak] {
-    display: none !important;
-}
-
-/* Dark Mode Strategy */
-@media (prefers-color-scheme: dark) {
-    :root {
-        --apple-bg: #000000;
-        --apple-white: #1c1c1e;
-        --apple-black: #f5f5f7;
-        --apple-gray: #98989d;
-        --apple-gray-light: #3a3a3c;
-        --apple-gray-bg: #1c1c1e;
-        --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
-        --shadow-md: 0 4px 14px rgba(0, 0, 0, 0.4);
-        --shadow-lg: 0 12px 40px rgba(0, 0, 0, 0.5);
-        --shadow-card: 0 2px 12px rgba(0, 0, 0, 0.4);
-
-        --apple-blue-light: rgba(10, 132, 255, 0.15);
-        --apple-green-light: rgba(48, 209, 88, 0.15);
-        --apple-red-light: rgba(255, 69, 58, 0.15);
-        --apple-orange-light: rgba(255, 159, 10, 0.15);
-        --apple-purple-light: rgba(191, 90, 242, 0.15);
-        --apple-teal-light: rgba(100, 210, 255, 0.15);
-
-        --hero-gradient-cabo: linear-gradient(135deg, #55efc4, #81ecec, #74b9ff);
-    }
-}
-
-/* ---- Empty State ---- */
-.empty-state {
-    text-align: center;
-    padding: var(--space-2xl) var(--space-md);
-    color: var(--apple-gray);
-    font-size: 1rem;
-    font-weight: 500;
-}
-
-.empty-state .empty-icon {
-    font-size: 3rem;
-    margin-bottom: var(--space-md);
-    display: block;
-    filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1));
-}
-
-/* ---- Leaderboard & Cards common styling ---- */
-.lb-card,
-.player-card,
-.hist-lb-card {
-    background: var(--apple-white);
-    border-radius: var(--radius-lg);
-    box-shadow: var(--shadow-card);
-    overflow: hidden;
-    margin-bottom: var(--space-lg);
-    transition: all var(--transition-normal);
-}
-
-/* ---- Toast Component ---- */
-.apple-toast {
-    position: fixed;
-    top: max(20px, env(safe-area-inset-top, 20px));
-    left: 50%;
-    transform: translateX(-50%) translateY(-20px);
-    background: rgba(245, 245, 247, 0.9);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    padding: 12px 24px;
-    border-radius: 30px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-    z-index: 20001;
-    font-size: 0.95rem;
-    font-weight: 500;
-    color: var(--apple-black);
-    opacity: 0;
-    transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
-    pointer-events: none;
-    text-align: center;
-    white-space: nowrap;
-}
-
-@media (prefers-color-scheme: dark) {
-    .apple-toast {
-        background: rgba(44, 44, 46, 0.9);
-        color: var(--apple-white);
-    }
-}
-
-.apple-toast.show {
-    opacity: 1;
-    transform: translateX(-50%) translateY(0);
-}
-
-.apple-toast-error {
-    background: rgba(255, 59, 48, 0.9);
-    color: white;
-}
-
-.apple-toast-success {
-    background: rgba(52, 199, 89, 0.9);
-    color: white;
-}
-
-/* ---- Micro-interactions & Animations ---- */
-
-/* 3D Role Card Fly-in */
-@keyframes role-card-enter {
-    0% {
-        opacity: 0;
-        transform: translateY(-50px) scale(0.9) rotateX(-90deg);
-    }
-
-    50% {
-        opacity: 0.8;
-        transform: translateY(10px) scale(1.05) rotateX(10deg);
-    }
-
-    100% {
-        opacity: 1;
-        transform: translateY(0) scale(1) rotateX(0deg);
-    }
-}
-
+/* ---- Role Card Animation ---- */
 .role-card-anim {
-    /* preserve-3d enables 3d transforms on children if any, perspective gives depth */
     perspective: 1000px;
     transform-origin: center center;
     animation: role-card-enter 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
 }
 
-/* Seamless Phase Transitions */
+/* ---- Phase Backgrounds ---- */
 .bg-transition-slow {
     transition: background-color 1.5s ease-in-out, background 1.5s ease-in-out, color 1.5s ease-in-out !important;
 }
 
-/* Special atmospheric backgrounds for Avalon */
 .bg-phase-vote {
     background: #e3f2fd !important;
 }
@@ -1415,7 +2317,6 @@ input[type="number"] {
     justify-content: center;
 }
 
-/* Global simple text animation for SVG titles. Some SVG titles override this with inline styles. */
 .animated-text {
     fill: transparent;
     stroke: var(--theme-color, #f5f5f7);
@@ -1425,9 +2326,379 @@ input[type="number"] {
     animation: text-draw 2s ease-out forwards;
 }
 
-@keyframes text-draw {
-    100% {
-        stroke-dashoffset: 0;
-        fill: var(--theme-color, #f5f5f7);
+/* ---- Leaderboard Cards ---- */
+.lb-card,
+.player-card,
+.hist-lb-card {
+    background: var(--color-surface);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm);
+    overflow: hidden;
+    margin-bottom: var(--space-lg);
+    transition: all var(--transition-normal);
+}
+
+/* ---- History Trail ---- */
+.history-trail {
+    font-size: 0.72rem;
+    color: var(--color-text-secondary);
+    font-weight: 500;
+    line-height: 1.4;
+}
+
+.score-badge {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--color-blue);
+}
+
+/* ---- Game Title / En Name ---- */
+.game-title {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.game-title h3 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin: 0;
+    letter-spacing: -0.02em;
+}
+
+.game-title .en-name {
+    font-size: 0.85rem;
+    color: var(--color-text-secondary);
+    font-weight: 500;
+}
+
+/* ---- Game Header ---- */
+.game-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: var(--space-md);
+}
+
+.game-icon {
+    width: 56px;
+    height: 56px;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.8rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+    flex-shrink: 0;
+}
+
+/* ---- Game Description ---- */
+.game-description {
+    font-size: 0.92rem;
+    color: #48484a;
+    line-height: 1.62;
+    margin-bottom: var(--space-md);
+    font-weight: 400;
+    text-align: justify;
+    text-justify: inter-character;
+}
+
+.game-lab {
+    margin-top: 8px;
+    padding: 10px 14px;
+    background: var(--color-blue-bg);
+    border-radius: 10px;
+    font-size: 0.85rem;
+    color: var(--color-blue);
+    font-weight: 600;
+    line-height: 1.5;
+}
+
+/* ---- Game Stats ---- */
+.game-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: var(--space-md);
+    background: rgba(142, 142, 147, 0.04);
+    padding: 16px;
+    border-radius: 12px;
+}
+
+.stat-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.9rem;
+    color: var(--color-text);
+    font-weight: 500;
+}
+
+.stat-icon {
+    color: var(--color-text-secondary);
+    width: 16px;
+    text-align: center;
+}
+
+/* ---- Game Tags ---- */
+.game-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: auto;
+}
+
+/* ---- Game Grid ---- */
+.game-grid {
+    display: grid;
+    gap: var(--space-lg);
+}
+
+@media (max-width: 600px) {
+    .game-grid {
+        grid-template-columns: 1fr;
     }
+}
+
+/* ---- Rule Sections ---- */
+.rule-section {
+    margin-bottom: var(--space-lg);
+    max-width: 65ch;
+}
+
+.rule-section h4 {
+    margin: var(--space-md) 0 var(--space-sm);
+    font-size: 1.15rem;
+    color: var(--color-text);
+}
+
+.rule-section p {
+    margin: 0 0 12px;
+    color: #48484a;
+    font-size: 0.95rem;
+    line-height: 1.65;
+}
+
+.rule-section strong {
+    color: var(--color-text);
+    font-weight: 600;
+}
+
+.rule-section ul {
+    margin: 8px 0 16px;
+    padding-left: 1.2rem;
+}
+
+.rule-section li {
+    margin-bottom: 8px;
+    color: #48484a;
+    font-size: 0.95rem;
+    line-height: 1.6;
+}
+
+/* ---- Modal Tab Bar ---- */
+.modal-tab-bar {
+    display: flex;
+    gap: 8px;
+    margin: 0 0 12px;
+    padding: 4px;
+    border-radius: 12px;
+    background: rgba(142, 142, 147, 0.08);
+}
+
+.modal-tab-btn {
+    flex: 1;
+    min-height: 36px;
+    border: none;
+    border-radius: 10px;
+    background: transparent;
+    color: var(--color-text-secondary);
+    font-size: 0.92rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    font-family: var(--font-stack);
+}
+
+.modal-tab-btn:hover {
+    background: rgba(0, 0, 0, 0.04);
+    color: var(--color-text);
+}
+
+.modal-tab-btn.active {
+    background: var(--color-surface);
+    color: var(--color-blue);
+    box-shadow: var(--shadow-sm);
+}
+
+@media (prefers-color-scheme: dark) {
+    .modal-tab-btn:hover {
+        background: rgba(255, 255, 255, 0.06);
+    }
+}
+
+/* ---- Back Link ---- */
+.back-link-container {
+    text-align: center;
+    margin-top: var(--space-2xl);
+    margin-bottom: var(--space-xl);
+}
+
+.back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--color-blue);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 1.05rem;
+    padding: 12px 24px;
+    border-radius: 30px;
+    background: var(--color-blue-bg);
+    transition: all var(--transition-fast);
+}
+
+.back-link:hover {
+    background: rgba(0, 113, 227, 0.12);
+    transform: scale(1.02);
+}
+
+/* ---- CTA ---- */
+.cta {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--color-blue);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.cta i {
+    font-size: 1.2rem;
+    margin-top: 2px;
+}
+
+/* ---- Status Badge ---- */
+.status-badge {
+    font-size: 0.7rem;
+    padding: 2px 6px;
+    border-radius: 4px;
+    background: rgba(0, 0, 0, 0.06);
+    color: var(--color-text-secondary);
+    font-weight: 600;
+    vertical-align: middle;
+    margin-left: 8px;
+}
+
+/* ---- Nav Random Button ---- */
+.nav-random-btn {
+    background: transparent;
+    border: none;
+    color: var(--color-blue);
+    font-size: 0.9rem;
+    font-weight: 500;
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    padding: 0;
+    font-family: var(--font-stack);
+}
+
+.nav-random-btn:hover {
+    opacity: 0.8;
+}
+
+/* ---- Starter Result ---- */
+.starter-result {
+    background: linear-gradient(135deg, var(--color-blue-bg), var(--color-teal-bg));
+    border: 1px solid rgba(0, 113, 227, 0.2);
+    border-radius: var(--radius-md);
+    padding: 14px 16px;
+    margin-top: var(--space-md);
+    color: var(--color-text);
+    font-weight: 600;
+    letter-spacing: -0.01em;
+}
+
+/* ---- Desc ---- */
+.desc {
+    font-size: 0.9rem;
+    color: var(--color-text-secondary);
+    margin-bottom: 8px;
+    font-weight: 500;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.desc span {
+    font-weight: 600;
+    color: var(--color-text);
+    font-size: 0.85rem;
+}
+
+/* ---- Game Info ---- */
+.game-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    flex: 1;
+}
+
+/* ---- Link ---- */
+a.link {
+    color: var(--color-blue);
+    text-decoration: none;
+}
+
+/* ---- Filter Container ---- */
+.filter-container {
+    margin-bottom: var(--space-2xl);
+    width: 100%;
+}
+
+/* ==========================================
+   27. FORM & INPUT HELPERS
+   ========================================== */
+
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+input[type="number"] {
+    -moz-appearance: textfield;
+    appearance: textfield;
+}
+
+/* ==========================================
+   28. RESPONSIVE
+   ========================================== */
+
+@media (min-width: 768px) {
+    h1 { font-size: 2.25rem; }
+    h2 { font-size: 1.75rem; }
+    h3 { font-size: 1.35rem; }
+}
+
+/* ==========================================
+   29. SAFE AREA SUPPORT
+   ========================================== */
+
+@supports (padding: max(0px)) {
+    body {
+        padding-left: env(safe-area-inset-left, 0px);
+        padding-right: env(safe-area-inset-right, 0px);
+    }
+}
+
+/* ==========================================
+   30. VUE CLOAK
+   ========================================== */
+
+[v-cloak] {
+    display: none !important;
 }
