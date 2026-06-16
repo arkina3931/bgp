@@ -100,15 +100,23 @@ class PlayerList extends HTMLElement {
         if (this._players.length === 0) {
             listEl.innerHTML = '<p class="text-muted" style="font-size:0.9rem;text-align:center;">暂无玩家</p>';
         } else {
+            var self = this;
             listEl.innerHTML = this._players.map(function(name) {
                 return '<div class="list-item" style="padding:8px 0;">' +
                     '<div class="list-item-content">' +
                     '<div class="list-item-title">' + escHtml(name) + '</div>' +
                     '</div>' +
                     '<button class="btn btn-secondary btn-sm" style="padding:4px 12px;font-size:0.8rem;" ' +
-                    'onclick="this.closest(\'player-list\').removePlayer(\'' + escHtml(name) + '\')">移除</button>' +
+                    'data-name="' + escHtml(name) + '">移除</button>' +
                     '</div>';
             }).join('');
+
+            listEl.querySelectorAll('button').forEach(function(btn) {
+                btn.addEventListener('click', function() {
+                    var name = btn.getAttribute('data-name');
+                    self.removePlayer(name);
+                });
+            });
         }
 
         if (this._mode !== 'simple') {
@@ -138,12 +146,21 @@ class PlayerList extends HTMLElement {
                 var isSelected = self._selectedWinner === name;
                 return '<button class="btn ' + (isSelected ? 'btn-primary' : 'btn-secondary') + '" ' +
                     'style="margin:4px;" ' +
-                    'onclick="var pl=this.closest(\'player-list\');' +
-                    'if(pl._selectedWinner===\'' + escHtml(name) + '\')pl._selectedWinner=\'\';' +
-                    'else pl._selectedWinner=\'' + escHtml(name) + '\';' +
-                    'pl._updateWinnerSelect();">' +
+                    'data-name="' + escHtml(name) + '">' +
                     escHtml(name) + '</button>';
             }).join('');
+
+            el.querySelectorAll('button').forEach(function(btn) {
+                btn.addEventListener('click', function() {
+                    var name = btn.getAttribute('data-name');
+                    if (self._selectedWinner === name) {
+                        self._selectedWinner = '';
+                    } else {
+                        self._selectedWinner = name;
+                    }
+                    self._updateWinnerSelect();
+                });
+            });
         }
     }
 
