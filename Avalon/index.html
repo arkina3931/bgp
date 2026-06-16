@@ -839,7 +839,7 @@ window.avalon_joinGame = async function() {
 };
 
 window.avalon_resetGame = async function() {
-    if (!confirm('确定重置并更换人数?')) return;
+    if (!await showConfirm('确定重置并更换人数?')) return;
     try {
         await api('/avalon/clear_game', { method: 'POST' });
         state.step = 1;
@@ -853,7 +853,7 @@ window.avalon_resetGame = async function() {
 
 window.avalon_proposeTeam = async function() {
     if (state.selectedTeam.length !== state.requiredTeamSize) {
-        return alert('本轮需要 ' + state.requiredTeamSize + ' 人');
+        return showToast('本轮需要 ' + state.requiredTeamSize + ' 人', 'error');
     }
     try {
         await api('/avalon/propose_team', {
@@ -893,7 +893,7 @@ window.avalon_voteMission = async function(action) {
 };
 
 window.avalon_assassinate = async function(target) {
-    if (!confirm('确定刺杀 ' + target + '?')) return;
+    if (!await showConfirm('确定刺杀 ' + target + '?')) return;
     try {
         await api('/avalon/assassinate', { method: 'POST', body: { target: target } });
     } catch (e) {
@@ -902,7 +902,7 @@ window.avalon_assassinate = async function(target) {
 };
 
 window.avalon_inspectPlayer = async function(target) {
-    if (!confirm('确定查验 ' + target + '?')) return;
+    if (!await showConfirm('确定查验 ' + target + '?')) return;
     try {
         var res = await api('/avalon/lady_of_lake', { method: 'POST', body: { target: target } });
         state.ladyResultData = { target: target, alignment: res.alignment };
@@ -923,7 +923,7 @@ window.avalon_assignExcalibur = async function(target) {
 };
 
 window.avalon_useExcalibur = async function(target) {
-    if (target && !confirm('确定对 ' + target + ' 使用王者之剑？将替换其投票并查看结果')) return;
+    if (target && !await showConfirm('确定对 ' + target + ' 使用王者之剑？将替换其投票并查看结果')) return;
     try {
         var res = await api('/avalon/use_excalibur', { method: 'POST', body: { target: target } });
         if (res.excalibur_result) {
@@ -937,7 +937,7 @@ window.avalon_useExcalibur = async function(target) {
 };
 
 window.avalon_quickRestart = async function() {
-    if (!confirm('确定重开？所有玩家将自动加入新局')) return;
+    if (!await showConfirm('确定重开？所有玩家将自动加入新局')) return;
     try {
         await api('/avalon/reset_game', {
             method: 'POST',
@@ -958,7 +958,7 @@ window.avalon_quickRestart = async function() {
 };
 
 window.avalon_endGame = async function() {
-    if (!confirm('确定结束当前游戏？')) return;
+    if (!await showConfirm('确定结束当前游戏？')) return;
     try {
         await api('/avalon/end_game', { method: 'POST' });
     } catch (e) {
@@ -1369,8 +1369,8 @@ function renderStep3() {
             var sname = snapshotKeys[sk];
             var svote = state.lastVoteSnapshot[sname];
             var sclass = svote === 'approve' ? 'approve' : 'reject';
-            var sicon = svote === 'approve' ? 'fa-check text-green' : 'fa-times text-red';
-            html += '<span class="chip ' + sclass + '">' + h_esc(sname) + ' <i class="fas ' + sicon + '" style="margin-left:4px;"></i></span>';
+            var sicon = svote === 'approve' ? 'ph-bold ph-check text-green' : 'ph-bold ph-x text-red';
+            html += '<span class="chip ' + sclass + '">' + h_esc(sname) + ' <i class="' + sicon + '" style="margin-left:4px;"></i></span>';
         }
         html += '</div></div>';
     }
@@ -1387,7 +1387,7 @@ function renderStep3() {
             var tv = state.teamVotes[vp];
             var vclass = tv === 'approve' ? 'approve' : (tv === 'reject' ? 'reject' : '');
             var vstyle = !tv ? 'opacity:0.4' : '';
-            var vicon = tv ? (tv === 'approve' ? '<i class="fas fa-check" style="margin-left:4px;"></i>' : '<i class="fas fa-times" style="margin-left:4px;"></i>') : '';
+            var vicon = tv ? (tv === 'approve' ? '<i class="ph-bold ph-check" style="margin-left:4px;"></i>' : '<i class="ph-bold ph-x" style="margin-left:4px;"></i>') : '';
             html += '<span class="chip ' + vclass + '" style="' + vstyle + '">' + h_esc(vp) + vicon + '</span>';
         }
         html += '</div>';
