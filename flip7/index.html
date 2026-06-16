@@ -1,6 +1,12 @@
 {% extends "base.html" %}
 
 {% block title %}Flip 7 - 刺激翻牌 · 见好就收{% endblock %}
+{% block body_class %}no-tab-bar{% endblock %}
+
+{% block nav_left %}<a href="/" class="top-nav-back">← 返回</a>{% endblock %}
+{% block nav_title %}<i class="ph-fill ph-cards text-purple" style="margin-right: 4px;"></i> 7连翻{% endblock %}
+{% block nav_right %}<button class="btn btn-sm btn-secondary" style="min-height: 32px;" onclick="resetGame()">重置</button>{% endblock %}
+{% block show_tab_bar %}{% endblock %}
 
 {% block extra_head %}
 <style>
@@ -77,88 +83,84 @@
         border-color: var(--apple-blue);
     }
 
-    /* Scoring section */
-    .round-player-block {
-        margin-bottom: var(--space-xl);
-        padding-bottom: var(--space-lg);
-        border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-    }
-
-    .round-player-block:last-child {
-        border-bottom: none;
-        padding-bottom: 0;
-        margin-bottom: 0;
-    }
-
-    .round-player-block h3 {
-        margin-bottom: 12px;
-        font-size: 1.1rem;
-        font-weight: 600;
-        color: var(--apple-black);
-    }
-
-    .card-selector {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
-        gap: 8px;
-    }
-
-    .card-btn {
-        background: rgba(0, 0, 0, 0.03);
-        border: 2px solid transparent;
-        border-radius: 12px;
-        padding: 8px 0;
-        font-size: 1.1rem;
-        font-weight: 700;
-        color: var(--apple-black);
-        cursor: pointer;
-        transition: all 0.2s;
-        text-align: center;
-        user-select: none;
-        position: relative;
-    }
-
-    .card-btn[data-num="true"].selected {
-        background: rgba(0, 113, 227, 0.1);
-        border-color: var(--apple-blue);
-        color: var(--apple-blue);
-    }
-
-    .card-btn[data-type="mod"].selected {
-        background: rgba(52, 199, 89, 0.1);
-        border-color: var(--apple-green);
-        color: var(--apple-green);
-    }
-
-    .card-btn[data-type="mult"].selected {
-        background: rgba(175, 82, 222, 0.1);
-        border-color: var(--apple-purple);
-        color: var(--apple-purple);
-    }
-
-    .card-btn .count-badge {
-        position: absolute;
-        top: -6px;
-        right: -6px;
-        background: var(--apple-red);
+    /* FAB */
+    .fab {
+        position: fixed;
+        bottom: calc(24px + env(safe-area-inset-bottom, 0px));
+        right: 24px;
+        width: 56px;
+        height: 56px;
+        border-radius: 28px;
+        background: var(--apple-purple);
         color: white;
-        font-size: 0.75rem;
-        font-weight: 700;
-        width: 20px;
-        height: 20px;
-        border-radius: 10px;
+        border: none;
+        box-shadow: 0 6px 20px rgba(175, 82, 222, 0.4);
         display: flex;
         align-items: center;
         justify-content: center;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-        display: none;
+        cursor: pointer;
+        z-index: 900;
+        font-size: 1.5rem;
+        transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+        -webkit-tap-highlight-color: transparent;
     }
 
-    .card-btn.multi .count-badge {
+    .fab:active {
+        transform: scale(0.92);
+        box-shadow: 0 4px 12px rgba(175, 82, 222, 0.3);
+    }
+
+    /* Scoring Overlay */
+    .scoring-overlay {
+        position: fixed;
+        inset: 0;
+        z-index: 1000;
+        background: var(--color-bg);
         display: flex;
+        flex-direction: column;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.3s cubic-bezier(0.25, 1, 0.5, 1);
     }
 
-    /* ---- Player Cards (Accordion) ---- */
+    .scoring-overlay.show {
+        opacity: 1;
+        pointer-events: auto;
+    }
+
+    .scoring-overlay-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: var(--space-md) var(--space-lg);
+        padding-top: calc(var(--space-md) + env(safe-area-inset-top, 0px));
+        background: var(--color-surface);
+        border-bottom: 1px solid var(--color-border);
+        flex-shrink: 0;
+    }
+
+    .scoring-overlay-header h3 {
+        margin: 0;
+        font-size: 1.15rem;
+        font-weight: 700;
+    }
+
+    .scoring-overlay-body {
+        flex: 1;
+        overflow-y: auto;
+        padding: var(--space-md);
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .scoring-overlay-footer {
+        padding: var(--space-md) var(--space-lg);
+        padding-bottom: calc(var(--space-md) + env(safe-area-inset-bottom, 0px));
+        background: var(--color-surface);
+        border-top: 1px solid var(--color-border);
+        flex-shrink: 0;
+    }
+
+    /* Player Cards (Accordion) */
     .player-section {
         margin-bottom: var(--space-md);
     }
@@ -250,47 +252,225 @@
     }
 
     @keyframes slideDown {
-        from {
-            opacity: 0;
-            transform: translateY(-10px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }    /* Modals */
-    .game-over-modal .apple-modal-content {
+        from { opacity: 0; transform: translateY(-10px); }
+        to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Card Selector */
+    .card-selector {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
+        gap: 8px;
+        margin-bottom: var(--space-sm);
+    }
+
+    .card-btn {
+        background: rgba(0, 0, 0, 0.03);
+        border: 2px solid transparent;
+        border-radius: 12px;
+        padding: 8px 0;
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: var(--apple-black);
+        cursor: pointer;
+        transition: all 0.2s;
         text-align: center;
-        padding: 40px 20px;
+        user-select: none;
+        position: relative;
+    }
+
+    .card-btn[data-num="true"].selected {
+        background: rgba(0, 113, 227, 0.1);
+        border-color: var(--apple-blue);
+        color: var(--apple-blue);
+    }
+
+    .card-btn[data-type="mod"].selected {
+        background: rgba(52, 199, 89, 0.1);
+        border-color: var(--apple-green);
+        color: var(--apple-green);
+    }
+
+    .card-btn[data-type="mult"].selected {
+        background: rgba(175, 82, 222, 0.1);
+        border-color: var(--apple-purple);
+        color: var(--apple-purple);
+    }
+
+    .card-btn .count-badge {
+        position: absolute;
+        top: -6px;
+        right: -6px;
+        background: var(--apple-red);
+        color: white;
+        font-size: 0.75rem;
+        font-weight: 700;
+        width: 20px;
+        height: 20px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        display: none;
+    }
+
+    .card-btn.multi .count-badge {
+        display: flex;
+    }
+
+    /* Bust toggle */
+    .bust-toggle {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 14px;
+        margin-bottom: var(--space-md);
+        background: rgba(255, 59, 48, 0.04);
+        border: 1.5px solid rgba(255, 59, 48, 0.15);
+        border-radius: 12px;
+        cursor: pointer;
+        font-size: 0.9rem;
+        font-weight: 700;
+        color: var(--apple-red);
+        transition: all 0.2s;
+        user-select: none;
+    }
+
+    .bust-toggle.active {
+        background: rgba(255, 59, 48, 0.12);
+        border-color: var(--apple-red);
+    }
+
+    .bust-toggle .bust-icon {
+        font-size: 1.2rem;
+    }
+
+    /* Section labels */
+    .card-type-label {
+        font-size: 0.75rem;
+        font-weight: 700;
+        color: var(--apple-gray);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        margin-bottom: 6px;
+        margin-top: var(--space-md);
+    }
+
+    .card-type-label:first-child {
+        margin-top: 0;
+    }
+
+    /* Game Over Modal */
+    .game-over-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.4);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        z-index: 2000;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: var(--space-lg);
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+    }
+
+    .game-over-overlay.show {
+        opacity: 1;
+        pointer-events: auto;
+    }
+
+    .game-over-modal {
+        background: var(--color-surface);
+        border-radius: var(--radius-xl);
+        box-shadow: var(--shadow-lg);
+        width: 100%;
+        max-width: 380px;
+        overflow: hidden;
+        text-align: center;
+        transform: scale(0.95) translateY(20px);
+        transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+    }
+
+    .game-over-overlay.show .game-over-modal {
+        transform: scale(1) translateY(0);
+    }
+
+    .game-over-modal .modal-body {
+        padding: 40px 24px 24px;
     }
 
     .winner-icon {
         font-size: 4rem;
-        margin-bottom: 20px;
-        display: inline-block;
+        margin-bottom: 16px;
+        display: block;
     }
 
     .winner-name {
-        font-size: 2rem;
+        font-size: 1.8rem;
         font-weight: 800;
         color: var(--apple-black);
-        margin-bottom: 12px;
+        margin-bottom: 8px;
     }
 
     .winner-score {
-        font-size: 1.2rem;
+        font-size: 1.1rem;
         color: var(--apple-gray);
         font-weight: 500;
+        margin-bottom: 8px;
+    }
+
+    .final-scores {
+        margin-top: 20px;
+        padding-top: 16px;
+        border-top: 1px solid var(--color-border);
+        text-align: left;
+    }
+
+    .final-scores .final-score-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 6px 0;
+        font-size: 0.95rem;
+    }
+
+    .final-scores .final-score-row .fs-name {
+        font-weight: 600;
+        color: var(--apple-black);
+    }
+
+    .final-scores .final-score-row .fs-score {
+        font-weight: 700;
+        color: var(--apple-blue);
+    }
+
+    .modal-actions {
+        display: flex;
+        gap: var(--space-md);
+        padding: 0 24px 24px;
+    }
+
+    .modal-actions .btn {
+        flex: 1;
+        font-weight: 600;
+        padding: 14px 0;
+        border-radius: 20px;
+        font-size: 1.05rem;
+    }
+
+    /* Round info badge */
+    .round-info {
+        font-size: 0.8rem;
+        color: var(--apple-gray);
+        font-weight: 600;
+        text-align: center;
+        margin-bottom: var(--space-md);
     }
 </style>
-{% endblock %}
-
-{% block nav_title %}
-<i class="ph-fill ph-cards text-purple" style="margin-right: 4px;"></i> 7连翻
-{% endblock %}
-
-{% block nav_right %}
-<button class="apple-btn apple-btn-sm apple-btn-secondary" style="min-height: 32px;" onclick="resetGame()">重置</button>
 {% endblock %}
 
 {% block content %}
@@ -298,79 +478,60 @@
     {% include 'header.svg' %}
 </div>
 
-<div id="tab-play" class="tab-pane active">
+<div class="card" id="setup-section">
+    <div class="section-title"><i class="ph-bold ph-users" style="color: var(--apple-blue);"></i> 玩家设置</div>
+    <ul class="player-list" id="player-list-ui"></ul>
+    <form class="add-player-form" onsubmit="addPlayer(event)">
+        <input type="text" id="new-player-name" placeholder="输入玩家名字..." autocomplete="off" required>
+        <button type="submit" class="btn btn-primary" style="padding: 0 20px;">增加</button>
+    </form>
+</div>
 
-    <div class="apple-card" id="setup-section">
-        <div class="section-title"><i class="ph-bold ph-users" style="color: var(--apple-blue);"></i> 玩家设置</div>
-        <ul class="player-list" id="player-list-ui"></ul>
-        <form class="add-player-form" onsubmit="addPlayer(event)">
-            <input type="text" id="new-player-name" placeholder="输入玩家名字..." autocomplete="off" required>
-            <button type="submit" class="apple-btn apple-btn-primary" style="padding: 0 20px;">增加</button>
-        </form>
-        <div style="margin-top: 16px; border-top: 1px solid rgba(0,0,0,0.05); padding-top: 16px;">
-            <button onclick="resetGame()" class="apple-btn"
-                style="color: var(--apple-red); border-color: var(--apple-red); width: 100%;">重新开始游戏</button>
+<!-- Leaderboard -->
+<div class="card" id="leaderboard-card">
+    <div class="section-title"><i class="ph-bold ph-trophy" style="color: var(--apple-orange);"></i> 历史排行榜</div>
+    <div id="leaderboard-container">
+        <div class="empty-state">
+            <span class="empty-state-icon">🏆</span>
+            <p>加载中...</p>
         </div>
     </div>
+</div>
 
-    <div class="apple-card" id="round-section" style="display: none;">
-        <div class="section-title"><i class="ph-fill ph-cards" style="color: var(--apple-purple);"></i> 本回合结算
-        </div>
-        <div id="round-players-container"></div>
-        <button onclick="submitRound()" class="apple-btn apple-btn-success apple-btn-block apple-btn-lg"
-            style="margin-top: var(--space-lg);">
-            结算回合分数
+<!-- FAB Scoring Button -->
+<button class="fab" id="fabScoring" style="display: none;" onclick="openScoring()">
+    <i class="ph-bold ph-pencil-simple"></i>
+</button>
+
+<!-- Scoring Overlay -->
+<div id="scoringOverlay" class="scoring-overlay">
+    <div class="scoring-overlay-header">
+        <button class="btn btn-sm btn-secondary" onclick="closeScoring()">✕ 取消</button>
+        <h3>第 <span id="roundNumDisplay">1</span> 回合计分</h3>
+        <div style="width: 44px;"></div>
+    </div>
+    <div class="scoring-overlay-body" id="scoringBody">
+    </div>
+    <div class="scoring-overlay-footer">
+        <button onclick="submitRound()" class="btn btn-primary btn-block btn-lg">
+            <i class="ph-bold ph-check-circle" style="margin-right: 6px;"></i> 结算回合分数
         </button>
     </div>
-
 </div>
 
-<div id="tab-leaderboard" class="tab-pane">
-    <div id="inline-leaderboard-section">
-        <div class="section-title" style="margin-top: var(--space-xl); margin-bottom: var(--space-md);">🏆 历史排行榜
+<!-- Game Over Overlay -->
+<div id="gameOverOverlay" class="game-over-overlay">
+    <div class="game-over-modal">
+        <div class="modal-body">
+            <span class="winner-icon" id="gameOverEmoji">🏆</span>
+            <h2 style="font-size: 1.4rem; color: var(--apple-black); margin-bottom: 12px;">游戏结束！</h2>
+            <div class="winner-name" id="winnerNameUi"></div>
+            <div class="winner-score" id="winnerScoreUi"></div>
+            <div class="final-scores" id="finalScoresList"></div>
         </div>
-        <div id="histLeaderboard">
-            <div class="apple-list mb-xl">
-                <div class="empty-state">
-                    <span class="empty-icon">🏆</span>
-                    暂无历史记录
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-</div>
-
-<!-- Game Over Modal -->
-<div id="gameOverModal" class="apple-modal" style="z-index: 2000;">
-    <div class="apple-modal-content" style="max-width: 400px; margin: auto; border-radius: 20px;">
-        <div style="text-align: center; padding: 20px;">
-            <div class="winner-icon">🏆</div>
-            <h2 style="font-size: 1.5rem; color: var(--apple-black); margin-bottom: 8px;">游戏结束！</h2>
-            <div class="winner-name" id="winner-name-ui"></div>
-            <div class="winner-score" id="winner-score-ui"></div>
-
-            <button onclick="closeGameOver()" class="apple-btn apple-btn-primary apple-btn-lg apple-btn-block"
-                style="margin-top: 30px;">
-                太棒了
-            </button>
-        </div>
-    </div>
-</div>
-
-<!-- Reset Confirm Modal -->
-<div id="resetConfirmModal" class="apple-modal" style="z-index: 2000;">
-    <div class="apple-modal-content" style="max-width: 320px; margin: auto; border-radius: 20px;">
-        <div style="text-align: center; padding: 20px;">
-            <div class="winner-icon" style="font-size: 3rem; margin-bottom: 12px;">⚠️</div>
-            <h2 style="font-size: 1.3rem; color: var(--apple-black); margin-bottom: 8px;">重新开始？</h2>
-            <div style="color: var(--apple-gray); margin-bottom: 24px; font-size: 0.95rem;">确定要重新开始吗？分数将清零。</div>
-
-            <div style="display: flex; gap: 12px; margin-top: 20px;">
-                <button onclick="closeResetConfirm()" class="apple-btn apple-btn-secondary" style="flex: 1;">取消</button>
-                <button onclick="executeResetGame()" class="apple-btn apple-btn-danger" style="flex: 1;">确定</button>
-            </div>
+        <div class="modal-actions">
+            <button onclick="closeGameOver()" class="btn btn-primary">太棒了</button>
+            <button onclick="newGameAfterOver()" class="btn btn-secondary">新游戏</button>
         </div>
     </div>
 </div>
@@ -378,236 +539,354 @@
 
 {% block extra_body %}
 <script>
-    const API_BASE = '/flip7/api';
-    let players = [];
-    let rankedPlayers = [];
-    // round state: name -> array of cards (strings)
-    let roundState = {};
+    var API_BASE = '/flip7/api';
 
-    const CARDS = [{
-        v: '0',
-        type: 'num'
-    }, {
-        v: '1',
-        type: 'num'
-    }, {
-        v: '2',
-        type: 'num'
-    }, {
-        v: '3',
-        type: 'num'
-    },
-    {
-        v: '4',
-        type: 'num'
-    }, {
-        v: '5',
-        type: 'num'
-    }, {
-        v: '6',
-        type: 'num'
-    }, {
-        v: '7',
-        type: 'num'
-    },
-    {
-        v: '8',
-        type: 'num'
-    }, {
-        v: '9',
-        type: 'num'
-    }, {
-        v: '10',
-        type: 'num'
-    }, {
-        v: '11',
-        type: 'num'
-    }, {
-        v: '12',
-        type: 'num'
-    },
-    {
-        v: '+2',
-        type: 'mod'
-    }, {
-        v: '+3',
-        type: 'mod'
-    }, {
-        v: '+4',
-        type: 'mod'
-    }, {
-        v: '+5',
-        type: 'mod'
-    },
-    {
-        v: '+6',
-        type: 'mod'
-    }, {
-        v: '+7',
-        type: 'mod'
-    }, {
-        v: '+8',
-        type: 'mod'
-    }, {
-        v: '+9',
-        type: 'mod'
-    }, {
-        v: '+10',
-        type: 'mod'
-    },
-    {
-        v: 'x2',
-        type: 'mult'
-    }
-    ];
+    // ---- Game State ----
+    var players = [];
+    var rankedPlayers = [];
+    var roundState = {};       // { name: [card1, card2, ...] }
+    var bustPlayers = {};      // { name: boolean }
+    var expandedPlayers = {};  // { name: boolean } for accordion
+    var roundCount = 0;
+    var gameStatus = 'active'; // 'active' | 'ended'
+
+    // ---- Card Definitions ----
+    var CARD_NUMBERS = ['0','1','2','3','4','5','6','7','8','9','10','11','12'];
+    var CARD_MODIFIERS = ['+2','+3','+4','+5','+6','+7','+8','+9','+10'];
+    var CARD_SPECIAL = ['x2'];
+
+    var AVATAR_COLORS = ['#e17055', '#0984e3', '#00b894', '#6c5ce7', '#fdcb6e', '#e84393', '#00cec9', '#d63031'];
+
+    // ===== API Functions =====
 
     async function fetchStatus() {
-        const res = await fetch(`${API_BASE}/status`);
-        const data = await res.json();
-        rankedPlayers = data.ranked;
-        players = data.players;
+        try {
+            var data = await api(API_BASE + '/status');
+            players = data.players || [];
+            rankedPlayers = data.ranked || [];
+            roundCount = data.round_count || 0;
+            gameStatus = (data.status === 'finished' || data.game_status === 'ended') ? 'ended' : 'active';
 
-        if (data.status === 'finished') {
-            document.getElementById('round-section').style.display = 'none';
-            renderPlayers(true);
-        } else {
-            if (players.length > 0) {
-                document.getElementById('round-section').style.display = 'block';
+            if (gameStatus === 'ended') {
+                document.getElementById('fabScoring').style.display = 'none';
+                renderPlayers(true);
             } else {
-                document.getElementById('round-section').style.display = 'none';
+                document.getElementById('fabScoring').style.display = players.length > 0 ? 'flex' : 'none';
+                renderPlayers(false);
             }
-            renderPlayers(false);
-            renderRoundUI();
+        } catch (e) {
+            showToast('加载状态失败: ' + e.message, 'error');
         }
     }
+
+    async function addPlayer(e) {
+        e.preventDefault();
+        var input = document.getElementById('new-player-name');
+        var name = input.value.trim();
+        if (!name) return;
+        try {
+            await api(API_BASE + '/add_player', { method: 'POST', body: { name: name } });
+            input.value = '';
+            await fetchStatus();
+            showToast(name + ' 已加入', 'success');
+        } catch (e) {
+            showToast('添加失败: ' + e.message, 'error');
+        }
+    }
+
+    async function removePlayer(name) {
+        try {
+            await api(API_BASE + '/remove_player', { method: 'POST', body: { name: name } });
+            delete roundState[name];
+            delete bustPlayers[name];
+            delete expandedPlayers[name];
+            await fetchStatus();
+            showToast(name + ' 已移除');
+        } catch (e) {
+            showToast('移除失败: ' + e.message, 'error');
+        }
+    }
+
+    async function resetGame() {
+        var confirmed = await showConfirm('确定重置？当前游戏数据将清除。', '重置', '取消');
+        if (!confirmed) return;
+        try {
+            await api(API_BASE + '/reset', { method: 'POST' });
+            roundState = {};
+            bustPlayers = {};
+            expandedPlayers = {};
+            roundCount = 0;
+            gameStatus = 'active';
+            closeScoring();
+            document.getElementById('gameOverOverlay').classList.remove('show');
+            await fetchStatus();
+            await fetchLeaderboard();
+            showToast('游戏已重置');
+        } catch (e) {
+            showToast('重置失败: ' + e.message, 'error');
+        }
+    }
+
+    async function submitRound() {
+        var payload = {
+            players: []
+        };
+        for (var i = 0; i < players.length; i++) {
+            var pName = players[i].name;
+            payload.players.push({
+                name: pName,
+                cards: roundState[pName] || [],
+                bust: bustPlayers[pName] || false
+            });
+        }
+
+        try {
+            var data = await api(API_BASE + '/submit_round', { method: 'POST', body: payload });
+
+            if (data.status === 'game_over') {
+                showGameOver(data.winner, data);
+            } else {
+                if (data.round_scores) {
+                    var msg = '本轮得分: ';
+                    var parts = [];
+                    for (var key in data.round_scores) {
+                        if (data.round_scores.hasOwnProperty(key)) {
+                            parts.push(key + ': ' + data.round_scores[key] + '分');
+                        }
+                    }
+                    showToast(msg + parts.join(', '), 'success');
+                }
+            }
+
+            // Clear round state
+            roundState = {};
+            bustPlayers = {};
+            closeScoring();
+            await fetchStatus();
+            await fetchLeaderboard();
+        } catch (e) {
+            showToast('提交失败: ' + e.message, 'error');
+        }
+    }
+
+    async function fetchLeaderboard() {
+        var container = document.getElementById('leaderboard-container');
+        container.innerHTML = '<div class="empty-state"><span class="empty-state-icon">🏆</span><p>加载中...</p></div>';
+
+        try {
+            var data = await api(API_BASE + '/leaderboard');
+            var lb = data.leaderboard || data || [];
+            renderLeaderboard(container, lb, {
+                showAvgScore: true,
+                avgScoreLabel: '均分',
+                emptyIcon: '👻',
+                emptyText: '还没人玩过呢，快去开一局！'
+            });
+        } catch (e) {
+            container.innerHTML = '<div class="empty-state"><span class="empty-state-icon">⚠️</span><p>加载失败</p></div>';
+        }
+    }
+
+    // ===== Rendering =====
 
     function renderPlayers(isFinished) {
-        const ul = document.getElementById('player-list-ui');
+        var ul = document.getElementById('player-list-ui');
         ul.innerHTML = '';
-        rankedPlayers.forEach((p, idx) => {
-            const li = document.createElement('li');
+
+        if (!rankedPlayers || rankedPlayers.length === 0) {
+            var emptyLi = document.createElement('li');
+            emptyLi.style.cssText = 'text-align:center;color:var(--apple-gray);padding:20px;font-size:0.95rem;';
+            emptyLi.textContent = '添加玩家开始游戏';
+            ul.appendChild(emptyLi);
+            return;
+        }
+
+        for (var i = 0; i < rankedPlayers.length; i++) {
+            var p = rankedPlayers[i];
+            var li = document.createElement('li');
             li.className = 'player-item';
-            let rankStr = p.total_score >= 200 ? '👑 ' : `${p.rank}. `;
-            li.innerHTML = `
-                    <div style="display: flex; align-items: center; gap: 8px;">
-                        <span style="color: var(--apple-gray); font-weight: 700; width: 24px; text-align: center;">${p.rank}</span>
-                        <div class="name">${p.name}</div>
-                    </div>
-                    <div style="display: flex; align-items: center; gap: 12px;">
-                        <span class="score">${p.total_score} 分</span>
-                        ${!isFinished ? `<button class="remove-btn" onclick="removePlayer('${p.name}')"><i class="ph-bold ph-trash"></i></button>` : ''}
-                    </div>
-                `;
+
+            var rankDisplay = p.rank || (i + 1);
+            var rankIcon = rankDisplay === 1 ? '👑 ' : '';
+
+            var leftDiv = document.createElement('div');
+            leftDiv.style.cssText = 'display: flex; align-items: center; gap: 8px;';
+            leftDiv.innerHTML =
+                '<span style="color: var(--apple-gray); font-weight: 700; width: 24px; text-align: center;">' + rankDisplay + '</span>' +
+                '<span class="name">' + escHtml(p.name) + '</span>';
+
+            var rightDiv = document.createElement('div');
+            rightDiv.style.cssText = 'display: flex; align-items: center; gap: 12px;';
+            rightDiv.innerHTML = '<span class="score">' + escHtml(String(p.total_score)) + ' 分</span>';
+
+            if (!isFinished) {
+                var rmBtn = document.createElement('button');
+                rmBtn.className = 'remove-btn';
+                rmBtn.innerHTML = '<i class="ph-bold ph-trash"></i>';
+                rmBtn.onclick = (function(playerName) {
+                    return function() { removePlayer(playerName); };
+                })(p.name);
+                rightDiv.appendChild(rmBtn);
+            }
+
+            li.appendChild(leftDiv);
+            li.appendChild(rightDiv);
             ul.appendChild(li);
-        });
-    }
-
-    let expandedPlayers = {};
-
-    function togglePlayerRound(name) {
-        expandedPlayers[name] = !expandedPlayers[name];
-        const chevron = document.getElementById(`chevron-${name}`);
-        const body = document.getElementById(`body-${name}`);
-        if (expandedPlayers[name]) {
-            chevron.classList.add('open');
-            body.classList.add('open');
-        } else {
-            chevron.classList.remove('open');
-            body.classList.remove('open');
         }
     }
 
-    function renderRoundUI() {
-        const container = document.getElementById('round-players-container');
+    function renderScoringSheet() {
+        var container = document.getElementById('scoringBody');
         container.innerHTML = '';
 
-        // Ensure roundState tracks all current players
-        let newRoundState = {};
-        
-        const section = document.createElement('div');
+        if (!players || players.length === 0) {
+            container.innerHTML = '<div class="empty-state"><span class="empty-state-icon">👥</span><p>请先添加玩家</p></div>';
+            return;
+        }
+
+        document.getElementById('roundNumDisplay').textContent = roundCount + 1;
+
+        // Initialize round state for new players
+        for (var i = 0; i < players.length; i++) {
+            var pName = players[i].name;
+            if (!roundState[pName]) roundState[pName] = [];
+            if (bustPlayers[pName] === undefined) bustPlayers[pName] = false;
+            if (expandedPlayers[pName] === undefined) expandedPlayers[pName] = false;
+        }
+
+        var section = document.createElement('div');
         section.className = 'player-section';
 
-        // Helper to pick a basic avatar color based on index
-        const colors = ['#e17055', '#0984e3', '#00b894', '#6c5ce7', '#fdcb6e', '#e84393'];
+        for (var j = 0; j < players.length; j++) {
+            var p = players[j];
+            var pName = p.name;
+            var color = AVATAR_COLORS[j % AVATAR_COLORS.length];
+            var isOpen = expandedPlayers[pName];
+            var cardCount = (roundState[pName] || []).length;
+            var isBust = bustPlayers[pName] || false;
 
-        players.forEach((p, idx) => {
-            newRoundState[p.name] = roundState[p.name] || [];
-            if (expandedPlayers[p.name] === undefined) {
-                expandedPlayers[p.name] = false;
+            var card = document.createElement('div');
+            card.className = 'player-card';
+
+            // Header
+            var header = document.createElement('div');
+            header.className = 'player-card-header';
+            header.onclick = (function(name) {
+                return function() { togglePlayerExpand(name); };
+            })(pName);
+
+            var summaryText = '';
+            if (isBust) {
+                summaryText = '💥 爆牌 (0分)';
+            } else if (cardCount > 0) {
+                summaryText = cardCount + ' 张手牌';
+            } else {
+                summaryText = '未选择手牌';
             }
 
-            const card = document.createElement('div');
-            card.className = 'player-card';
-            
-            const isOpen = expandedPlayers[p.name] ? 'open' : '';
-            const color = colors[idx % colors.length];
-            const cardCount = newRoundState[p.name].length;
+            header.innerHTML =
+                '<div class="player-card-left">' +
+                '<div class="player-card-avatar" style="background: ' + color + '">' + escHtml(pName.charAt(0).toUpperCase()) + '</div>' +
+                '<div>' +
+                '<div class="player-card-name">' + escHtml(pName) + '</div>' +
+                '<div class="player-card-summary" id="summary-' + escHtml(pName) + '">' + summaryText + '</div>' +
+                '</div>' +
+                '</div>' +
+                '<i class="ph-bold ph-caret-right player-card-chevron' + (isOpen ? ' open' : '') + '" id="chevron-' + escHtml(pName) + '"></i>';
 
-            card.innerHTML = `
-                <div class="player-card-header" onclick="togglePlayerRound('${p.name}')">
-                    <div class="player-card-left">
-                        <div class="player-card-avatar" style="background: ${color}">${p.name.charAt(0).toUpperCase()}</div>
-                        <div>
-                            <div class="player-card-name">${p.name}</div>
-                            <div class="player-card-summary" id="summary-${p.name}">${cardCount > 0 ? cardCount + ' 张手牌' : '未选择手牌'}</div>
-                        </div>
-                    </div>
-                    <i class="ph-bold ph-caret-right player-card-chevron ${isOpen}" id="chevron-${p.name}"></i>
-                </div>
-                <div class="player-card-body ${isOpen}" id="body-${p.name}">
-                    <div class="section-title" style="margin-top:var(--space-xs); font-size: 1rem;">选择最终手牌</div>
-                    <div class="card-selector"></div>
-                </div>
-            `;
+            // Body
+            var body = document.createElement('div');
+            body.className = 'player-card-body' + (isOpen ? ' open' : '');
+            body.id = 'body-' + pName;
 
-            const grid = card.querySelector('.card-selector');
+            // Bust toggle
+            var bustLabel = document.createElement('div');
+            bustLabel.className = 'bust-toggle' + (isBust ? ' active' : '');
+            bustLabel.id = 'bust-' + pName;
+            bustLabel.onclick = (function(name) {
+                return function() { toggleBust(name); };
+            })(pName);
+            bustLabel.innerHTML = '<span class="bust-icon">💥</span> 爆牌 (本轮分数归零)';
 
-            CARDS.forEach(cardDef => {
-                const btn = document.createElement('button');
-                btn.className = 'card-btn';
-                btn.dataset.num = cardDef.type === 'num' ? "true" : "false";
-                btn.dataset.type = cardDef.type;
-                btn.innerHTML = `${cardDef.v} <div class="count-badge"></div>`;
+            body.appendChild(bustLabel);
 
-                const count = newRoundState[p.name].filter(c => c === cardDef.v).length;
-                if (count > 0) {
-                    btn.classList.add('selected');
-                    if (count > 1) {
-                        btn.classList.add('multi');
-                        btn.querySelector('.count-badge').innerText = count;
+            // Card type sections
+            var cardSections = [
+                { label: '数字牌', cards: CARD_NUMBERS, type: 'num', dataNum: 'true' },
+                { label: '行动牌', cards: CARD_MODIFIERS, type: 'mod', dataNum: 'false' },
+                { label: '修正牌', cards: CARD_SPECIAL, type: 'mult', dataNum: 'false' }
+            ];
+
+            for (var s = 0; s < cardSections.length; s++) {
+                var sec = cardSections[s];
+
+                var labelEl = document.createElement('div');
+                labelEl.className = 'card-type-label';
+                labelEl.textContent = sec.label;
+                body.appendChild(labelEl);
+
+                var grid = document.createElement('div');
+                grid.className = 'card-selector';
+
+                for (var c = 0; c < sec.cards.length; c++) {
+                    var cardDef = sec.cards[c];
+                    var btn = document.createElement('button');
+                    btn.className = 'card-btn';
+                    btn.dataset.num = sec.dataNum;
+                    btn.dataset.type = sec.type;
+                    btn.innerHTML = cardDef + '<div class="count-badge"></div>';
+
+                    var count = (roundState[pName] || []).filter(function(card) { return card === cardDef; }).length;
+                    if (count > 0) {
+                        btn.classList.add('selected');
+                        if (count > 1) {
+                            btn.classList.add('multi');
+                            btn.querySelector('.count-badge').textContent = count;
+                        }
                     }
+
+                    btn.onclick = (function(playerName, cardVal, button) {
+                        return function() { toggleCard(playerName, cardVal, button); };
+                    })(pName, cardDef, btn);
+
+                    grid.appendChild(btn);
                 }
+                body.appendChild(grid);
+            }
 
-                btn.onclick = () => toggleCard(p.name, cardDef.v, btn);
-                grid.appendChild(btn);
-            });
-
+            card.appendChild(header);
+            card.appendChild(body);
             section.appendChild(card);
-        });
-        
+        }
+
         container.appendChild(section);
-        roundState = newRoundState;
     }
 
+    // ===== Card Selection =====
+
     function toggleCard(playerName, cardVal, btn) {
-        const idx = roundState[playerName].indexOf(cardVal);
+        if (bustPlayers[playerName]) {
+            showToast('该玩家已爆牌，请先取消爆牌标记', 'error');
+            return;
+        }
+
+        if (!roundState[playerName]) roundState[playerName] = [];
+
+        var idx = roundState[playerName].indexOf(cardVal);
         if (idx === -1) {
-            // Not selected -> select 1
             roundState[playerName].push(cardVal);
         } else {
-            const count = roundState[playerName].filter(c => c === cardVal).length;
+            var count = roundState[playerName].filter(function(c) { return c === cardVal; }).length;
             if (count === 1) {
-                // Selected 1 -> select 2 (allows bust checking, or multiple mod cards)
                 roundState[playerName].push(cardVal);
             } else {
-                // Selected 2 -> clear all of this card type
-                roundState[playerName] = roundState[playerName].filter(c => c !== cardVal);
+                roundState[playerName] = roundState[playerName].filter(function(c) { return c !== cardVal; });
             }
         }
 
-        // UI Update locally to avoid full re-render
-        const count = roundState[playerName].filter(c => c === cardVal).length;
-        const badge = btn.querySelector('.count-badge');
+        // Update button UI
+        var count = roundState[playerName].filter(function(c) { return c === cardVal; }).length;
+        var badge = btn.querySelector('.count-badge');
 
         if (count === 0) {
             btn.classList.remove('selected', 'multi');
@@ -616,176 +895,136 @@
             btn.classList.remove('multi');
         } else {
             btn.classList.add('selected', 'multi');
-            badge.innerText = count;
+            badge.textContent = count;
         }
 
-        // Update player card summary text
-        const totalCards = roundState[playerName].length;
-        const summaryEl = document.getElementById(`summary-${playerName}`);
-        if (summaryEl) {
-            summaryEl.innerText = totalCards > 0 ? totalCards + ' 张手牌' : '未选择手牌';
-        }
+        // Update summary
+        updatePlayerSummary(playerName);
     }
 
-    async function addPlayer(e) {
-        e.preventDefault();
-        const input = document.getElementById('new-player-name');
-        const name = input.value.trim();
-        if (!name) return;
+    function toggleBust(playerName) {
+        bustPlayers[playerName] = !bustPlayers[playerName];
 
-        await fetch(`${API_BASE}/add_player`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                name
-            })
-        });
-        input.value = '';
-        fetchStatus();
-    }
-
-    async function removePlayer(name) {
-        await fetch(`${API_BASE}/remove_player`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                name
-            })
-        });
-        delete roundState[name];
-        fetchStatus();
-    }
-
-    async function resetGame() {
-        if (!await window.showConfirm("确定重置？", "重置", "取消")) return;
-        await fetch(`${API_BASE}/reset`, {
-            method: 'POST'
-        });
-        roundState = {};
-        fetchStatus();
-    }
-
-    async function submitRound() {
-        const payload = {
-            players: Object.keys(roundState).map(name => ({
-                name,
-                cards: roundState[name]
-            }))
-        };
-        const res = await fetch(`${API_BASE}/submit_round`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(payload)
-        });
-        const data = await res.json();
-
-        if (data.status === 'game_over') {
-            document.getElementById('winner-name-ui').innerText = data.winner;
-            document.getElementById('winner-score-ui').innerText = '率先达到 200 分！';
-            document.getElementById('gameOverModal').classList.add('show');
+        var bustEl = document.getElementById('bust-' + playerName);
+        if (bustPlayers[playerName]) {
+            bustEl.classList.add('active');
+            // Clear cards when busted
+            roundState[playerName] = [];
+            // Re-render card buttons for this player
+            refreshPlayerCardButtons(playerName);
         } else {
-            // Show a quick toast or alert for scores? (Optional)
-            let msg = "本轮得分：\n";
-            Object.entries(data.round_scores).forEach(([n, s]) => msg += `${n}: ${s}\n`);
-            // alert(msg); // uncomment to debug round score
+            bustEl.classList.remove('active');
         }
 
-        // Clear round selection
-        Object.keys(roundState).forEach(k => roundState[k] = []);
-        fetchStatus();
-        fetchLeaderboard();
+        updatePlayerSummary(playerName);
+    }
+
+    function refreshPlayerCardButtons(playerName) {
+        var body = document.getElementById('body-' + playerName);
+        if (!body) return;
+
+        var btns = body.querySelectorAll('.card-btn');
+        for (var i = 0; i < btns.length; i++) {
+            btns[i].classList.remove('selected', 'multi');
+            var badge = btns[i].querySelector('.count-badge');
+            if (badge) badge.textContent = '';
+        }
+    }
+
+    function updatePlayerSummary(playerName) {
+        var summaryEl = document.getElementById('summary-' + playerName);
+        if (!summaryEl) return;
+
+        if (bustPlayers[playerName]) {
+            summaryEl.textContent = '💥 爆牌 (0分)';
+        } else {
+            var totalCards = (roundState[playerName] || []).length;
+            summaryEl.textContent = totalCards > 0 ? totalCards + ' 张手牌' : '未选择手牌';
+        }
+    }
+
+    // ===== Accordion =====
+
+    function togglePlayerExpand(playerName) {
+        expandedPlayers[playerName] = !expandedPlayers[playerName];
+
+        var chevron = document.getElementById('chevron-' + playerName);
+        var body = document.getElementById('body-' + playerName);
+        if (!chevron || !body) return;
+
+        if (expandedPlayers[playerName]) {
+            chevron.classList.add('open');
+            body.classList.add('open');
+        } else {
+            chevron.classList.remove('open');
+            body.classList.remove('open');
+        }
+    }
+
+    // ===== Scoring Overlay =====
+
+    function openScoring() {
+        if (players.length === 0) {
+            showToast('请先添加玩家', 'error');
+            return;
+        }
+        renderScoringSheet();
+        document.getElementById('scoringOverlay').classList.add('show');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeScoring() {
+        document.getElementById('scoringOverlay').classList.remove('show');
+        document.body.style.overflow = '';
+    }
+
+    // ===== Game Over =====
+
+    function showGameOver(winnerName, data) {
+        document.getElementById('winnerNameUi').textContent = winnerName || '未知';
+        document.getElementById('winnerScoreUi').textContent = '率先达到 200 分！';
+
+        // Render final scores
+        var scoresList = document.getElementById('finalScoresList');
+        scoresList.innerHTML = '';
+        if (data && data.final_scores) {
+            for (var key in data.final_scores) {
+                if (data.final_scores.hasOwnProperty(key)) {
+                    var row = document.createElement('div');
+                    row.className = 'final-score-row';
+                    row.innerHTML =
+                        '<span class="fs-name">' + escHtml(key) + '</span>' +
+                        '<span class="fs-score">' + escHtml(String(data.final_scores[key])) + ' 分</span>';
+                    scoresList.appendChild(row);
+                }
+            }
+        } else if (rankedPlayers && rankedPlayers.length > 0) {
+            for (var i = 0; i < rankedPlayers.length; i++) {
+                var rp = rankedPlayers[i];
+                var row = document.createElement('div');
+                row.className = 'final-score-row';
+                row.innerHTML =
+                    '<span class="fs-name">' + escHtml(rp.name) + '</span>' +
+                    '<span class="fs-score">' + escHtml(String(rp.total_score)) + ' 分</span>';
+                scoresList.appendChild(row);
+            }
+        }
+
+        document.getElementById('gameOverOverlay').classList.add('show');
+        document.getElementById('fabScoring').style.display = 'none';
+        gameStatus = 'ended';
     }
 
     function closeGameOver() {
-        document.getElementById('gameOverModal').classList.remove('show');
-        resetGame();
+        document.getElementById('gameOverOverlay').classList.remove('show');
     }
 
-    // Leaderboard logic
-    async function fetchLeaderboard() {
-        document.getElementById('histLeaderboard').innerHTML = `
-                    <div class="apple-list mb-xl">
-                        <div class="empty-state">
-                            <span class="empty-icon">🏆</span>
-                            跑去查大名册了...
-                        </div>
-                    </div>`;
-
-        try {
-            const res = await fetch(`${API_BASE}/leaderboard`);
-            const data = await res.json();
-
-            if (data.leaderboard) {
-                if (data.leaderboard.length === 0) {
-                    document.getElementById('histLeaderboard').innerHTML = `
-                                <div class="apple-list mb-xl">
-                                    <div class="text-center text-muted" style="padding: var(--space-xl);">
-                                        <div class="empty-state">
-                                            <span class="empty-icon">👻</span>
-                                            还没人玩过呢，快去开一局！
-                                        </div>
-                                    </div>
-                                </div>`;
-                    return;
-                }
-
-                let html = '<div class="apple-list mb-xl">';
-
-                data.leaderboard.forEach((p, idx) => {
-                    const rank = idx + 1;
-                    let rankClass = rank === 1 ? 'rank-1' : (rank === 2 ? 'rank-2' : (rank === 3 ? 'rank-3' : 'rank-other'));
-                    let rankIcon = rank === 1 ? '👑' : rank;
-
-
-
-                    html += `
-                            <div class="apple-list-item" ${p.mastery === 'provisional' ? 'style="opacity:0.65;"' : ''}>
-                                <div class="rank-num ${rankClass}">${rankIcon}</div>
-                                
-                                <div class="apple-list-item-content">
-                                    <div class="apple-list-item-title">${p.name} ${p.mastery === 'expert' ? '<span style="font-size:0.7rem;color:var(--apple-orange);font-weight:700;">👑专精</span>' : p.mastery === 'rookie' ? '<span style="font-size:0.7rem;color:var(--apple-blue);font-weight:600;">🔰新手</span>' : '<span style="font-size:0.7rem;color:var(--apple-gray);font-weight:600;">⏳定级中</span>'}</div>
-                                    <div class="history-trail">${p.total_games}局 · 胜${p.wins}场 · 战力${p.win_rate}% · 胜率${p.smoothed_rate}%</div>
-                                </div>
-                                
-                                <div style="text-align: right; display: flex; align-items: center; gap: 16px;">
-                                    <div style="text-align: right;">
-                                        <div class="history-trail" style="font-size: 0.7rem; margin-bottom: 2px;">均分</div>
-                                        <div class="score-badge" style="font-size: 1.2rem; color: var(--apple-blue);">${p.avg_score}</div>
-                                    </div>
-                                </div>
-                            </div>
-                    `;
-                });
-                html += '</div>';
-
-                document.getElementById('histLeaderboard').innerHTML = html;
-            } else {
-                document.getElementById('histLeaderboard').innerHTML =
-                    '<div class="empty-state">加载失败</div>';
-            }
-        } catch (e) {
-            document.getElementById('histLeaderboard').innerHTML =
-                `<div class="empty-state">网络出错: ${e}</div>`;
-        }
+    async function newGameAfterOver() {
+        document.getElementById('gameOverOverlay').classList.remove('show');
+        await resetGame();
     }
 
-    function switchTab(tabId) {
-        document.querySelectorAll('.apple-segment-btn').forEach(b => b.classList.remove('active'));
-        document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
-
-        event.target.classList.add('active');
-        document.getElementById('tab-' + tabId).classList.add('active');
-
-        if (tabId === 'leaderboard') fetchLeaderboard();
-    }
-
-    // Init
+    // ===== Init =====
     fetchStatus();
     fetchLeaderboard();
 </script>
