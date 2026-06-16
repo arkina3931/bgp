@@ -34,11 +34,11 @@
     <!-- Bottom Tab Bar (main pages only, overridden by game pages) -->
     {% block show_tab_bar %}
     <nav class="tab-bar">
-        <a href="/" class="tab-bar-item {% block tab_home_active %}{% endblock %}">
+        <a href="/" class="tab-bar-item{% if request.url.path == '/' %} active{% endif %}">
             <span class="tab-icon">🏠</span>
             <span class="tab-label">首页</span>
         </a>
-        <a href="/gamelist" class="tab-bar-item {% block tab_games_active %}{% endblock %}">
+        <a href="/gamelist" class="tab-bar-item{% if request.url.path == '/gamelist' %} active{% endif %}">
             <span class="tab-icon">🎮</span>
             <span class="tab-label">游戏</span>
         </a>
