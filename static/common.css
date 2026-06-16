@@ -62,6 +62,13 @@
     --transition-fast: 0.2s var(--ease-out);
     --transition-normal: 0.3s var(--ease-out);
 
+    /* ---- Button hover colors ---- */
+    --color-blue-hover: #0077ed;
+    --color-red-hover: #e0352b;
+
+    /* ---- Description text ---- */
+    --color-desc: #48484a;
+
     /* ---- Legacy support (aliases) ---- */
     --apple-bg: var(--color-bg);
     --apple-white: var(--color-surface);
@@ -70,7 +77,7 @@
     --apple-gray-light: #d2d2d7;
     --apple-gray-bg: #fbfbfd;
     --apple-blue: var(--color-blue);
-    --apple-blue-hover: #0077ed;
+    --apple-blue-hover: var(--color-blue-hover);
     --apple-blue-light: var(--color-blue-bg);
     --apple-red: var(--color-red);
     --apple-red-light: var(--color-red-bg);
@@ -337,7 +344,7 @@ a:hover {
 }
 
 .btn-primary:hover {
-    background: #0077ed;
+    background: var(--color-blue-hover);
 }
 
 .btn-secondary {
@@ -355,7 +362,7 @@ a:hover {
 }
 
 .btn-danger:hover {
-    background: #e0352b;
+    background: var(--color-red-hover);
 }
 
 .btn-outline {
@@ -523,7 +530,7 @@ a:hover {
 
 .gd-desc {
     font-size: 0.85rem;
-    color: #48484a;
+    color: var(--color-desc);
     line-height: 1.6;
     margin-bottom: var(--space-md);
 }
@@ -572,31 +579,7 @@ a:hover {
    9. INPUTS
    ========================================== */
 
-.input {
-    width: 100%;
-    font-family: var(--font-stack);
-    font-size: 1rem;
-    font-weight: 400;
-    padding: 12px 16px;
-    border: 1.5px solid rgba(0, 0, 0, 0.12);
-    border-radius: var(--radius-md);
-    background: var(--color-surface);
-    color: var(--color-text);
-    outline: none;
-    transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
-    -webkit-appearance: none;
-    appearance: none;
-}
-
-.input:focus {
-    border-color: var(--color-blue);
-    box-shadow: 0 0 0 3px rgba(0, 113, 227, 0.15);
-}
-
-.input::placeholder {
-    color: var(--color-text-secondary);
-}
-
+.input,
 .input-field {
     width: 100%;
     font-family: var(--font-stack);
@@ -613,9 +596,14 @@ a:hover {
     appearance: none;
 }
 
+.input:focus,
 .input-field:focus {
     border-color: var(--color-blue);
     box-shadow: 0 0 0 3px rgba(0, 113, 227, 0.15);
+}
+
+.input::placeholder {
+    color: var(--color-text-secondary);
 }
 
 /* ==========================================
@@ -834,7 +822,8 @@ a:hover {
    14. MODAL
    ========================================== */
 
-.modal-overlay {
+.modal-overlay,
+.modal {
     position: fixed;
     inset: 0;
     background: rgba(0, 0, 0, 0.4);
@@ -850,9 +839,11 @@ a:hover {
     padding: var(--space-lg);
 }
 
-.modal-overlay.show {
+.modal-overlay.show,
+.modal.show {
     opacity: 1;
     pointer-events: auto;
+    visibility: visible;
 }
 
 .modal-content {
@@ -869,7 +860,8 @@ a:hover {
     overflow: hidden;
 }
 
-.modal-overlay.show .modal-content {
+.modal-overlay.show .modal-content,
+.modal.show .modal-content {
     transform: scale(1);
 }
 
@@ -1359,12 +1351,6 @@ a:hover {
 .bg-orange { background: var(--color-orange-bg) !important; }
 .bg-purple { background: var(--color-purple-bg) !important; }
 
-.bg-blue-light { background: var(--color-blue-bg) !important; }
-.bg-green-light { background: var(--color-green-bg) !important; }
-.bg-red-light { background: var(--color-red-bg) !important; }
-.bg-orange-light { background: var(--color-orange-bg) !important; }
-.bg-purple-light { background: var(--color-purple-bg) !important; }
-
 /* ---- Margin ---- */
 .mt-xs { margin-top: var(--space-xs); }
 .mt-sm { margin-top: var(--space-sm); }
@@ -1472,6 +1458,9 @@ a:hover {
         --color-purple-bg: rgba(191, 90, 242, 0.15);
         --color-teal-bg: rgba(100, 210, 255, 0.15);
 
+        /* Description text */
+        --color-desc: #b0b0b5;
+
         /* Shadows */
         --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
         --shadow-md: 0 4px 14px rgba(0, 0, 0, 0.4);
@@ -1546,7 +1535,7 @@ a:hover {
 
     /* ---- Game detail dark ---- */
     .gd-desc {
-        color: #b0b0b5;
+        color: var(--color-desc);
     }
 
     /* ---- Toast dark ---- */
@@ -1741,7 +1730,7 @@ a:hover {
 }
 
 .apple-btn-primary:hover {
-    background: #0077ed;
+    background: var(--color-blue-hover);
     color: #ffffff;
     text-decoration: none;
 }
@@ -2395,7 +2384,7 @@ input.apple-toggle-input:checked + .apple-toggle-btn {
 /* ---- Game Description ---- */
 .game-description {
     font-size: 0.92rem;
-    color: #48484a;
+    color: var(--color-desc);
     line-height: 1.62;
     margin-bottom: var(--space-md);
     font-weight: 400;
@@ -2474,7 +2463,7 @@ input.apple-toggle-input:checked + .apple-toggle-btn {
 
 .rule-section p {
     margin: 0 0 12px;
-    color: #48484a;
+    color: var(--color-desc);
     font-size: 0.95rem;
     line-height: 1.65;
 }
@@ -2491,7 +2480,7 @@ input.apple-toggle-input:checked + .apple-toggle-btn {
 
 .rule-section li {
     margin-bottom: 8px;
-    color: #48484a;
+    color: var(--color-desc);
     font-size: 0.95rem;
     line-height: 1.6;
 }
