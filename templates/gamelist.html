@@ -1,1935 +1,450 @@
-﻿<!DOCTYPE html>
-<html lang="zh-CN">
+{% extends "base.html" %}
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>游戏列表 - 桌游助手</title>
-    <link href="/static/common.css" rel="stylesheet">
-    <script src="https://unpkg.com/@phosphor-icons/web"></script>
-    <!-- PWA Settings -->
-    <meta name="theme-color" content="#1d1d1f" media="(prefers-color-scheme: dark)">
-    <meta name="theme-color" content="#f5f5f7" media="(prefers-color-scheme: light)">
-    <!-- iOS Web App Settings -->
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="桌游助手">
-    <style>
-        .filter-container {
-            margin-bottom: var(--space-2xl);
-            width: 100%;
-        }
+{% block title %}游戏列表 - 桌游助手{% endblock %}
 
-        .filter-scroll {
-            display: flex;
-            gap: 12px;
-            overflow-x: auto;
-            padding: 4px var(--space-md) 12px;
-            /* Add horizontal padding for edges */
-            scrollbar-width: none;
-            /* Firefox */
-            -ms-overflow-style: none;
-            /* Internet Explorer 10+ */
-            scroll-snap-type: x mandatory;
-            -webkit-overflow-scrolling: touch;
-            /* Smooth scroll on iOS */
-        }
+{% block nav_title %}🎮 游戏列表{% endblock %}
 
-        .filter-scroll::-webkit-scrollbar {
-            display: none;
-            /* WebKit */
-        }
+{% block tab_games_active %}active{% endblock %}
 
-        .filter-btn {
-            flex-shrink: 0;
-            padding: 10px 20px;
-            border-radius: 22px;
-            min-height: 44px;
-            background: rgba(142, 142, 147, 0.08);
-            /* Apple light gray bg */
-            color: var(--apple-black);
-            font-size: 1rem;
-            font-weight: 600;
-            border: none;
-            cursor: pointer;
-            transition: all var(--transition-normal);
-            scroll-snap-align: center;
-        }
+{% block extra_head %}
+<style>
+    .game-cards-container {
+        padding: 0 var(--space-md);
+        margin-bottom: var(--space-2xl);
+    }
 
-        .filter-btn:hover {
-            background: rgba(142, 142, 147, 0.15);
-        }
+    .game-detail-card.hidden {
+        display: none !important;
+    }
 
-        .filter-btn.active {
-            background: var(--apple-blue);
-            color: var(--apple-white);
-            box-shadow: 0 4px 12px rgba(0, 122, 255, 0.3);
-        }
+    .gd-icon {
+        color: #fff;
+    }
 
-        .game-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: var(--space-lg);
-        }
+    .gd-name {
+        font-size: 1.1rem;
+        font-weight: 700;
+        margin: 0;
+    }
 
-        @media (max-width: 600px) {
-            .game-grid {
-                grid-template-columns: 1fr;
-            }
-        }
+    .gd-en-name {
+        font-size: 0.8rem;
+        color: var(--color-text-secondary);
+        font-weight: 500;
+    }
 
-        .game-card {
-            display: flex;
-            flex-direction: column;
-            background: var(--apple-white);
-            border-radius: var(--radius-lg);
-            box-shadow: var(--shadow-md);
-            padding: var(--space-lg);
-            transition: transform var(--transition-normal), box-shadow var(--transition-normal);
-            text-decoration: none;
-            color: inherit;
-        }
+    .gd-rating {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        font-size: 0.85rem;
+        font-weight: 600;
+    }
 
-        .game-card:hover {
-            transform: translateY(-4px) scale(1.015);
-            box-shadow: var(--shadow-lg);
-        }
+    .gd-star {
+        color: var(--color-yellow);
+    }
 
-        .game-card.hidden {
-            display: none !important;
-        }
+    .gd-rating-num {
+        color: var(--color-text-secondary);
+        font-size: 0.8rem;
+        margin-left: 4px;
+    }
 
-        .game-header {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            margin-bottom: var(--space-md);
-        }
+    .gd-header .rules-btn {
+        flex-shrink: 0;
+        background: rgba(0, 0, 0, 0.06);
+        border: none;
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        font-size: 1rem;
+        color: var(--color-text-secondary);
+        transition: background var(--transition-fast);
+        font-family: var(--font-stack);
+    }
 
-        .game-icon {
-            width: 56px;
-            height: 56px;
-            border-radius: 16px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.8rem;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
-            flex-shrink: 0;
-        }
+    .gd-header .rules-btn:hover {
+        background: rgba(0, 0, 0, 0.12);
+    }
 
-        .game-title {
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-        }
+    .gd-btn-row {
+        margin-top: var(--space-md);
+    }
 
-        .game-title h3 {
-            font-size: 1.25rem;
-            font-weight: 700;
-            margin: 0;
-            letter-spacing: -0.02em;
-        }
+    .sheet-tab-bar {
+        display: flex;
+        gap: 8px;
+        margin: 0 var(--space-lg) var(--space-md);
+        padding: 4px;
+        border-radius: 12px;
+        background: rgba(0, 0, 0, 0.04);
+    }
 
-        .game-title .en-name {
-            font-size: 0.85rem;
-            color: var(--apple-gray);
-            font-weight: 500;
-        }
+    .sheet-tab-btn {
+        flex: 1;
+        min-height: 36px;
+        border: none;
+        border-radius: 10px;
+        background: transparent;
+        color: var(--color-text-secondary);
+        font-size: 0.92rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all var(--transition-fast);
+        font-family: var(--font-stack);
+    }
 
-        .game-stats {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-            margin-bottom: var(--space-md);
-            background: rgba(142, 142, 147, 0.04);
-            padding: 16px;
-            border-radius: 12px;
-        }
+    .sheet-tab-btn:hover {
+        background: rgba(0, 0, 0, 0.04);
+        color: var(--color-text);
+    }
 
-        .stat-item {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 0.9rem;
-            color: var(--apple-black);
-            font-weight: 500;
-        }
+    .sheet-tab-btn.active {
+        background: var(--color-surface);
+        color: var(--color-blue);
+        box-shadow: var(--shadow-sm);
+    }
 
-        .stat-icon {
-            color: var(--apple-gray);
-            width: 16px;
-            text-align: center;
-        }
+    .sheet-body {
+        padding: 0 var(--space-lg);
+        overflow-y: auto;
+        flex: 1;
+    }
 
-        .game-tags {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            margin-top: auto;
-        }
+    .sheet-body h4 {
+        margin: var(--space-md) 0 var(--space-sm);
+        font-size: 1rem;
+        color: var(--color-text);
+    }
 
-        .tag {
-            padding: 4px 10px;
-            border-radius: 6px;
-            background: rgba(142, 142, 147, 0.08);
-            color: var(--apple-gray);
-            font-size: 0.8rem;
-            font-weight: 600;
-        }
+    .sheet-body p {
+        margin: 0 0 12px;
+        color: var(--color-desc);
+        font-size: 0.9rem;
+        line-height: 1.6;
+    }
 
-        .back-link-container {
-            text-align: center;
-            margin-top: var(--space-2xl);
-            margin-bottom: var(--space-xl);
-        }
+    .sheet-body ul {
+        margin: 4px 0 var(--space-md);
+        padding-left: 1.2rem;
+    }
 
-        .back-link {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            color: var(--apple-blue);
-            text-decoration: none;
-            font-weight: 600;
-            font-size: 1.05rem;
-            padding: 12px 24px;
-            border-radius: 30px;
-            background: rgba(0, 122, 255, 0.08);
-            transition: all var(--transition-normal);
-        }
+    .sheet-body li {
+        margin-bottom: 6px;
+        color: var(--color-desc);
+        font-size: 0.9rem;
+        line-height: 1.55;
+    }
 
-        .back-link:hover {
-            background: rgba(0, 122, 255, 0.15);
-            transform: scale(1.02);
-        }
+    .sheet-body strong {
+        color: var(--color-text);
+        font-weight: 600;
+    }
 
+    .sheet-close-btn {
+        padding: var(--space-md) var(--space-lg);
+        border-top: 1px solid var(--color-border);
+        flex-shrink: 0;
+    }
+</style>
+{% endblock %}
 
-        .game-description {
-            font-size: 0.92rem;
-            color: #3a3a3c; /* Slightly darker for better readability */
-            line-height: 1.62;
-            margin-bottom: var(--space-md);
-            font-weight: 400;
-            text-align: justify;
-            text-justify: inter-character;
-        }
+{% block content %}
+<!-- Filter Chips -->
+<div class="filter-scroll" id="filterScroll">
+    <button class="filter-chip active" data-players="0" onclick="handleFilterClick(this)">全部</button>
+    <button class="filter-chip" data-players="2" onclick="handleFilterClick(this)">2人</button>
+    <button class="filter-chip" data-players="3" onclick="handleFilterClick(this)">3人</button>
+    <button class="filter-chip" data-players="4" onclick="handleFilterClick(this)">4人</button>
+    <button class="filter-chip" data-players="5" onclick="handleFilterClick(this)">5人</button>
+    <button class="filter-chip" data-players="6" onclick="handleFilterClick(this)">6人</button>
+    <button class="filter-chip" data-players="7" onclick="handleFilterClick(this)">7人</button>
+    <button class="filter-chip" data-players="8" onclick="handleFilterClick(this)">8人</button>
+    <button class="filter-chip" data-players="9" onclick="handleFilterClick(this)">9人+</button>
+</div>
 
-        .rule-section {
-            margin-bottom: var(--space-lg);
-            max-width: 65ch; /* Comfortable line length */
-        }
+<!-- Game Cards Container (JS-rendered) -->
+<div class="game-cards-container" id="gameCardsContainer"></div>
 
-        .rule-section h4 {
-            margin: var(--space-md) 0 var(--space-sm);
-            font-size: 1.15rem;
-            color: var(--apple-black);
-        }
-
-        .rule-section p {
-            margin: 0 0 12px;
-            color: #48484a;
-            font-size: 0.95rem;
-            line-height: 1.65;
-        }
-
-        .rule-section strong {
-            color: var(--apple-black);
-            font-weight: 600;
-        }
-
-        .rule-section ul {
-            margin: 8px 0 16px;
-            padding-left: 1.2rem;
-        }
-
-        .rule-section li {
-            margin-bottom: 8px;
-            color: #48484a;
-            font-size: 0.95rem;
-            line-height: 1.6;
-        }
-
-
-
-        .modal-tab-bar {
-            display: flex;
-            gap: 8px;
-            margin: 0 0 12px;
-            padding: 4px;
-            border-radius: 12px;
-            background: rgba(142, 142, 147, 0.08);
-        }
-
-        .modal-tab-btn {
-            flex: 1;
-            min-height: 36px;
-            border: none;
-            border-radius: 10px;
-            background: transparent;
-            color: var(--apple-gray);
-            font-size: 0.92rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all var(--transition-normal);
-        }
-
-        .modal-tab-btn:hover {
-            background: rgba(0, 0, 0, 0.04);
-            color: var(--apple-black);
-        }
-
-        .modal-tab-btn.active {
-            background: var(--apple-white);
-            color: var(--apple-blue);
-            box-shadow: var(--shadow-sm);
-        }
-    </style>
-</head>
-
-<body>
-    <!-- Nav -->
-    <nav class="apple-nav">
-        <div class="apple-nav-content" style="justify-content: space-between; min-height: 44px; padding: 0 16px;">
-            <a href="/"
-                style="text-decoration: none; color: inherit; display: flex; align-items: center; min-height: 44px;">
-                <span class="apple-nav-title">🎲 桌游助手</span>
-            </a>
-            <a href="/gamelist"
-                style="color: var(--apple-blue); text-decoration: none; font-size: 0.9rem; font-weight: 600; display: flex; align-items: center; min-height: 44px;">游戏列表</a>
+<!-- Rules Bottom Sheet -->
+<div class="sheet-overlay" id="rulesSheet" onclick="if(event.target === this) closeRules()">
+    <div class="sheet-content">
+        <div class="sheet-handle"></div>
+        <div class="modal-header" style="border-bottom: none; padding-bottom: 0;">
+            <h2 class="modal-title" id="sheetTitle">📖 规则</h2>
+            <button class="modal-close" onclick="closeRules()">
+                <i class="ph-bold ph-x"></i>
+            </button>
         </div>
-    </nav>
-
-    <div class="apple-container">
-
-        <div class="apple-hero">
-            <h1>游戏列表</h1>
-            <p>寻找最适合你的桌游</p>
+        <div class="sheet-tab-bar">
+            <button id="sheetRuleBtn" class="sheet-tab-btn active" onclick="switchRulesTab('rule')">📋 规则</button>
+            <button id="sheetGuideBtn" class="sheet-tab-btn" onclick="switchRulesTab('guide')">💡 攻略</button>
         </div>
-
-        <div class="filter-container">
-            <div class="filter-scroll">
-                <button class="filter-btn active" onclick="filterGames(0, this)">全部</button>
-                <button class="filter-btn" onclick="filterGames(2, this)">2人</button>
-                <button class="filter-btn" onclick="filterGames(3, this)">3人</button>
-                <button class="filter-btn" onclick="filterGames(4, this)">4人</button>
-                <button class="filter-btn" onclick="filterGames(5, this)">5人</button>
-                <button class="filter-btn" onclick="filterGames(6, this)">6人</button>
-                <button class="filter-btn" onclick="filterGames(7, this)">7人</button>
-                <button class="filter-btn" onclick="filterGames(8, this)">8人</button>
-                <button class="filter-btn" onclick="filterGames(9, this)">9人</button>
-                <button class="filter-btn" onclick="filterGames(10, this)">10人</button>
-                <button class="filter-btn" onclick="filterGames(11, this)">11人</button>
-                <button class="filter-btn" onclick="filterGames(12, this)">12人</button>
-                <button class="filter-btn" onclick="filterGames(13, this)">12人+</button>
-            </div>
+        <div class="sheet-body" id="sheetContent"></div>
+        <div class="sheet-close-btn">
+            <button class="btn btn-secondary btn-block" onclick="closeRules()">关闭</button>
         </div>
-
-        <div class="game-grid" id="game-list">
-
-            <!-- 璀璨宝石 -->
-            <a href="/splendor/" class="game-card" data-min="2" data-max="4">
-                <div class="game-header">
-                    <div class="game-icon" style="background: rgba(175, 82, 222, 0.08); cursor: pointer;"
-                        onclick="openRulesModal('璀璨宝石', event)">
-                        <i class="ph-fill ph-diamond" style="color: var(--apple-purple);"></i>
-                    </div>
-                    <div class="game-title">
-                        <h3>璀璨宝石</h3>
-                        <span class="en-name">Splendor <i class="ph-fill ph-star"
-                                style="color: var(--apple-yellow); margin-left: 6px;"></i> 7.4</span>
-                    </div>
-                </div>
-                <div class="game-stats">
-                    <div class="stat-item">
-                        <i class="ph-bold ph-users stat-icon"></i>推荐 3人
-                    </div>
-                    <div class="stat-item">
-                        <i class="ph-bold ph-clock stat-icon"></i>30分钟
-                    </div>
-                    <div class="stat-item">
-                        <i class="ph-bold ph-cake stat-icon"></i>年龄 10+
-                    </div>
-                    <div class="stat-item">
-                        <i class="ph-bold ph-trend-up stat-icon"></i>难度 2.26/5
-                    </div>
-                </div>
-                <div class="game-description">
-                    玩家扮演文艺复兴时期的商人，通过收集宝石、购买矿山、运输、店铺等发展卡，不断积累财富与声望；当你的产业和影响力足够大时，还可能获得贵族来访，进一步提升声望。
-                    <div class="game-lab">这是一款以“拿宝石—买卡片—滚雪球”为核心的轻中度引擎构筑桌游，乐趣在于资源规划、抢牌节奏和先一步冲到声望 15 分。</div>
-                </div>
-                <div class="game-tags">
-                    <div
-                        style="width: 100%; font-size: 0.8rem; color: var(--apple-gray); font-weight: 600; margin-bottom: 2px;">
-                        标签</div>
-                    <span class="tag">竞争</span>
-                    <span class="tag">抽象</span>
-                    <div
-                        style="width: 100%; font-size: 0.8rem; color: var(--apple-gray); font-weight: 600; margin-top: 6px; margin-bottom: 2px;">
-                        机制</div>
-                    <span class="tag" style="background: rgba(0, 113, 227, 0.08); color: var(--apple-blue);">卡牌选取</span>
-                    <span class="tag" style="background: rgba(0, 113, 227, 0.08); color: var(--apple-blue);">成套收集</span>
-                    <span class="tag" style="background: rgba(0, 113, 227, 0.08); color: var(--apple-blue);">资源管理</span>
-                </div>
-            </a>
-
-            <!-- 阿瓦隆 -->
-            <a href="/avalon/" class="game-card" data-min="5" data-max="12">
-                <div class="game-header">
-                    <div class="game-icon" style="background: rgba(0, 113, 227, 0.08); cursor: pointer;"
-                        onclick="openRulesModal('阿瓦隆', event)">
-                        <i class="ph-fill ph-shield-check" style="color: var(--apple-blue);"></i>
-                    </div>
-                    <div class="game-title">
-                        <h3>阿瓦隆</h3>
-                        <span class="en-name">Avalon <i class="ph-fill ph-star"
-                                style="color: var(--apple-yellow); margin-left: 6px;"></i> 7.4</span>
-                    </div>
-                </div>
-                <div class="game-stats">
-                    <div class="stat-item">
-                        <i class="ph-bold ph-users stat-icon"></i>推荐 7-8人
-                    </div>
-                    <div class="stat-item">
-                        <i class="ph-bold ph-clock stat-icon"></i>30分钟
-                    </div>
-                    <div class="stat-item">
-                        <i class="ph-bold ph-cake stat-icon"></i>年龄 13+
-                    </div>
-                    <div class="stat-item">
-                        <i class="ph-bold ph-trend-up stat-icon"></i>难度 2.06/5
-                    </div>
-                </div>
-                <div class="game-description">
-                    游戏讲述亚瑟王阵营与莫德雷德势力争夺不列颠未来的对抗。好人阵营想让任务成功，邪恶阵营则潜伏在圆桌骑士之中暗中破坏。梅林知道邪恶势力是谁，但又不能暴露自己；一旦身份被识破，即使好人完成了任务，也可能被刺客翻盘。
-                    <div class="game-lab">这是一款以“隐藏身份、组队投票、语言博弈”为核心的阵营推理游戏，乐趣在于真假信息交错中找出敌我、骗过对手并拿下关键任务。</div>
-                </div>
-                <div class="game-tags">
-                    <div
-                        style="width: 100%; font-size: 0.8rem; color: var(--apple-gray); font-weight: 600; margin-bottom: 2px;">
-                        标签</div>
-                    <span class="tag">混合</span>
-                    <span class="tag">聚会</span>
-                    <div
-                        style="width: 100%; font-size: 0.8rem; color: var(--apple-gray); font-weight: 600; margin-top: 6px; margin-bottom: 2px;">
-                        机制</div>
-                    <span class="tag" style="background: rgba(0, 113, 227, 0.08); color: var(--apple-blue);">推理</span>
-                    <span class="tag"
-                        style="background: rgba(0, 113, 227, 0.08); color: var(--apple-blue);">可变玩家能力</span>
-                    <span class="tag" style="background: rgba(0, 113, 227, 0.08); color: var(--apple-blue);">隐藏叛徒</span>
-                    <span class="tag" style="background: rgba(0, 113, 227, 0.08); color: var(--apple-blue);">秘密目标</span>
-                    <span class="tag"
-                        style="background: rgba(0, 113, 227, 0.08); color: var(--apple-blue);">同步行动选择</span>
-                    <span class="tag" style="background: rgba(0, 113, 227, 0.08); color: var(--apple-blue);">吹牛</span>
-                    <span class="tag" style="background: rgba(0, 113, 227, 0.08); color: var(--apple-blue);">谈判</span>
-                    <span class="tag" style="background: rgba(0, 113, 227, 0.08); color: var(--apple-blue);">投票</span>
-                </div>
-            </a>
-
-            <!-- 拉斯维加斯 -->
-            <a href="/lasvegas/" class="game-card" data-min="2" data-max="6">
-                <div class="game-header">
-                    <div class="game-icon" style="background: rgba(52, 199, 89, 0.08); cursor: pointer;"
-                        onclick="openRulesModal('拉斯维加斯', event)">
-                        <i class="ph-fill ph-dice-five" style="color: var(--apple-green);"></i>
-                    </div>
-                    <div class="game-title">
-                        <h3>拉斯维加斯</h3>
-                        <span class="en-name">Las Vegas <i class="ph-fill ph-star"
-                                style="color: var(--apple-yellow); margin-left: 6px;"></i> 7.5</span>
-                    </div>
-                </div>
-                <div class="game-stats">
-                    <div class="stat-item">
-                        <i class="ph-bold ph-users stat-icon"></i>推荐 4-5人
-                    </div>
-                    <div class="stat-item">
-                        <i class="ph-bold ph-clock stat-icon"></i>45-60分钟
-                    </div>
-                    <div class="stat-item">
-                        <i class="ph-bold ph-cake stat-icon"></i>年龄 8+
-                    </div>
-                    <div class="stat-item">
-                        <i class="ph-bold ph-trend-up stat-icon"></i>难度 1.42/5
-                    </div>
-                </div>
-                <div class="game-description">
-                    玩家来到拉斯维加斯，在 1 到 6 号赌场之间下注抢钱。你会不断掷出自己的骰子，把它们押到对应点数的赌场，最后谁在赌场里“势力最大”，谁就能优先拿走高额钞票。皇家版则在这个基础上加入特殊板块，让不同赌场多出额外能力和变化。
-                    <div class="game-lab">这是一款“掷骰子抢赌场”的欢乐竞标游戏，核心乐趣在于看准时机把骰子压进最值钱的赌场，同时用“平手全灭”的规则狠狠干扰对手。</div>
-                </div>
-                <div class="game-tags">
-                    <div
-                        style="width: 100%; font-size: 0.8rem; color: var(--apple-gray); font-weight: 600; margin-bottom: 2px;">
-                        标签</div>
-                    <span class="tag">竞争</span>
-                    <span class="tag">聚会</span>
-                    <div
-                        style="width: 100%; font-size: 0.8rem; color: var(--apple-gray); font-weight: 600; margin-top: 6px; margin-bottom: 2px;">
-                        机制</div>
-                    <span class="tag" style="background: rgba(0, 113, 227, 0.08); color: var(--apple-blue);">区域控制</span>
-                    <span class="tag" style="background: rgba(0, 113, 227, 0.08); color: var(--apple-blue);">投骰子</span>
-                    <span class="tag"
-                        style="background: rgba(0, 113, 227, 0.08); color: var(--apple-blue);">拍卖与竞价</span>
-                    <span class="tag" style="background: rgba(0, 113, 227, 0.08); color: var(--apple-blue);">拼运气</span>
-                    <span class="tag" style="background: rgba(0, 113, 227, 0.08); color: var(--apple-blue);">接招</span>
-                    <span class="tag"
-                        style="background: rgba(0, 113, 227, 0.08); color: var(--apple-blue);">可变行动顺序</span>
-                    <span class="tag" style="background: rgba(0, 113, 227, 0.08); color: var(--apple-blue);">骰子挑选</span>
-                </div>
-            </a>
-
-            <!-- 情书 -->
-            <a href="/loveletters/" class="game-card" data-min="2" data-max="8">
-                <div class="game-header">
-                    <div class="game-icon" style="background: rgba(255, 59, 48, 0.08); cursor: pointer;"
-                        onclick="openRulesModal('情书', event)">
-                        <i class="ph-fill ph-heart" style="color: var(--apple-red);"></i>
-                    </div>
-                    <div class="game-title">
-                        <h3>情书</h3>
-                        <span class="en-name">Love Letter <i class="ph-fill ph-star"
-                                style="color: var(--apple-yellow); margin-left: 6px;"></i> 7.4</span>
-                    </div>
-                </div>
-                <div class="game-stats">
-                    <div class="stat-item">
-                        <i class="ph-bold ph-users stat-icon"></i>推荐 4-6人
-                    </div>
-                    <div class="stat-item">
-                        <i class="ph-bold ph-clock stat-icon"></i>20-30分钟
-                    </div>
-                    <div class="stat-item">
-                        <i class="ph-bold ph-cake stat-icon"></i>年龄 8+
-                    </div>
-                    <div class="stat-item">
-                        <i class="ph-bold ph-trend-up stat-icon"></i>难度 1.30/5
-                    </div>
-                </div>
-                <div class="game-description">
-                    安妮塔公主因母后玛丽安娜被捕而陷入悲伤。作为公主的追求者之一，你想把亲笔情书送到她手上，但她深居宫中，你只能借由宫廷中的各色人物代为转交。你手中留下的那张牌，代表此刻正替你传递情书的人；谁最终把信送到最接近公主的人手中，谁就更能赢得公主的好感。
-                    <div class="game-lab">这是一款以“留手牌、猜身份、打效果”为核心的轻量级推理卡牌游戏，乐趣在于用最少的信息判断别人手里是谁，并想办法把情书送到最接近公主的人手上。</div>
-                </div>
-                <div class="game-tags">
-                    <div
-                        style="width: 100%; font-size: 0.8rem; color: var(--apple-gray); font-weight: 600; margin-bottom: 2px;">
-                        标签</div>
-                    <span class="tag">竞争</span>
-                    <span class="tag">卡牌</span>
-                    <span class="tag">聚会</span>
-                    <div
-                        style="width: 100%; font-size: 0.8rem; color: var(--apple-gray); font-weight: 600; margin-top: 6px; margin-bottom: 2px;">
-                        机制</div>
-                    <span class="tag" style="background: rgba(0, 113, 227, 0.08); color: var(--apple-blue);">手牌管理</span>
-                    <span class="tag" style="background: rgba(0, 113, 227, 0.08); color: var(--apple-blue);">玩家淘汰</span>
-                    <span class="tag" style="background: rgba(0, 113, 227, 0.08); color: var(--apple-blue);">推理</span>
-                </div>
-            </a>
-
-            <!-- 炸弹猫 -->
-            <a href="/explodingkittens/" class="game-card" data-min="2" data-max="5">
-                <div class="game-header">
-                    <div class="game-icon" style="background: rgba(255, 59, 48, 0.08); cursor: pointer;"
-                        onclick="openRulesModal('炸弹猫', event)">
-                        <i class="ph-fill ph-cat" style="color: var(--apple-red);"></i>
-                    </div>
-                    <div class="game-title">
-                        <h3>炸弹猫</h3>
-                        <span class="en-name">Exploding Kittens <i class="ph-fill ph-star"
-                                style="color: var(--apple-yellow); margin-left: 6px;"></i> 6.1</span>
-                    </div>
-                </div>
-                <div class="game-stats">
-                    <div class="stat-item">
-                        <i class="ph-bold ph-users stat-icon"></i>推荐 4-5人
-                    </div>
-                    <div class="stat-item">
-                        <i class="ph-bold ph-clock stat-icon"></i>15分钟
-                    </div>
-                    <div class="stat-item">
-                        <i class="ph-bold ph-cake stat-icon"></i>年龄 7+
-                    </div>
-                    <div class="stat-item">
-                        <i class="ph-bold ph-trend-up stat-icon"></i>难度 1.08/5
-                    </div>
-                </div>
-                <div class="game-description">
-                    《爆炸猫咪》可以理解成“猫咪版俄罗斯轮盘”。玩家轮流抽牌，直到有人抽到 爆炸猫咪 并出局。其他功能牌则让你有机会偷看未来、打断别人、跳过抽牌，或把爆炸猫咪重新塞回牌库害人。 
-                    <div class="game-lab">这是一款“打牌控场＋抽牌拆弹”的欢乐淘汰游戏，核心乐趣在于一边用手牌坑别人、一边想办法别抽到爆炸猫咪。 </div>
-                </div>
-                <div class="game-tags">
-                    <div
-                        style="width: 100%; font-size: 0.8rem; color: var(--apple-gray); font-weight: 600; margin-bottom: 2px;">
-                        标签</div>
-                    <span class="tag">竞争</span>
-                    <span class="tag">聚会</span>
-                    <div
-                        style="width: 100%; font-size: 0.8rem; color: var(--apple-gray); font-weight: 600; margin-top: 6px; margin-bottom: 2px;">
-                        机制</div>
-                    <span class="tag" style="background: rgba(0, 113, 227, 0.08); color: var(--apple-blue);">吹牛</span>
-                    <span class="tag" style="background: rgba(0, 113, 227, 0.08); color: var(--apple-blue);">手牌管理</span>
-                    <span class="tag" style="background: rgba(0, 113, 227, 0.08); color: var(--apple-blue);">玩家淘汰</span>
-                    <span class="tag" style="background: rgba(0, 113, 227, 0.08); color: var(--apple-blue);">拼运气</span>
-                    <span class="tag" style="background: rgba(0, 113, 227, 0.08); color: var(--apple-blue);">成套收集</span>
-                    <span class="tag" style="background: rgba(0, 113, 227, 0.08); color: var(--apple-blue);">接招</span>
-                </div>
-            </a>
-
-            <!-- 卡波 -->
-            <a href="/cabo/" class="game-card" data-min="2" data-max="4">
-                <div class="game-header">
-                    <div class="game-icon" style="background: rgba(255, 149, 0, 0.08); cursor: pointer;"
-                        onclick="openRulesModal('卡波', event)">
-                        <i class="ph-fill ph-magic-wand" style="color: var(--apple-orange);"></i>
-                    </div>
-                    <div class="game-title">
-                        <h3>卡波</h3>
-                        <span class="en-name">Cabo <i class="ph-fill ph-star"
-                                style="color: var(--apple-yellow); margin-left: 6px;"></i> 7.3</span>
-                    </div>
-                </div>
-                <div class="game-stats">
-                    <div class="stat-item">
-                        <i class="ph-bold ph-users stat-icon"></i>推荐 3-4人
-                    </div>
-                    <div class="stat-item">
-                        <i class="ph-bold ph-clock stat-icon"></i>45分钟
-                    </div>
-                    <div class="stat-item">
-                        <i class="ph-bold ph-cake stat-icon"></i>年龄 8+
-                    </div>
-                    <div class="stat-item">
-                        <i class="ph-bold ph-trend-up stat-icon"></i>难度 1.23/5
-                    </div>
-                </div>
-                <div class="game-description">
-                    在 CABO 中，数字牌代表你与独角兽 CABO 的距离，数值越小越接近它。你的目标就是让自己面前留下来的牌总值尽量低；谁在一轮结束时总值最低，谁就最接近 CABO。
-                    <div class="game-lab">这是一款以“记牌、换牌、偷看情报”为核心的轻量卡牌游戏，乐趣在于一边想办法把自己面前的牌变小，一边抓时机喊出“CABO”抢先结束回合。</div>
-                </div>
-                <div class="game-tags">
-                    <div
-                        style="width: 100%; font-size: 0.8rem; color: var(--apple-gray); font-weight: 600; margin-bottom: 2px;">
-                        标签</div>
-                    <span class="tag">竞争</span>
-                    <span class="tag">卡牌</span>
-                    <div
-                        style="width: 100%; font-size: 0.8rem; color: var(--apple-gray); font-weight: 600; margin-top: 6px; margin-bottom: 2px;">
-                        机制</div>
-                    <span class="tag" style="background: rgba(0, 113, 227, 0.08); color: var(--apple-blue);">手牌管理</span>
-                    <span class="tag" style="background: rgba(0, 113, 227, 0.08); color: var(--apple-blue);">记忆</span>
-                </div>
-            </a>
-
-            <!-- 7连翻 -->
-            <a href="/flip7/" class="game-card" data-min="3" data-max="13">
-                <div class="game-header">
-                    <div class="game-icon" style="background: rgba(175, 82, 222, 0.08); cursor: pointer;"
-                        onclick="openRulesModal('7连翻', event)">
-                        <i class="ph-fill ph-cards" style="color: var(--apple-purple);"></i>
-                    </div>
-                    <div class="game-title">
-                        <h3>7连翻</h3>
-                        <span class="en-name">Flip 7 <i class="ph-fill ph-star"
-                                style="color: var(--apple-yellow); margin-left: 6px;"></i> 7.2</span>
-                    </div>
-                </div>
-                <div class="game-stats">
-                    <div class="stat-item">
-                        <i class="ph-bold ph-users stat-icon"></i>推荐 5-6人
-                    </div>
-                    <div class="stat-item">
-                        <i class="ph-bold ph-clock stat-icon"></i>20分钟
-                    </div>
-                    <div class="stat-item">
-                        <i class="ph-bold ph-cake stat-icon"></i>年龄 8+
-                    </div>
-                    <div class="stat-item">
-                        <i class="ph-bold ph-trend-up stat-icon"></i>难度 1.03/5
-                    </div>
-                </div>
-                <div class="game-description">
-                    《Flip 7》没有很重的主题包装，它的魅力主要来自牌组结构本身：牌堆里并不是均匀分布的数字牌，而是 1 只有 1 张、2 有 2 张、3 有 3 张……一直到 12 有 12 张，再加上一批行动牌与计分修正牌。数字越大，牌越多，也越容易撞重复。
-                    <div class="game-lab">这是一款“翻牌不停手，但不能翻到重复数字”的押运气卡牌游戏，核心乐趣在于一边见好就收、一边赌自己能不能凑出 7 张不重复数字牌拿下大奖励。</div>
-                </div>
-                <div class="game-tags">
-                    <div
-                        style="width: 100%; font-size: 0.8rem; color: var(--apple-gray); font-weight: 600; margin-bottom: 2px;">
-                        标签</div>
-                    <span class="tag">竞争</span>
-                    <span class="tag">卡牌</span>
-                    <div
-                        style="width: 100%; font-size: 0.8rem; color: var(--apple-gray); font-weight: 600; margin-top: 6px; margin-bottom: 2px;">
-                        机制</div>
-                    <span class="tag" style="background: rgba(0, 113, 227, 0.08); color: var(--apple-blue);">拼运气</span>
-                </div>
-            </a>
-
-            <!-- 现代艺术 -->
-            <a href="/modernart/" class="game-card" data-min="3" data-max="5">
-                <div class="game-header">
-                    <div class="game-icon" style="background: rgba(255, 149, 0, 0.08); cursor: pointer;"
-                        onclick="openRulesModal('现代艺术', event)">
-                        <i class="ph-fill ph-palette" style="color: var(--apple-orange);"></i>
-                    </div>
-                    <div class="game-title">
-                        <h3>现代艺术</h3>
-                        <span class="en-name">Modern Art <i class="ph-fill ph-star"
-                                style="color: var(--apple-yellow); margin-left: 6px;"></i> 7.5</span>
-                    </div>
-                </div>
-                <div class="game-stats">
-                    <div class="stat-item">
-                        <i class="ph-bold ph-users stat-icon"></i>推荐 4-5人
-                    </div>
-                    <div class="stat-item">
-                        <i class="ph-bold ph-clock stat-icon"></i>45分钟
-                    </div>
-                    <div class="stat-item">
-                        <i class="ph-bold ph-cake stat-icon"></i>年龄 10+
-                    </div>
-                    <div class="stat-item">
-                        <i class="ph-bold ph-trend-up stat-icon"></i>难度 2.28/5
-                    </div>
-                </div>
-                <div class="game-description">
-                    在《现代艺术》中，玩家扮演博物馆，通过拍卖五位艺术家的作品来赚钱。每轮结束时，会根据本轮各艺术家被打出的数量决定市场排名，进而决定这些画值多少钱。也就是说，你现在高价买来的画，可能转眼大赚，也可能直接一文不值。
-                    <div class="game-lab">这是一款“我来开价、也来接盘”的拍卖博弈游戏，核心乐趣在于一边操纵市场热度、一边判断哪些画值得买、哪些画更适合高价卖给别人。根据规则书，玩家扮演的是博物馆，在四轮拍卖里通过买卖画作赚到最多钱。</div>
-                </div>
-                <div class="game-tags">
-                    <div
-                        style="width: 100%; font-size: 0.8rem; color: var(--apple-gray); font-weight: 600; margin-bottom: 2px;">
-                        标签</div>
-                    <span class="tag">竞争</span>
-                    <span class="tag">德式</span>
-                    <div
-                        style="width: 100%; font-size: 0.8rem; color: var(--apple-gray); font-weight: 600; margin-top: 6px; margin-bottom: 2px;">
-                        机制</div>
-                    <span class="tag"
-                        style="background: rgba(0, 113, 227, 0.08); color: var(--apple-blue);">下注与打赌</span>
-                    <span class="tag" style="background: rgba(0, 113, 227, 0.08); color: var(--apple-blue);">吹牛</span>
-                    <span class="tag" style="background: rgba(0, 113, 227, 0.08); color: var(--apple-blue);">手牌管理</span>
-                    <span class="tag" style="background: rgba(0, 113, 227, 0.08); color: var(--apple-blue);">商品估值</span>
-                </div>
-            </a>
-
-            <!-- 纸牌帮 -->
-            <a href="/thegang/" class="game-card" data-min="3" data-max="6">
-                <div class="game-header">
-                    <div class="game-icon" style="background: rgba(88, 86, 214, 0.08); cursor: pointer;"
-                        onclick="openRulesModal('纸牌帮', event)">
-                        <i class="ph-fill ph-spade" style="color: var(--apple-indigo, #5856d6);"></i>
-                    </div>
-                    <div class="game-title">
-                        <h3>纸牌帮</h3>
-                        <span class="en-name">The Gang <i class="ph-fill ph-star"
-                                style="color: var(--apple-yellow); margin-left: 6px;"></i> 7.6</span>
-                    </div>
-                </div>
-                <div class="game-stats">
-                    <div class="stat-item">
-                        <i class="ph-bold ph-users stat-icon"></i>推荐 5人
-                    </div>
-                    <div class="stat-item">
-                        <i class="ph-bold ph-clock stat-icon"></i>20分钟
-                    </div>
-                    <div class="stat-item">
-                        <i class="ph-bold ph-cake stat-icon"></i>年龄 10+
-                    </div>
-                    <div class="stat-item">
-                        <i class="ph-bold ph-trend-up stat-icon"></i>难度 1.60/5
-                    </div>
-                </div>
-                <div class="game-description">
-                    你们是一伙准备连续抢银行的职业大盗。每次“抢劫”里，只要全员把彼此牌力顺序判断正确，就能打开一格金库；如果顺序判断错了，就会触发一次警报。先拿到 3 根金条获胜，先触发 3 次警报则失败。
-                    <div class="game-lab">这是一款把德州扑克变成合作推理的桌游，核心乐趣在于大家不能明说手牌，只能靠筹码排序与公共牌变化，默契地把全员手牌强弱排对。</div>
-                </div>
-                <div class="game-tags">
-                    <div
-                        style="width: 100%; font-size: 0.8rem; color: var(--apple-gray); font-weight: 600; margin-bottom: 2px;">
-                        标签</div>
-                    <span class="tag">合作</span>
-                    <span class="tag">卡牌</span>
-                    <div
-                        style="width: 100%; font-size: 0.8rem; color: var(--apple-gray); font-weight: 600; margin-top: 6px; margin-bottom: 2px;">
-                        机制</div>
-                    <span class="tag" style="background: rgba(0, 113, 227, 0.08); color: var(--apple-blue);">下注与打赌</span>
-                </div>
-            </a>
-
-        </div>
-
-        <!-- Rules Modal -->
-        <div id="rulesModal" class="apple-modal" onclick="if(event.target === this) closeRulesModal()">
-            <div class="apple-modal-content">
-                <div class="apple-modal-header">
-                    <h2 class="apple-modal-title" id="modalGameTitle">游戏规则</h2>
-                    <button class="apple-modal-close" onclick="closeRulesModal()"><i class="ph-bold ph-x"></i></button>
-                </div>
-                <div class="apple-modal-body">
-                    <div class="modal-tab-bar">
-                        <button id="modalRuleBtn" class="modal-tab-btn active"
-                            onclick="switchModalTab('rule')">规则</button>
-                        <button id="modalGuideBtn" class="modal-tab-btn" onclick="switchModalTab('guide')">攻略</button>
-                    </div>
-                    <div id="modalBodyContent">
-                        <!-- Dynamic content will be injected here -->
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="back-link-container">
-            <a href="/" class="back-link">
-                <i class="ph-bold ph-arrow-left"></i> 返回首页
-            </a>
-        </div>
-
-        <footer class="apple-footer">
-            <p>Board Game Portal © 2026</p>
-        </footer>
-
     </div>
+</div>
+{% endblock %}
 
-    <script>
-        function filterGames(num, elem) {
-            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
-            if (elem) {
-                elem.classList.add('active');
-            }
+{% block extra_body %}
+<script>
+// ============================================
+// Game Data
+// ============================================
+var GAMES = [
+  {
+    id: 'splendor', name: '璀璨宝石', enName: 'Splendor', icon: '💎', color: 'purple',
+    minP: 2, maxP: 4, recP: '3', duration: '30分钟', age: '10+', difficulty: '2.26/5', rating: '7.4',
+    desc: '通过收集宝石购买发展卡，积累财富与声望。以"拿宝石—买卡片—滚雪球"为核心的引擎构筑。',
+    tags: ['卡牌选取', '成套收集', '资源管理'], href: '/splendor/',
+    rule: '<h4>胜利条件</h4><p>通过购买发展卡、吸引贵族来获得声望分；当有玩家在自己回合结束时达到15分或以上，游戏进入结束流程。最终由声望分最高的玩家获胜。</p><h4>回合流程</h4><p>每回合从以下行动中选1个执行：拿筹码（3不同色或2同色需≥4个）、保留牌（保留1张+拿1金筹码，上限3张）、购买牌（支付筹码买公开或保留牌）。</p><h4>常见易错</h4><ul><li>筹码上限10个</li><li>保留牌上限3张</li><li>拿2同色需该色至少4个</li><li>贵族在回合结束自动检查</li></ul>',
+    guide: '<h4>核心策略</h4><p>尽早建立宝石折扣引擎。1级卡和2级卡提供折扣，3级卡提供大量声望。争夺贵族时注意对手的颜色积累。控制节奏，在对手即将到达15分时抢先一步。</p>'
+  },
+  {
+    id: 'avalon', name: '阿瓦隆', enName: 'Avalon', icon: '🛡️', color: 'blue',
+    minP: 5, maxP: 12, recP: '7-8', duration: '30分钟', age: '13+', difficulty: '2.06/5', rating: '7.4',
+    desc: '好人阵营让任务成功，邪恶阵营潜伏破坏。梅林知道坏人是谁但必须隐藏身份。',
+    tags: ['推理', '阵营', '身份隐藏', '投票'], href: '/avalon/',
+    rule: '<h4>胜利条件</h4><p>蓝方让3个任务成功且梅林未被刺杀→蓝方胜。红方让3个任务失败，或刺客成功刺杀梅林→红方胜。</p><h4>回合流程</h4><p>队长组队→全员公投→执行任务→记录结果。5轮任务中先取3胜者进入结算。</p><h4>常见易错</h4><ul><li>蓝方不能投失败票</li><li>蓝方3胜≠立刻赢（还要防刺杀）</li><li>7-10人第4轮需2失败才炸车</li></ul>',
+    guide: '<h4>核心策略</h4><p><strong>梅林</strong>：要暗中引导团队但不可暴露身份。在投票中巧妙表达意见。</p><p><strong>刺客</strong>：观察谁在引导团队——那很可能是梅林。</p><p><strong>派西维尔</strong>：分辨梅林和莫甘娜是关键。观察两人的行为模式差异。</p>'
+  },
+  {
+    id: 'lasvegas', name: '拉斯维加斯', enName: 'Las Vegas', icon: '🎲', color: 'green',
+    minP: 2, maxP: 6, recP: '4-5', duration: '45-60分钟', age: '8+', difficulty: '1.42/5', rating: '7.5',
+    desc: '欢乐掷骰抢赌场游戏。把骰子押到赌场争抢钞票，平手全灭是核心互动规则。',
+    tags: ['掷骰', '区域控制', '竞标'], href: '/lasvegas/',
+    rule: '<h4>胜利条件</h4><p>游戏进行3轮。每轮结束后各赌场分钞票。3轮后总金额最高者获胜。</p><h4>回合流程</h4><p>掷剩余骰子→选择一个点数→放置该点数所有骰子到对应赌场。所有玩家放完后按赌场结算：骰子多的先拿高额钞票，平手互相取消。</p><h4>常见易错</h4><ul><li>每回合只能选一个点数</li><li>骰子只能放对应点数赌场</li><li>平手玩家全部失去资格</li></ul>',
+    guide: '<h4>核心策略</h4><p>不要过早分散骰子。集中力量争夺1-2个高价值赌场。利用平手规则干扰对手——有时不是要赢，是要让对手也不赢。</p>'
+  },
+  {
+    id: 'loveletters', name: '情书', enName: 'Love Letter', icon: '💌', color: 'red',
+    minP: 2, maxP: 8, recP: '4-6', duration: '20-30分钟', age: '8+', difficulty: '1.30/5', rating: '7.4',
+    desc: '极简卡牌推理游戏。用最少的信息判断别人手里的角色，把情书送到最接近公主的人手上。',
+    tags: ['手牌管理', '推理', '玩家淘汰'], href: '/loveletters/',
+    rule: '<h4>胜利条件</h4><p>多局制。每局结束时手牌亲近度最高者获得1枚好感指示物。先达到目标好感数者获胜（2人7枚/3人5枚/4人+4枚）。</p><h4>回合流程</h4><p>抽1张牌→打1张牌→执行效果→留1张牌。牌库空或只剩1人时结束本局。</p>',
+    guide: '<h4>核心策略</h4><p>记住已打出的牌。用卫兵猜别人手牌是获取信息的关键。5-8人局牌组翻倍，信息密度更高。</p>'
+  },
+  {
+    id: 'explodingkittens', name: '炸弹猫', enName: 'Exploding Kittens', icon: '🐱', color: 'red',
+    minP: 2, maxP: 5, recP: '4-5', duration: '15分钟', age: '7+', difficulty: '1.08/5', rating: '6.1',
+    desc: '猫咪版俄罗斯轮盘。一边用手牌坑别人、一边想办法别抽到爆炸猫咪。',
+    tags: ['吹牛', '手牌管理', '玩家淘汰', '拼运气'], href: '/explodingkittens/',
+    rule: '<h4>胜利条件</h4><p>最后存活的玩家获胜。抽到爆炸猫咪且无法化解则出局。</p><h4>回合流程</h4><p>可出0或多张牌→必须抽1张牌结束回合。拆弹牌可化解爆炸猫咪。</p>',
+    guide: '<h4>核心策略</h4><p>保留拆弹牌直到必须用。用预见未来偷看牌库顶。用攻击叠加让下家抽多张牌。</p>'
+  },
+  {
+    id: 'cabo', name: '卡波', enName: 'Cabo', icon: '🪄', color: 'orange',
+    minP: 2, maxP: 4, recP: '3-4', duration: '45分钟', age: '8+', difficulty: '1.23/5', rating: '7.3',
+    desc: '记忆博弈游戏。想办法把自己面前的牌变小，抓时机喊CABO抢先结束回合。',
+    tags: ['手牌管理', '记忆'], href: '/cabo/',
+    rule: '<h4>胜利条件</h4><p>多轮计分，总分越低越好。有玩家总分超过100时触发结束，总分最低者获胜。</p><h4>回合流程</h4><p>抽牌（牌库或弃牌堆）或喊CABO。抽牌后可弃牌（发动能力）或替换自己面前的牌。喊CABO后其他玩家各再1回合。</p>',
+    guide: '<h4>核心策略</h4><p>起手看好2张牌并记住。从弃牌堆拿牌要明置。CABO要确保自己最低，否则+10分惩罚。</p>'
+  },
+  {
+    id: 'flip7', name: '7连翻', enName: 'Flip 7', icon: '📚', color: 'purple',
+    minP: 3, maxP: 12, recP: '5-6', duration: '20分钟', age: '8+', difficulty: '1.03/5', rating: '7.2',
+    desc: '翻牌不停手但不能翻到重复数字。见好就收，赌自己凑出7张不重复数字牌拿大奖。',
+    tags: ['拼运气'], href: '/flip7/',
+    rule: '<h4>胜利条件</h4><p>多轮累计分数。某轮结束后有人达到200分触发结束，总分最高者获胜。</p><h4>回合流程</h4><p>发牌者依次询问Hit（要牌）或Stay（停手）。翻到重复数字则Bust本轮0分。有人翻出7张不同数字牌则本轮立刻结束。</p>',
+    guide: '<h4>核心策略</h4><p>数字牌不能重复是核心。0也是数字牌帮你凑7。Second Chance可挡一次重复。x2先翻倍再加修正牌。</p>'
+  },
+  {
+    id: 'modernart', name: '现代艺术', enName: 'Modern Art', icon: '🎨', color: 'orange',
+    minP: 3, maxP: 5, recP: '4-5', duration: '45分钟', age: '10+', difficulty: '2.28/5', rating: '7.5',
+    desc: '拍卖博弈游戏。一边操纵市场热度、一边判断哪些画值得买、哪些画适合高价卖给别人。',
+    tags: ['下注与打赌', '吹牛', '手牌管理', '商品估值'], href: '/modernart/',
+    rule: '<h4>胜利条件</h4><p>4轮拍卖后现金最多者获胜。</p><h4>回合流程</h4><p>拍卖师打出1张画→按拍卖类型进行拍卖→结算归属。每轮结束按艺术家热度将画卖给银行变现。</p>',
+    guide: '<h4>核心策略</h4><p>关注每个艺术家已打出的数量。第5张画打出时本轮结束。拍卖类型影响策略：公开竞价要抬对手价，一轮拍卖要压价捡漏。</p>'
+  },
+  {
+    id: 'thegang', name: '纸牌帮', enName: 'The Gang', icon: '♠️', color: 'blue',
+    minP: 3, maxP: 6, recP: '5', duration: '20分钟', age: '10+', difficulty: '1.60/5', rating: '7.6',
+    desc: '合作推理桌游。不能明说手牌，靠筹码排序与公共牌变化，把全员手牌强弱排对。',
+    tags: ['下注与打赌', '合作'], href: '/thegang/',
+    rule: '<h4>胜利条件</h4><p>合作模式。先拿到3根金条获胜，先触发3次警报失败。</p><h4>回合流程</h4><p>每人下注表示自己手牌强弱→翻公共牌→重新评估→全员确认排序。排序全对→金条+1；有人排错→警报+1。</p>',
+    guide: '<h4>核心策略</h4><p>观察队友下注模式。保守的人突然加注=有强牌。公共牌改变后重新评估手牌价值。沟通要含蓄——不能直接说出牌面。</p>'
+  }
+];
 
-            document.querySelectorAll('.game-card').forEach(item => {
-                if (num === 0) {
-                    item.classList.remove('hidden');
-                } else {
-                    const min = parseInt(item.dataset.min);
-                    const max = parseInt(item.dataset.max);
-                    if (num >= min && num <= max) {
-                        item.classList.remove('hidden');
-                    } else {
-                        item.classList.add('hidden');
-                    }
-                }
-            });
+// ============================================
+// Color mapping helper
+// ============================================
+function colorBg(c) {
+    var map = {
+        purple: 'rgba(175,82,222,0.18)',
+        blue: 'rgba(0,113,227,0.18)',
+        green: 'rgba(52,199,89,0.18)',
+        red: 'rgba(255,59,48,0.18)',
+        orange: 'rgba(255,149,0,0.18)'
+    };
+    return map[c] || 'rgba(0,0,0,0.08)';
+}
+
+// ============================================
+// Star rating HTML
+// ============================================
+function starsHtml(rating) {
+    var n = parseFloat(rating) || 0;
+    var full = Math.floor(n);
+    var half = (n - full) >= 0.5 ? 1 : 0;
+    var empty = 5 - full - half;
+    var html = '';
+    for (var i = 0; i < full; i++) { html += '★'; }
+    if (half) { html += '☆'; }
+    for (var i = 0; i < empty; i++) { html += '☆'; }
+    return html;
+}
+
+// ============================================
+// Render game cards
+// ============================================
+function renderGameCards(filterPlayers) {
+    if (typeof filterPlayers === 'undefined') { filterPlayers = 0; }
+    var container = document.getElementById('gameCardsContainer');
+    if (!container) return;
+
+    var html = '';
+    for (var i = 0; i < GAMES.length; i++) {
+        var g = GAMES[i];
+        var show = true;
+        if (filterPlayers === 9) {
+            show = g.maxP >= 9;
+        } else if (filterPlayers > 0) {
+            show = filterPlayers >= g.minP && filterPlayers <= g.maxP;
         }
 
-        const gameRulesData = {
-            '璀璨宝石': {
-                content: `
-                    <div class="rule-section">
-                        <h4>⚙️ 规则：1. 胜利条件</h4>
-                        <p>通过购买发展卡、吸引贵族来获得声望分；当有玩家在自己回合结束时达到 <strong>15 分或以上</strong>，游戏进入结束流程。最后由<strong>声望分最高</strong>的玩家获胜；若平分，则<strong>购买的发展卡更少</strong>者获胜；若还平，则共同获胜。</p>
-                    </div>
-
-                    <div class="rule-section">
-                        <h4>⚙️ 规则：2. 开局准备</h4>
-                        <ul>
-                            <li>将 <strong>1 / 2 / 3 级发展卡</strong>分别洗混，三叠牌按等级摆放。</li>
-                            <li>每个等级翻开 <strong>4 张</strong>公开牌，放在对应牌堆旁。</li>
-                            <li>洗混贵族板块，并按人数翻开：2 人：3 个贵族；3 人：4 个贵族；4 人：5 个贵族。</li>
-                            <li>将宝石筹码按颜色分类放成公共供应区：白钻、绿祖母绿、蓝蓝宝石、黑缟玛瑙、红红宝石，以及金色万能筹码。</li>
-                            <li>按人数调整普通宝石数量：2 人：每色 4 个；3 人：每色 5 个；4 人：每色 7 个（金筹码不减少）。</li>
-                            <li>由<strong>最年轻的玩家</strong>拿先手标记并先开始。</li>
-                        </ul>
-                    </div>
-
-                    <div class="rule-section">
-                        <h4>🔄 规则：3. 回合流程</h4>
-                        <p>每位玩家回合通常按以下步骤进行（必须从以下行动中选 <strong>1 个</strong>执行）：</p>
-                        <ul>
-                            <li><strong>可选行动 A：拿筹码</strong><br>
-                            拿 <strong>3 个不同颜色</strong>的宝石筹码。或拿 <strong>2 个相同颜色</strong>的宝石筹码，但前提是该颜色在你拿之前公共区里<strong>至少有 4 个</strong>。金筹码不能用这个方式拿。</li>
-                            <li><strong>可选行动 B：保留 1 张牌</strong><br>
-                            可从桌面公开牌保留 1 张，或直接从某一级牌堆顶盲抽 1 张保留，然后拿 <strong>1 个金筹码</strong>；若金筹码没了，仍然可以保留牌。每位玩家手中最多只能保留 <strong>3 张</strong>牌。</li>
-                            <li><strong>可选行动 C：购买 1 张发展卡</strong><br>
-                            可以买桌面公开牌，或买自己之前保留的牌。支付牌面要求的筹码，金筹码可当任意颜色。买下后将牌放到自己面前，它会提供一个<strong>永久宝石折扣</strong>，有些牌还会给<strong>声望分</strong>。</li>
-                            <li><strong>回合结束：</strong><br>
-                            若你此时拥有的发展卡满足某位贵族的颜色需求，则获得 <strong>1 个贵族板块</strong>。每回合最多获得 <strong>1 位贵族</strong>。若你手上的筹码总数超过 <strong>10 个</strong>，需弃到 10 个。</li>
-                        </ul>
-                    </div>
-
-                    <div class="rule-section">
-                        <h4>🏆 规则：4. 游戏结束 & 5. 结算方式</h4>
-                        <ul>
-                            <li>当 <strong>任意玩家在自己回合结束时达到 15 分或以上</strong> 时，先触发游戏结束。之后其余玩家继续进行，直到所有玩家回合数相同，本轮结束后结算。</li>
-                            <li>统计所有<strong>发展卡上的声望分</strong>，加上所有<strong>贵族板块的声望分</strong>。</li>
-                            <li>若同分，比较<strong>已购买的发展卡数量</strong>。</li>
-                            <li><strong>最终获胜者</strong>：总声望最高者；若仍平手，则共同获胜。</li>
-                        </ul>
-                    </div>
-
-                    <div class="rule-section">
-                        <h4>⚠️ 规则：6. 关键规则 & 7. 常见易错点</h4>
-                        <ul>
-                            <li>发展卡右上角的宝石颜色，代表它提供的<strong>永久折扣颜色</strong>；以后买牌时可少付同色 1 个。</li>
-                            <li>金筹码是<strong>万能筹码</strong>，买牌时可替代任意颜色。</li>
-                            <li>桌面上任一公开牌被买走或被保留后，都要从对应等级牌堆<strong>补 1 张</strong>；若牌堆空了，就不再补。</li>
-                            <li>贵族不是主动行动去拿，而是<strong>回合结束时自动检查</strong>是否满足条件。</li>
-                            <li><strong>拿 2 个同色</strong>不是随便拿，必须该颜色公共区里原本至少有 <strong>4 个</strong>。</li>
-                            <li><strong>保留牌上限是 3 张</strong>，而且保留后不能主动弃掉，只能等以后买掉。</li>
-                            <li><strong>筹码上限是 10 个</strong>，很多新手回合做完会忘记弃到 10 个。</li>
-                            <li><strong>一回合只能做 1 个主行动</strong>，不能“先拿宝石再保留牌”。</li>
-                            <li><strong>若同时满足多个贵族</strong>，该回合也只能选 <strong>1 位</strong>获得。</li>
-                        </ul>
-                    </div>
-                `
-            },
-            '阿瓦隆': {
-                content: `
-                    <div class="rule-section">
-                        <h4>⚙️ 规则：1. 胜利条件</h4>
-                        <p>游戏围绕最多 <strong>5 轮任务</strong>进行。</p>
-                        <ul>
-                            <li><strong>蓝方（亚瑟/骑士阵营）</strong>：让任务成功 <strong>3 次</strong></li>
-                            <li><strong>红方（莫德雷德/反抗军阵营）</strong>：让任务失败 <strong>3 次</strong></li>
-                        </ul>
-                        <p>但如果蓝方先完成 3 次成功任务，游戏<strong>还不会立刻结束</strong>：刺客会进行一次刺杀，若成功刺中梅林，则红方反败为胜；刺杀失败则蓝方获胜。</p>
-                    </div>
-
-                    <div class="rule-section">
-                        <h4>⚙️ 规则：2. 开局准备</h4>
-                        <ul>
-                            <li>按人数分配对应角色，不同人数的角色配置是固定的。</li>
-                            <li>给每位玩家发身份牌，并发放表决用的支持 / 反对投票牌。</li>
-                            <li>进行全局唯一一次的<strong>夜晚阶段</strong>：不同身份按顺序睁眼或示意，获取初始信息。</li>
-                            <li>随机选出第一位队长，准备开始第一轮任务。</li>
-                        </ul>
-                    </div>
-
-                    <div class="rule-section">
-                        <h4>🔄 规则：3. 回合流程</h4>
-                        <p>每位玩家回合通常按以下步骤进行：</p>
-                        <ul>
-                            <li><strong>队长组队</strong>：当轮队长提名若干名玩家执行任务；人数取决于当前是第几轮、以及总玩家数。 </li>
-                            <li><strong>玩家发言</strong>：围绕这支队伍是否合理进行讨论、分析和表态；队长通常最后发言。 </li>
-                            <li><strong>全员公投</strong>：所有玩家同时公开投票，决定是否同意这支队伍出任务；过半同意则任务开始，否则队长顺时针移交给下一位玩家重组队伍。 </li>
-                            <li><strong>执行任务</strong>：被选中的玩家匿名投出“任务成功”或“任务失败”；蓝方只能投成功，红方可投成功伪装，也可投失败破坏。 </li>
-                            <li><strong>回合结束</strong>：记录本轮任务结果，进入下一轮；若达成胜利条件则进入结算或刺杀阶段。 </li>
-                        </ul>
-                    </div>
-
-                    <div class="rule-section">
-                        <h4>🏆 规则：4. 游戏结束 & 5. 结算方式</h4>
-                        <p>当任一阵营先拿到 <strong>3 次任务胜利</strong> 时，进入结束判断：</p>
-                        <ul>
-                            <li><strong>红方先破坏 3 轮任务</strong>：红方直接获胜</li>
-                            <li><strong>蓝方先完成 3 轮任务</strong>：进入刺杀阶段</li>
-                            <li><strong>刺客刺中梅林</strong>：红方翻盘</li>
-                            <li><strong>最终获胜者</strong>：若刺杀成功则红方胜，否则蓝方胜。</li>
-                        </ul>
-                    </div>
-
-                    <div class="rule-section">
-                        <h4>⚠️ 规则：6. 关键规则 & 7. 常见易错点</h4>
-                        <ul>
-                            <li><strong>夜晚信息不对称</strong>：红方通常彼此互认；梅林能看到大多数红方；派西维尔能看到梅林和莫甘娜，但分不清谁是谁。</li>
-                            <li><strong>任务投票匿名</strong>：这是游戏信息博弈的核心，大家只能从队伍构成、发言和任务结果倒推身份。</li>
-                            <li><strong>7-10 人局第 4 轮是保护轮</strong>：需要 <strong>2 张失败票</strong> 才会导致任务失败，只有 1 张失败票仍算成功。</li>
-                            <li><strong>若连续多次组队未通过</strong>：队长会顺时针轮换继续组队；若连续三次无法让任务开始，第 4 次组队会强制执行任务。</li>
-                            <li>新手最容易忘记：<strong>蓝方玩家不能投任务失败票</strong></li>
-                            <li>很多人会误解：<strong>蓝方 3 成功并不等于马上赢</strong>，还要看刺客是否刺中梅林</li>
-                            <li>保护轮经常被忽略：<strong>7-10 人局第 4 轮需要 2 失败才炸车</strong></li>
-                            <li>公投不过不代表这一轮结束，只是<strong>换下一位队长重新组队</strong></li>
-                            <li>派西维尔看到的是<strong>梅林和莫甘娜两个人选</strong>，不是直接知道谁是梅林。</li>
-                        </ul>
-                    </div>
-                `
-            },
-            '拉斯维加斯': {
-                content: `
-                    <div class="rule-section">
-                        <h4>⚙️ 规则：1. 胜利条件</h4>
-                        <p>游戏进行 <strong>3 轮</strong>。<br>
-                        每轮结束后，玩家会从各赌场分走钞票。<br>
-                        <strong>3 轮结束后，持有金钱总额最高的玩家获胜。</strong></p>
-                    </div>
-
-                    <div class="rule-section">
-                        <h4>⚙️ 规则：2. 开局准备</h4>
-                        <ul>
-                            <li>摆出 <strong>6 个赌场板块</strong>，分别对应数字 <strong>1～6</strong>。</li>
-                            <li>将钞票洗混后，给每个赌场翻开钞票，直到该赌场面前的金额总和<strong>至少达到 50,000</strong>。</li>
-                            <li>每位玩家拿一组同色骰子。皇家版中通常会包含一颗<strong>大骰子</strong>，它在结算时通常按 <strong>2 颗骰子</strong>计算。</li>
-                            <li>如果玩 <strong>Royale / 豪华版扩展玩法</strong>，在每个赌场旁随机放置一块扩展板块，作为该赌场的特殊能力。</li>
-                            <li>决定先手，准备开始第一轮。</li>
-                        </ol>
-                    </div>
-
-                    <div class="rule-section">
-                        <h4>🔄 规则：3. 回合流程</h4>
-                        <p>每位玩家回合通常按以下步骤进行：</p>
-                        <ul>
-                            <li><strong>掷剩余骰子</strong>：轮到你时，把自己还没放出的骰子全部掷一次。</li>
-                            <li><strong>选择一个点数</strong>：你必须从本次掷出的结果中选 <strong>1 个点数</strong>。</li>
-                            <li><strong>放置骰子</strong>：把你这次掷出的、该点数的所有骰子，<strong>全部</strong>放到对应数字的赌场里。<br>
-                            例如你掷出 1、1、3、5、5，那么你只能选一个数字，把所有该数字骰子一起放出去。</li>
-                            <li><strong>换下一位玩家</strong>：顺时针轮到下一位玩家重复上述流程，直到所有玩家的骰子都放完。</li>
-                            <li><strong>回合结束 / 赌场结算</strong>：所有赌场按规则分钱；然后开始下一轮，重新补钱、收回骰子。</li>
-                        </ol>
-                    </div>
-
-                    <div class="rule-section">
-                        <h4>🏆 规则：4. 游戏结束 & 5. 结算方式</h4>
-                        <p>当 <strong>第 3 轮结算完成</strong> 时，游戏结束。</p>
-                        <p>每个赌场分别结算：</p>
-                        <ul>
-                            <li>先比较每位玩家在该赌场里的骰子数量</li>
-                            <li><strong>如果有玩家数量平手，这些平手玩家全部失去资格</strong>，相当于互相抵消</li>
-                            <li>把平手抵消后，剩下骰子最多的玩家先拿该赌场<strong>面额最高</strong>的钞票</li>
-                            <li>第二多的玩家拿下一张最高的钞票</li>
-                            <li>依此类推，直到该赌场没有可领奖的玩家或没有可拿的钞票</li>
-                            <li><strong>最终获胜者</strong>：3 轮后总金额最高的玩家</li>
-                        </ul>
-                    </div>
-
-                    <div class="rule-section">
-                        <h4>⚠️ 规则：6. 关键规则 & 7. 常见易错点</h4>
-                        <ul>
-                            <li><strong>你每回合只能选一个点数，但必须把该点数的所有骰子都放出去</strong>，不能拆开分放。</li>
-                            <li><strong>骰子只能放到与点数相同的赌场</strong>，不能自由选择赌场。</li>
-                            <li><strong>平手会互相取消</strong>，这是游戏最关键的互动规则之一。</li>
-                            <li>皇家版中的<strong>大骰子通常按 2 颗骰子计算</strong>，抢赌场时非常强。</li>
-                            <li>如果使用<strong>扩展板块</strong>，把骰子放进对应赌场时，可能会触发额外能力；具体效果看该板块说明。</li>
-                            <li>每轮结束后要<strong>重新补钞票</strong>，再进入下一轮。</li>
-                            <li><strong>不是想放哪就放哪</strong>，你只能把骰子放到对应数字的赌场</li>
-                            <li><strong>不是选一颗骰子放</strong>，而是该数字的骰子要一次全放出去</li>
-                            <li><strong>平手不是都拿钱，而是都出局</strong></li>
-                            <li>很多新手只盯着“第一名”，其实结算时常常是<strong>先制造平手，再让自己捡大钱</strong></li>
-                            <li>皇家版的扩展板块效果很多，第一局建议先玩基础，再加扩展</li>
-                        </ul>
-                    </div>
-                `
-            },
-            '情书': {
-                content: `
-                    <div class="rule-section">
-                        <h4>⚙️ 规则：1. 胜利条件</h4>
-                        <p>情书会进行多局，每一局代表一天。<br>
-                        每局结束时，成功把情书送到公主手上的玩家会获得 <strong>1 枚好感指示物</strong>。<br>
-                        先达到指定数量好感指示物的玩家获胜：</p>
-                        <ul>
-                            <li><strong>2 人局</strong>：7 枚</li>
-                            <li><strong>3 人局</strong>：5 枚</li>
-                            <li><strong>4 人局</strong>：4 枚</li>
-                            <li><strong>5–8 人局</strong>：4 枚</li>
-                        </ul>
-                    </div>
-
-                    <div class="rule-section">
-                        <h4>⚙️ 规则：2. 开局准备</h4>
-                        <ul>
-                            <li>按人数准备牌组：
-                                <ul>
-                                    <li><strong>2–4 人</strong>：使用基础的 <strong>16 张角色牌</strong></li>
-                                    <li><strong>5–8 人</strong>：使用全部 <strong>32 张角色牌</strong></li>
-                                </ul>
-                            </li>
-                            <li>将牌洗混后组成牌库。</li>
-                            <li>将牌库最上方 <strong>1 张</strong>面朝下移出游戏。</li>
-                            <li><strong>2 人局</strong>额外再从牌库顶翻开 <strong>3 张</strong>牌，面朝上移出游戏，供双方查看。</li>
-                            <li>每位玩家从牌库抽 <strong>1 张</strong>牌作为起始手牌。</li>
-                            <li>发给每位玩家帮助牌（可选，用于查效果）。</li>
-                            <li>由最近约会过的人担任起始玩家；若平手，则年龄较小者先开始。</li>
-                        </ol>
-                    </div>
-
-                    <div class="rule-section">
-                        <h4>🔄 规则：3. 回合流程</h4>
-                        <p>每位玩家回合通常按以下步骤进行：</p>
-                        <ul>
-                            <li><strong>抽牌</strong>：从牌库顶抽 1 张牌，加入手牌。</li>
-                            <li><strong>打出 1 张牌</strong>：从自己手中 2 张牌里选择 1 张弃掉，面朝上放在自己面前。</li>
-                            <li><strong>执行效果</strong>：若该牌有弃牌效果，必须立刻执行；即使效果对自己不利，也必须照做。</li>
-                            <li><strong>保留 1 张手牌</strong>：执行完效果后，你手中会剩下 1 张牌，代表当前替你传递情书的人。</li>
-                            <li><strong>换下一位</strong>：轮到左手边玩家继续。</li>
-                        </ol>
-                    </div>
-
-                    <div class="rule-section">
-                        <h4>🏆 规则：4. 游戏结束 & 5. 结算方式</h4>
-                        <p>当出现以下任一情况时，本局结束：</p>
-                        <ul>
-                            <li><strong>牌库被抽空后的该回合结束</strong></li>
-                            <li><strong>场上只剩 1 名玩家未出局</strong></li>
-                        </ul>
-                        <p>本局结束后，仍未出局的玩家亮出手牌：</p>
-                        <ul>
-                            <li>手牌上 <strong>亲近度数值最高</strong> 的玩家获胜</li>
-                            <li>若平手，则比较各自 <strong>弃牌堆中亲近度总值</strong></li>
-                            <li>若仍平手，则共同获胜</li>
-                            <li><strong>最终获胜者</strong>：本局胜者获得 1 枚好感指示物；整场游戏中先达到目标好感数者获胜</li>
-                        </ul>
-                    </div>
-
-                    <div class="rule-section">
-                        <h4>⚠️ 规则：6. 关键规则 & 7. 常见易错点</h4>
-                        <ul>
-                            <li>你的回合永远是 <strong>“抽 1 张，打 1 张，留 1 张”</strong></li>
-                            <li>被你打出的牌通常会触发效果，而且<strong>必须执行</strong></li>
-                            <li>若玩家出局，需要公开自己手上的最后 1 张牌，但<strong>不执行该牌效果</strong></li>
-                            <li>所有弃牌都应按顺序叠放在自己面前，方便大家推理</li>
-                            <li><strong>2 人局</strong>会额外公开移出 3 张牌，因此信息会更多</li>
-                            <li><strong>5–8 人局</strong>中，部分不同角色可能拥有相同的亲近度数字；若效果要求“说出一个数字”，则会命中所有该数字对应的角色</li>
-                            <li>某些牌会影响“指定目标”的合法性，因此打牌时要注意是否能指定对方</li>
-                            <li>不是“想留哪张就留哪张再出另一张”，而是要结合牌效果和当前局势判断</li>
-                            <li>被淘汰时公开手牌，<strong>但不触发它的弃牌效果</strong></li>
-                            <li>若某张牌写着必须执行效果，就算是负面效果也不能跳过</li>
-                            <li>平局时不是直接共同获胜，要先比较<strong>弃牌堆总值</strong></li>
-                            <li>有些角色会限制你能指定的对象，新手很容易忽略“目标是否合法”</li>
-                            <li>有些牌之间存在“必须先弃某张牌”的限制，不能为了隐藏信息而硬留</li>
-                        </ul>
-                    </div>
-                `
-            },
-            '炸弹猫': {
-                content: `
-                    <div class="rule-section">
-                        <h4>⚙️ 规则：1. 胜利条件</h4>
-                        <p>不断进行回合，直到除了 1 名玩家外，其他玩家都因为抽到 <strong>爆炸猫咪</strong> 而出局。</p>
-                        <ul>
-                            <li><strong>抽到爆炸猫咪且无法化解</strong>：立刻出局</li>
-                            <li><strong>最后存活的玩家</strong>：获胜</li>
-                        </ul>
-                    </div>
-
-                    <div class="rule-section">
-                        <h4>⚙️ 规则：2. 开局准备</h4>
-                        <ul>
-                            <li>先把所有 <strong>爆炸猫咪（4 张）</strong> 从牌堆中拿出来放在一旁。</li>
-                            <li>再把所有 <strong>拆弹牌（6 张）</strong> 从牌堆中拿出来，给每位玩家 <strong>1 张</strong>。</li>
-                            <li>将剩余牌洗混后，给每位玩家发 <strong>7 张</strong>手牌。这样每个人起始共 <strong>8 张牌</strong>（7 张手牌 + 1 张拆弹）。</li>
-                            <li>按人数把适量的爆炸猫咪放回牌库，数量为 <strong>玩家人数减 1</strong>。
-                                <ul>
-                                    <li>4 人局放回 3 张</li>
-                                    <li>3 人局放回 2 张<br>
-                                    多余的爆炸猫咪移出游戏。</li>
-                                </ul>
-                            </li>
-                            <li>将多余的拆弹牌中，通常额外洗回 <strong>2 张</strong>进牌库，其余移出；<strong>5 人局</strong>只有 1 张额外拆弹牌可洗回。</li>
-                            <li>将牌库面朝下放在桌面中央，留出弃牌堆位置。</li>
-                            <li>选出起始玩家。</li>
-                        </ol>
-                    </div>
-
-                    <div class="rule-section">
-                        <h4>🔄 规则：3. 回合流程</h4>
-                        <p>每位玩家回合通常按以下步骤进行：</p>
-                        <ul>
-                            <li><strong>出牌或选择不出牌</strong>：你可以从手中打出 0 张、1 张或多张牌，按顺序结算它们的效果。</li>
-                            <li><strong>继续连打</strong>：只要你愿意，而且手里有牌，可以在同一回合连续打出多张牌。</li>
-                            <li><strong>结束回合并抽牌</strong>：当你不再出牌时，必须从牌库顶抽 <strong>1 张</strong>牌，这通常代表你的回合结束。</li>
-                            <li><strong>换下一位玩家</strong>：游戏顺时针继续进行。</li>
-                        </ol>
-                    </div>
-
-                    <div class="rule-section">
-                        <h4>🏆 规则：4. 游戏结束 & 5. 结算方式</h4>
-                        <p>当场上只剩下 <strong>1 名未爆炸的玩家</strong> 时，游戏结束，该玩家获胜。规则中特别说明，牌库不会正常“抽完结束”，因为开局放入了足够多的爆炸猫咪，理论上足以淘汰所有人直到剩 1 人。</p>
-                        <ul>
-                            <li>抽到 <strong>爆炸猫咪</strong> 时，若没有打出 <strong>拆弹牌</strong>，你立刻出局。</li>
-                            <li>若你打出 <strong>拆弹牌</strong>，则不用出局，但必须把那张爆炸猫咪秘密放回牌库任意位置。</li>
-                            <li>当其余玩家都出局后，<strong>最后存活的玩家</strong>获胜。</li>
-                        </ul>
-                    </div>
-
-                    <div class="rule-section">
-                        <h4>⚠️ 规则：6. 关键规则 & 7. 常见易错点</h4>
-                        <ul>
-                            <li><strong>Defuse（拆弹）</strong> 是最关键的保命牌：它能让你在抽到爆炸猫咪时不死，并把猫塞回牌库任意位置。</li>
-                            <li><strong>Skip（跳过）</strong>：立刻结束你的回合，不用抽牌。</li>
-                            <li><strong>Attack（攻击）</strong>：结束你的回合且不用抽牌，并强迫下一位玩家连续进行 <strong>2 个回合</strong>；攻击可以叠加。</li>
-                            <li><strong>See the Future（预见未来）</strong>：偷偷查看牌库顶 <strong>3 张</strong>牌，并按原顺序放回。</li>
-                            <li><strong>Shuffle（洗牌）</strong>：把牌库重新随机洗混。</li>
-                            <li><strong>Favor（索要）</strong>：指定一名玩家给你 1 张手牌，由对方自己选给哪张。</li>
-                            <li><strong>Nope（不准）</strong>：可以打断几乎任何行动，让那张牌视为没发生；但不能阻止爆炸猫咪或拆弹。你甚至还能用 Nope 去反制别人的 Nope。</li>
-                            <li><strong>Cat Cards（猫咪牌）</strong> 单独没效果，但可组成特殊连招。</li>
-                            <li>很多人会忘记：<strong>回合不是“出一张牌就结束”</strong>，你可以连续出多张，然后才抽牌。</li>
-                            <li><strong>Skip</strong> 只是让你这次不用抽牌；如果你正吃到 <strong>Attack</strong>，一张 Skip 只消掉其中 <strong>1 个回合</strong>。</li>
-                            <li><strong>Attack</strong> 会叠加。比如被攻击的玩家再打出一张 Attack，下一位可能要接 <strong>4 个回合</strong>。</li>
-                            <li><strong>Nope</strong> 必须在行动开始前打出，而且被 Nope 的牌照样进入弃牌堆，不会回到手里。</li>
-                            <li>没有手牌上限，也没有最低手牌数；空手也没关系，下次轮到你照样进行。</li>
-                        </ul>
-                    </div>
-                `
-            },
-            '卡波': {
-                content: `
-                    <div class="rule-section">
-                        <h4>⚙️ 规则：1. 胜利条件</h4>
-                        <p>CABO 以多轮进行。每轮结束后，所有玩家结算自己面前牌的总分，<strong>总分越低越好</strong>。整局游戏中，当有玩家总分<strong>超过 100 分</strong>时触发游戏结束，最终由<strong>总分最低</strong>的玩家获胜。</p>
-                    </div>
-
-                    <div class="rule-section">
-                        <h4>⚙️ 规则：2. 开局准备</h4>
-                        <ul>
-                            <li>洗混牌库。</li>
-                            <li>每位玩家面朝下横向摆放 <strong>4 张牌</strong>在自己面前。</li>
-                            <li>将牌库放在桌面中央，翻开 1 张作为弃牌堆起始牌。</li>
-                            <li>每位玩家<strong>秘密查看自己其中 2 张牌</strong>，并尽量记住；除非牌效说明，否则之后不能再随意查看。</li>
-                            <li>随机决定起始玩家。</li>
-                        </ol>
-                    </div>
-
-                    <div class="rule-section">
-                        <h4>🔄 规则：3. 回合流程</h4>
-                        <p>每位玩家回合通常按以下步骤进行：</p>
-                        <ul>
-                            <li><strong>抽牌或喊 CABO</strong>：在你的回合，你可以从<strong>牌库</strong>抽 1 张，或从<strong>弃牌堆顶</strong>拿 1 张，或者直接喊 <strong>“CABO”</strong>。</li>
-                            <li><strong>若从牌库抽牌</strong>：
-                                <ul>
-                                    <li>你可以把这张牌直接弃掉；若它有能力，可以发动</li>
-                                    <li>或者用它去替换自己面前的 1 张或多张牌，被换掉的牌进入弃牌堆，新牌放到对应位置。</li>
-                                </ul>
-                            </li>
-                            <li><strong>若从弃牌堆拿牌</strong>：
-                                <ul>
-                                    <li>你必须用这张牌去替换自己面前的 1 张或多张牌</li>
-                                    <li>被换掉的牌进入弃牌堆，新拿来的牌放到对应位置。</li>
-                                    <li><strong>从弃牌堆拿来的牌会保持明置</strong>，留在你面前。</li>
-                                </ul>
-                            </li>
-                            <li><strong>若喊 CABO</strong>：你的回合立刻结束；其他所有玩家<strong>各再进行 1 个回合</strong>，然后本轮结束。</li>
-                        </ol>
-                    </div>
-
-                    <div class="rule-section">
-                        <h4>🏆 规则：4. 游戏结束 & 5. 结算方式</h4>
-                        <p>一轮会在以下任一情况发生时结束：</p>
-                        <ul>
-                            <li>有玩家喊出 <strong>CABO</strong></li>
-                            <li><strong>牌库抽空</strong></li>
-                        </ul> 
-                        <p>结算方式：</p>
-                        <ul>
-                            <li>每位玩家计算自己面前所有牌的总值，<strong>越低越好</strong></li>
-                            <li>若喊 CABO 的玩家是<strong>单独最低</strong>或<strong>并列最低</strong>，则他本轮记 <strong>0 分</strong></li>
-                            <li>若喊 CABO 的玩家<strong>不是最低</strong>，则他照常计分，且还要<strong>额外 +10 分惩罚</strong></li>
-                            <li>其余玩家照常把本轮分数加到总分中</li>
-                            <li><strong>最终获胜者</strong>：整局结束时，总分最低的玩家获胜。</li>
-                        </ul>
-                    </div>
-
-                    <div class="rule-section">
-                        <h4>⚠️ 规则：6. 关键规则 & 7. 常见易错点</h4>
-                        <ul>
-                            <li><strong>7–8：PEEK</strong>：偷看自己 1 张面朝下的牌。</li>
-                            <li><strong>9–10：SPY</strong>：偷看任意 1 名对手 1 张面朝下的牌。</li>
-                            <li><strong>11–12：SWAP</strong>：用自己 1 张牌与对手 1 张牌交换，但<strong>不能翻看</strong>被换的牌。</li>
-                            <li><strong>多张交换（Exchange Multiple Cards）</strong>：若你用一张抽到的牌去换多张牌，所有被换的牌必须<strong>数值相同</strong>；否则会有惩罚。</li>
-                            <li><strong>多张不匹配惩罚</strong>：如果你尝试多张交换但数字不一致，要把那些牌放回原位，并把抽到的牌也留下；不匹配得越多，保留的牌越多。</li>
-                            <li><strong>Kamikaze 特例</strong>：若玩家在回合结束时正好有 <strong>两张 13 和两张 12</strong>，且没有其他牌，则该玩家本轮 <strong>0 分</strong>，其他玩家本轮<strong>各记 50 分</strong>；该玩家也算成功喊到 CABO。</li>
-                            <li><strong>100 分重置规则</strong>：若某位玩家总分<strong>恰好等于 100 分</strong>，可以把总分重置到 <strong>50 分</strong>，且<strong>整局每位玩家只能触发一次</strong>。</li>
-                            <li>很多人会忘记：<strong>起手只允许看自己 2 张牌一次</strong>，之后不能随便翻看。</li>
-                            <li>从<strong>弃牌堆</strong>拿牌后，不是直接入手，而是必须立刻拿去替换。</li>
-                            <li>从<strong>弃牌堆拿来的牌留在你面前时是明置的</strong>，不是再盖回去。</li>
-                            <li>喊了 CABO 不代表立刻结算，<strong>其他玩家还会各有 1 回合</strong>。</li>
-                            <li>CABO 不是“我觉得自己最低就稳赢”，因为<strong>如果你不是最低，会吃 10 分罚分</strong>。</li>
-                        </ul>
-                    </div>
-                `
-            },
-            '7连翻': {
-                content: `
-                    <div class="rule-section">
-                        <h4>⚙️ 规则：1. 胜利条件</h4>
-                        <p>游戏按<strong>多轮</strong>进行，玩家在每轮中通过自己面前的牌得分。<br>
-                        当某一轮结束后，<strong>至少有一名玩家总分达到或超过 200 分</strong>，整局游戏结束，<strong>总分最高</strong>的玩家获胜。</p>
-                    </div>
-
-                    <div class="rule-section">
-                        <h4>⚙️ 规则：2. 开局准备</h4>
-                        <ul>
-                            <li>准备纸笔记分，因为这是一款累计分数到 <strong>200 分</strong>的游戏。</li>
-                            <li>将整副牌<strong>充分洗混</strong>。</li>
-                            <li>选出一名玩家担任本轮的<strong>发牌者</strong>。</li>
-                            <li>按顺序由发牌者给每位玩家（包括自己）<strong>发 1 张明牌</strong>。</li>
-                            <li>如果发出的牌是<strong>行动牌</strong>，要立刻暂停发牌并先结算该行动牌，再继续发牌。<br>
-                            因此开局时，不是每个人都一定只有 1 张数字牌；有人可能面前已经有数字牌、行动牌、修正牌，甚至有多张牌。</li>
-                        </ol>
-                    </div>
-
-                    <div class="rule-section">
-                        <h4>🔄 规则：3. 回合流程</h4>
-                        <p>每位玩家回合通常按以下步骤进行：</p>
-                        <ul>
-                            <li><strong>发牌者依次询问</strong>：从发牌者开始，按顺序问每位玩家是要 <strong>Hit（继续要牌）</strong> 还是 <strong>Stay（停手保分）</strong>。</li>
-                            <li><strong>如果选择 Hit</strong>：该玩家获得 1 张新牌，并把数字牌排成一列放在自己面前；若翻出行动牌或修正牌，则按规则放在对应区域并结算。</li>
-                            <li><strong>如果选择 Stay</strong>：该玩家立刻退出本轮，并保住当前已经获得的分数；直到本轮结束前都不再是活跃玩家。规则建议把自己的牌翻过去，表示本轮不再参与。</li>
-                            <li><strong>持续轮询</strong>：发牌者继续按顺序询问仍是活跃状态的玩家，要继续 Hit 还是 Stay。</li>
-                            <li><strong>若翻到重复数字</strong>：只要你翻出的数字牌，与自己面前已有的某张数字牌重复，你就<strong>Bust（爆掉）</strong>，本轮<strong>0 分出局</strong>。</li>
-                        </ol>
-                    </div>
-
-                    <div class="rule-section">
-                        <h4>🏆 规则：4. 游戏结束 & 5. 结算方式</h4>
-                        <p>一轮会在以下两种情况之一发生时结束：</p>
-                        <ul>
-                            <li>所有玩家都已经<strong>爆掉</strong>或<strong>选择停手</strong></li>
-                            <li>有玩家成功翻出 <strong>7 张互不重复的数字牌</strong>，该轮<strong>立刻结束</strong>，并获得额外奖励分数</li>
-                        </ul>
-                        <p>整局游戏则在某轮结束后，至少一名玩家分数达到 <strong>200 分</strong>时结束。</p>
-                        <p>结算方式：</p>
-                        <ul>
-                            <li>本轮中，玩家的基础分数等于自己面前<strong>所有数字牌的数值总和</strong></li>
-                            <li>若有 <strong>x2</strong> 修正牌，先把数字牌总和<strong>翻倍</strong></li>
-                            <li>再加入其他修正牌的额外分数（如 <strong>+2、+4、+6、+8、+10</strong>）</li>
-                            <li>若成功翻出 <strong>7 张不同数字牌</strong>，再额外获得 <strong>15 分奖励</strong></li>
-                            <li>若本轮爆掉，则该轮<strong>不得分</strong></li>
-                            <li><strong>最终获胜者</strong>：在有人达到 200+ 的轮次结束后，累计总分最高者获胜</li>
-                        </ul>
-                    </div>
-
-                    <div class="rule-section">
-                        <h4>⚠️ 规则：6. 关键规则 & 7. 常见易错点</h4>
-                        <ul>
-                            <li><strong>数字牌不能重复</strong>：这是游戏的核心，重复就爆掉，本轮 0 分。</li>
-                            <li><strong>0 也是数字牌</strong>：它本身值 <strong>0 分</strong>，但依然能帮助你凑齐“7 张不同数字牌”。</li>
-                            <li><strong>行动牌可指定任意活跃玩家</strong>：包括自己；若场上只剩你一个活跃玩家，就只能对自己使用。</li>
-                            <li><strong>Freeze（冻结）</strong>：被指定的玩家立刻结算并退出本轮，相当于强制他“停手保分”。</li>
-                            <li><strong>Flip Three（翻三张）</strong>：目标玩家必须连续接收接下来的 3 张牌，逐张翻开；但如果中途爆掉或已经成功 Flip 7，就会提前停止。若这三张里又出现新的 Freeze 或 Flip Three，要等三张都翻完后再处理。</li>
-                            <li><strong>Second Chance（第二次机会）</strong>：留在玩家面前。当该玩家之后翻到与已有数字重复的牌时，可弃掉这张 Second Chance 和那张重复数字牌，避免爆掉。每人面前最多只能有 1 张；如果再拿到一张，要转给其他活跃玩家，若没人能收，就弃掉。回合结束时所有未用掉的 Second Chance 也会弃掉。</li>
-                            <li><strong>修正牌不算数字牌</strong>：也<strong>不计入 Flip 7</strong>；你甚至可以在没有数字牌、只有加分修正牌的情况下选择停手得分，但 <strong>x2</strong> 单独存在时不会给你分数。</li>
-                            <li><strong>凑 Flip 7 只看数字牌</strong>：行动牌和修正牌都不算。</li>
-                            <li><strong>x2 的计算顺序</strong>：先把数字牌总和翻倍，再加其他 +2 / +4 / +6 / +8 / +10。</li>
-                            <li><strong>Second Chance 不是永久护盾</strong>：只能挡一次重复，而且每轮结束都会被弃掉。</li>
-                            <li><strong>Freeze 会直接让目标结算退出本轮</strong>：不是“跳过一次行动”。</li>
-                            <li><strong>Flip Three 期间翻出的行动牌不会立刻插队结算</strong>：要等三张翻完后再处理；但如果目标先爆掉了，就不会再继续。</li>
-                        </ul>
-                    </div>
-                `
-            },
-            '现代艺术': {
-                content: `
-                    <div class="rule-section">
-                        <h4>⚙️ 规则：1. 胜利条件</h4>
-                        <p>游戏共进行 <strong>4 轮</strong>。每轮中玩家把手里的画拿出来拍卖，轮末按艺术家热度把已买到的画卖给银行。<strong>第 4 轮结束后，现金最多的玩家获胜。</strong></p>
-                    </div>
-
-                    <div class="rule-section">
-                        <h4>⚙️ 规则：2. 开局准备</h4>
-                        <ul>
-                            <li>将 <strong>70 张画作牌</strong>洗混。</li>
-                            <li>按人数发第一轮手牌：
-                                <ul>
-                                    <li><strong>3 人</strong>：每人 10 张</li>
-                                    <li><strong>4 人</strong>：每人 9 张</li>
-                                    <li><strong>5 人</strong>：每人 8 张</li>
-                                </ul>
-                            </li>
-                            <li>选一名玩家担任银行家，给每位玩家 <strong>100</strong> 元起始资金。</li>
-                            <li>每位玩家拿一个屏风，把钱藏在后面。</li>
-                            <li>最年轻的玩家拿拍卖槌，开始第一场拍卖。</li>
-                        </ol>
-                    </div>
-
-                    <div class="rule-section">
-                        <h4>🔄 规则：3. 回合流程</h4>
-                        <p>每位玩家回合通常按以下步骤进行：</p>
-                        <ul>
-                            <li><strong>出 1 张画作牌</strong>：当前拍卖师从手里打出 1 张画，正面朝上放到桌面中央。</li>
-                            <li><strong>按牌上的拍卖类型进行拍卖</strong>：每张牌都带有一种拍卖方式，决定这张画怎么卖。</li>
-                            <li><strong>结算金钱与归属</strong>：
-                                <ul>
-                                    <li>最高出价者买下这张画</li>
-                                    <li>如果买家不是拍卖师，就把钱付给拍卖师</li>
-                                    <li>如果拍卖师自己买下，则把钱付给银行</li>
-                                    <li>若无人出价，则拍卖师免费获得这张画；但<strong>定价拍卖</strong>例外。</li>
-                                </ul>
-                            </li>
-                            <li><strong>下一位成为拍卖师</strong>：通常由上一位拍卖师左手边玩家开始新拍卖，顺时针继续。</li>
-                        </ol>
-                    </div>
-
-                    <div class="rule-section">
-                        <h4>🏆 规则：4. 游戏结束 & 5. 结算方式</h4>
-                        <p>当第 <strong>4 轮</strong>结束并完成卖画结算后，游戏结束。若在第 4 轮中所有玩家都先出完手牌，则最后打出的那张画不拍卖，但仍会计入该轮统计，然后直接结算并结束游戏。</p>
-                        <p>每轮结束时按以下顺序结算：</p>
-                        <ul>
-                            <li>当某位艺术家的<strong>第 5 张画</strong>被打出时，本轮立刻结束</li>
-                            <li>统计本轮每位艺术家被打出的画作数量，<strong>连结束本轮但未拍卖的那张也要算进去</strong></li>
-                            <li>本轮数量第 <strong>1 / 2 / 3</strong> 名艺术家，分别价值 <strong>30 / 20 / 10</strong></li>
-                            <li>若数量平手，则看游戏板上谁更靠左，越靠左排名越高</li>
-                            <li>玩家把本轮拍到的所有画按当前价值卖给银行</li>
-                            <li><strong>最终获胜者</strong>：4 轮后现金最多者获胜。</li>
-                        </ul>
-                    </div>
-
-                    <div class="rule-section">
-                        <h4>⚠️ 规则：6. 关键规则 & 7. 常见易错点</h4>
-                        <ul>
-                            <li><strong>只有本轮排进前三的艺术家有价值</strong>；没进前三的画本轮全部不值钱。</li>
-                            <li><strong>艺术家价值会累积</strong>：若某艺术家本轮进入前三，则他在之前轮次得到的价值标记会一并累计；但若本轮没进前三，即使以前很值钱，这轮也还是 <strong>0</strong>。</li>
-                            <li><strong>拍到的画只持有到本轮结束</strong>，卖掉后全部弃掉，不会留到下一轮。留到下一轮的只有<strong>手牌</strong>。</li>
-                            <li><strong>定价拍卖</strong>中，若其他玩家都不买，拍卖师必须按自己宣布的价格买下；而且报价不能高于自己现有现金。</li>
-                            <li><strong>双重拍卖</strong>必须再配一张同艺术家的牌，且第二张不能也是双重拍卖；最后按照<strong>第二张牌</strong>的拍卖方式卖两张画。若别人补出第二张，则那个人成为新的拍卖师并拿走钱。</li>
-                            <li>所有出价都必须是整数金额，且<strong>不能超过自己拥有的钱</strong>。</li>
-                            <li><strong>第 5 张画不会拍卖</strong>，但会计入该艺术家的本轮数量统计。</li>
-                            <li>不是“买到的画越多越好”，因为<strong>只看本轮前三名艺术家</strong>。</li>
-                            <li>很多人会忘：<strong>上一轮值钱的艺术家，这一轮如果没进前三，照样是 0</strong>。</li>
-                            <li><strong>双重拍卖</strong>如果第二张画是别人补的，拿钱的是新拍卖师，不是原本打出双拍牌的人。</li>
-                            <li><strong>定价拍卖</strong>不是没人买就流拍，而是拍卖师自己硬吃。</li>
-                        </ul>
-                    </div>
-                `
-            },
-            '纸牌帮': {
-                content: `
-                    <div class="rule-section">
-                        <h4>⚙️ 规则：1. 胜利条件</h4>
-                        <p>整局游戏由 <strong>3 到 5 次抢劫（heists）</strong>组成。<br>
-                        每次抢劫结束时：</p>
-                        <ul>
-                            <li>若全员最终的相对牌力顺序判断正确，获得 <strong>1 根金条</strong></li>
-                            <li>若顺序中出现至少 1 处错误，触发 <strong>1 个警报</strong></li>
-                        </ul>
-                        <p>当你们先拿到 <strong>3 根金条</strong>时全队获胜；先触发 <strong>3 次警报</strong>则全队失败。</p>
-                    </div>
-
-                    <div class="rule-section">
-                        <h4>⚙️ 规则：2. 开局准备</h4>
-                        <ol>
-                            <li>摆出游戏垫与金条、警报标记。</li>
-                            <li>洗混 <strong>52 张扑克牌</strong>，放在桌面中央。</li>
-                            <li>每位玩家拿 1 张<strong>流程与牌型速查卡</strong>。</li>
-                            <li>按玩家人数，把超过人数上限的星级筹码移回盒中。<br>
-                            例如 4 人局只需要 <strong>1 星到 4 星</strong>的各色筹码。</li>
-                            <li>白、黄、橙、红四组筹码分别放到游戏垫对应区域。</li>
-                        </ol>
-                    </div>
-
-                    <div class="rule-section">
-                        <h4>🔄 规则：3. 回合流程</h4>
-                        <p>每次抢劫按以下步骤进行：</p>
-                        <ol>
-                            <li><strong>Round 1 / Pre-Flop</strong>：每位玩家发 <strong>2 张手牌（pocket cards）</strong>，然后大家同时争抢或交换 <strong>白色筹码</strong>，表示自己认为当前手牌相对全桌的强弱位置。</li>
-                            <li><strong>Round 2 / Flop</strong>：翻开 <strong>3 张公共牌</strong>，再拿 <strong>黄色筹码</strong>重新判断一次。之前轮次的筹码不参与本轮，但要留在面前，让大家看出你判断的变化。</li>
-                            <li><strong>Round 3 / Turn</strong>：再翻开 <strong>1 张公共牌</strong>，再拿 <strong>橙色筹码</strong>。</li>
-                            <li><strong>Round 4 / River</strong>：再翻开 <strong>1 张公共牌</strong>，再拿 <strong>红色筹码</strong>。这轮结束后进入摊牌。</li>
-                            <li><strong>Showdown / 摊牌</strong>：只看 <strong>红色筹码</strong>。从红色 <strong>1 星</strong>开始，按星级从低到高依次亮牌并宣告自己最好的 <strong>5 张牌组合</strong>。只要后亮出的手牌都与前面相比<strong>同强或更强</strong>，这次抢劫就成功；若有人比前面更弱，则本次失败。</li>
-                        </ol>
-                    </div>
-
-                    <div class="rule-section">
-                        <h4>🏆 规则：4. 游戏结束 & 5. 结算方式</h4>
-                        <p>当满足以下任一条件时，整局结束：</p>
-                        <ul>
-                            <li>成功获得 <strong>3 根金条</strong></li>
-                            <li>触发 <strong>3 次警报</strong></li>
-                        </ul>
-                        <p>结算方式：</p>
-                        <ul>
-                            <li><strong>全员排序正确</strong>：移动 1 根金条到已开启区域，本次抢劫成功。</li>
-                            <li><strong>至少一处排序错误</strong>：移动 1 个警报标记到警报区域，本次抢劫失败。</li>
-                            <li><strong>最终获胜者</strong>：这是合作游戏，没有个人胜者；全队一起赢或一起输。</li>
-                        </ul>
-                    </div>
-
-                    <div class="rule-section">
-                        <h4>⚠️ 规则：6. 关键规则 & 7. 常见易错点</h4>
-                        <ul>
-                            <li><strong>不能自由交流手牌信息</strong>：你不能展示、说出、暗示自己手里有什么牌；哪怕你对别人手牌的判断是基于自己手牌推出来的，也不能说。</li>
-                            <li><strong>每轮筹码可以抢和换</strong>：同色筹码一人最多 1 个；你可以从桌中央拿，也可以从别人面前拿，但不能直接把筹码塞给别人。所有人都有当前轮次筹码后，该轮立刻结束。</li>
-                            <li><strong>摊牌时必须用 7 选 5</strong>：从自己的 <strong>2 张手牌 + 5 张公共牌</strong>里，组成<strong>恰好 5 张</strong>的最佳牌型。</li>
-                            <li><strong>真平手（True Tie）是允许的</strong>：如果几名玩家的最佳五张牌完全一样，那么他们彼此之间的星级先后不重要，但相对于其他玩家的整体排序仍要正确。</li>
-                            <li><strong>牌型和普通德州扑克一致</strong>：从弱到强依次包括高牌、一对、两对、三条、顺子、同花、葫芦、四条、同花顺、皇家同花顺。A 可作高顺也可作低顺。</li>
-                            <li>很多人会忘：<strong>最终检查只看红色筹码</strong>，前面白黄橙筹码只是公开的推理过程信息。</li>
-                            <li>不是“我觉得自己强就拿高星”这么简单，而是要判断自己<strong>相对全桌</strong>排第几。</li>
-                            <li><strong>不能吹、不能演、不能暗示</strong>，这游戏和普通扑克最大的不同恰恰在这里。</li>
-                            <li><strong>真平手不算错序</strong>，新手很容易误判为必须分出严格先后。</li>
-                            <li>一定要用<strong>最佳五张组合</strong>结算，不是把 7 张牌全部比大小。</li>
-                        </ul>
-                    </div>
-                `
-            }
-        };
-
-        const gameGuideData = {
-            '璀璨宝石': {
-                content: `
-                    <div class="rule-section">
-                        <h4>💡 1. 新手开局建议</h4>
-                        <ul>
-                            <li>前几回合优先观察：<strong>哪些低费牌能顺手买下，并且颜色正好通向贵族需求</strong></li>
-                            <li>不要一上来就无脑囤很多筹码，拿得太散常常会拖慢节奏</li>
-                            <li>第一局建议先熟悉两件事：<strong>永久折扣的价值</strong>，以及<strong>保留牌是为了抢关键牌，不是为了屯牌</strong></li>
-                        </ul>
-                    </div>
-                    <div class="rule-section">
-                        <h4>⚖️ 2. 核心思路</h4>
-                        <p>璀璨宝石的核心不是“谁先拿到大牌”，而是<strong>谁更快把自己的资源引擎搭起来</strong>。前期买便宜牌建立折扣，中期用折扣高效转化成高分牌，后期再看是冲贵族还是直接冲 15 分。它本质上是一个<strong>节奏型引擎构筑</strong>游戏：你每回合都在比较“现在拿资源最赚，还是先买一张让以后更便宜”。</p>
-                    </div>
-                    <div class="rule-section">
-                        <h4>⚠️ 3. 常见误区</h4>
-                        <ul>
-                            <li><strong>误区 1</strong>：只盯着高分大牌，不肯买低级牌。结果前期没有折扣，节奏会非常慢。</li>
-                            <li><strong>误区 2</strong>：看到关键牌就全保留。保留牌太多会卡住自己，而且上限只有 3 张。</li>
-                            <li><strong>误区 3</strong>：只顾自己做引擎，不看对手快拿到哪位贵族、快冲到哪张高分牌，容易被截胡。</li>
-                        </ul>
-                    </div>
-                    <div class="rule-section">
-                        <h4>🚀 4. 进阶技巧</h4>
-                        <ul>
-                            <li><strong>技巧 1</strong>：优先买能同时满足两个目标的牌，例如既补你缺的折扣颜色，又贴近某位贵族条件。</li>
-                            <li><strong>技巧 2</strong>：保留牌最强的用途往往不是“给自己准备”，而是<strong>阻断对手的关键一跳</strong>。</li>
-                            <li><strong>技巧 3</strong>：快到终盘时，不一定要追求最优收益；<strong>能先触发 15 分并把回合数锁死</strong>，往往比多赚一点更重要。</li>
-                            <li><strong>技巧 4</strong>：同分时比的是<strong>发展卡数量更少者获胜</strong>，所以终盘有时“少买一张杂牌、直接冲分”更优。</li>
-                        </ul>
-                    </div>
-                    <div class="rule-section">
-                        <h4>👥 5. 人数差异</h4>
-                        <ul>
-                            <li><strong>2 人局</strong>：信息更透明，卡牌和贵族争夺更精准，偏计算与互相卡位；每色宝石更少，资源控制感更强。</li>
-                            <li><strong>3 人局</strong>：节奏通常最均衡，既有竞争也不会太乱，很多人会觉得这是体验最舒服的人数。</li>
-                            <li><strong>4 人局</strong>：场面变化快，公开牌周转更快，想要的牌可能转眼就没，读局势和抢时机更重要。</li>
-                            <li><strong>更多人数 / 特殊模式</strong>：基础版支持 <strong>2–4 人</strong>；若玩扩展，则会加入新模块和额外规则，但核心依然是资源转化与引擎构筑。</li>
-                        </ul>
-                    </div>
-                `
-            },
-            '阿瓦隆': {
-                content: `
-                    <div class="rule-section">
-                        <h4>💡 1. 新手开局建议</h4>
-                        <ul>
-                            <li>第一局先重点盯三个信息源：<strong>谁怎么组队、谁怎么投票、任务结果如何变化</strong></li>
-                            <li>不要一上来就把“发言多”当成好人，也不要把“发言少”直接当成坏人</li>
-                            <li>先熟悉不同身份的信息边界，尤其是梅林、派西维尔、刺客之间的关系，再去玩心态和套路会更顺手</li>
-                        </ul>
-                    </div>
-
-                    <div class="rule-section">
-                        <h4>⚖️ 2. 核心思路</h4>
-                        <p>阿瓦隆的核心不是“谁说得最像真相”，而是<strong>谁能在有限公开信息里构造最可信的叙事</strong>。蓝方要做的是通过任务结果和投票轨迹逐步排坑，尽可能让可靠的人上车；红方要做的是把自己混进“看起来合理”的车队里，并在合适的时机破坏任务，同时避免暴露过深。梅林知道很多，但不能说太满；派西维尔要接住信息，但又不能把梅林点爆；这也是它最迷人的地方。</p>
-                    </div>
-
-                    <div class="rule-section">
-                        <h4>⚠️ 3. 常见误区</h4>
-                        <ul>
-                            <li><strong>误区 1</strong>：以为红方一定要每次上车都投失败。实际上很多时候红方更需要“藏身份”，故意投成功也是常见操作。</li>
-                            <li><strong>误区 2</strong>：蓝方只盯任务结果，不看公投。其实公投立场往往和任务结果一样重要。</li>
-                            <li><strong>误区 3</strong>：梅林给信息给得太明显。这样虽然可能带赢任务，但也更容易在最后被刺客精准锁定。</li>
-                        </ul>
-                    </div>
-
-                    <div class="rule-section">
-                        <h4>🚀 4. 进阶技巧</h4>
-                        <ul>
-                            <li><strong>技巧 1</strong>：看“组队逻辑”而不只看“车炸没炸”——一个人为什么带这几个人，往往比结果本身更能说明问题</li>
-                            <li><strong>技巧 2</strong>：红方不要总想着抢主导发言，有时候维持“普通好人感”比强行带节奏更安全</li>
-                            <li><strong>技巧 3</strong>：派西维尔要尽早建立自己的信任度，但别把梅林保护得太像“我已经认到了”</li>
-                            <li><strong>技巧 4</strong>：终局阶段，刺客判断梅林时要回看整局谁在“适度给信息但不愿站死边”，这类人往往更可疑</li>
-                        </ul>
-                    </div>
-
-                    <div class="rule-section">
-                        <h4>👥 5. 人数差异</h4>
-                        <ul>
-                            <li><strong>5 人局</strong>：节奏快，信息密度高，容错低，适合新手快速熟悉规则。</li>
-                            <li><strong>6-7 人局</strong>：发言空间更大，身份关系开始更有层次，很多人会觉得这是兼顾紧凑和博弈感的区间。</li>
-                            <li><strong>8-10 人局</strong>：角色更多，局势更复杂，还可能加入湖中仙女等扩展，博弈深度明显提高。</li>
-                            <li><strong>更多人数 / 特殊模式</strong>：可扩展到 <strong>12 人</strong>，并加入兰斯洛特、湖中仙女、王者之剑等扩展机制，但更适合已经熟悉基础局的玩家。</li>
-                        </ul>
-                    </div>
-                `
-            },
-            '拉斯维加斯': {
-                content: `
-                    <div class="rule-section">
-                        <h4>💡 1. 新手开局建议</h4>
-                        <ul>
-                            <li>第一局先学会看两件事：<strong>哪个赌场钱多</strong>，以及<strong>谁会和谁撞车</strong></li>
-                            <li>不要看到钱最多的赌场就无脑冲，热门赌场也最容易被平手搞掉</li>
-                            <li>先熟悉“平手抵消”这个机制，理解它之后，整款游戏就会突然变聪明很多</li>
-                        </ul>
-                    </div>
-
-                    <div class="rule-section">
-                        <h4>⚖️ 2. 核心思路</h4>
-                        <p>这游戏的核心不是“掷到好数字就赢”，而是<strong>如何把随机掷骰变成位置博弈</strong>。你要不断判断：<br>
-                        现在去抢热门赌场，值不值得？<br>
-                        我要不要故意进一个别人已经领先的赌场，把他做成平手？<br>
-                        我要拿大钱，还是稳稳拿个第二、第三顺位？<br>
-                        皇家版进一步加入扩展板块后，这种判断会更丰富，因为有时特殊能力本身就比钞票更值钱。</p>
-                    </div>
-
-                    <div class="rule-section">
-                        <h4>⚠️ 3. 常见误区</h4>
-                        <ul>
-                            <li><strong>误区 1</strong>：只追大赌场。大赌场很诱人，但也最容易被多人争夺，最后可能谁都拿不到。</li>
-                            <li><strong>误区 2</strong>：只想拿第一。这游戏里稳定拿第二、第三，往往比冒险抢第一更赚钱。</li>
-                            <li><strong>误区 3</strong>：忽视平手破坏。很多时候你放骰子不是为了赚钱，而是为了让别人也赚不到。</li>
-                        </ul>
-                    </div>
-
-                    <div class="rule-section">
-                        <h4>🚀 4. 进阶技巧</h4>
-                        <ul>
-                            <li><strong>技巧 1</strong>：看“当前第一名”是否容易被做平手。如果能用少量骰子把对手拉下水，这手往往非常赚。</li>
-                            <li><strong>技巧 2</strong>：不要把所有希望押在一个赌场。分散到两个有机会结算的赌场，通常比孤注一掷更稳。</li>
-                            <li><strong>技巧 3</strong>：留意别人剩下多少骰子。有时某人现在领先，不代表他最后还能守住。</li>
-                            <li><strong>技巧 4</strong>：大骰子别乱交。皇家版里大骰子价值很高，最好用在关键赌场，或用来强行压过别人。</li>
-                            <li><strong>技巧 5</strong>：扩展板块不一定只是“附加效果”，有时它就是整轮最强目标。如果某块扩展板块能明显改变局面，优先级可能高于现金本身。</li>
-                        </ul>
-                    </div>
-
-                    <div class="rule-section">
-                        <h4>👥 5. 人数差异</h4>
-                        <ul>
-                            <li><strong>2 人局</strong>：更像精算与互卡，很多时候会围绕“做平手”展开，控制感更强</li>
-                            <li><strong>3 人局</strong>：节奏最均衡，既有互动，也不会太乱</li>
-                            <li><strong>4 人局</strong>：赌场竞争明显加剧，热门区很容易爆满，局势更欢乐</li>
-                            <li><strong>5 人局</strong>：最混乱也最热闹，计划常常会被别人打乱，更适合轻松聚会</li>
-                            <li><strong>更多人数 / 特殊模式</strong>：皇家版可加入扩展板块与特殊规则，变化更多，但建议新手先玩一两局基础玩法，再加入豪华版内容</li>
-                        </ul>
-                    </div>
-                `
-            },
-            '情书': {
-                content: `
-                    <div class="rule-section">
-                        <h4>💡 1. 新手开局建议</h4>
-                        <ul>
-                            <li>第一局先把重点放在两件事上：<strong>记别人打过什么牌</strong>，以及<strong>推当前还可能剩下什么</strong></li>
-                            <li>不要只盯着自己手上的牌强不强，很多时候“这一回合该不该出手”比牌本身更重要</li>
-                            <li>先熟悉基础 16 张牌的节奏，再去玩 5–8 人豪华版，会顺很多</li>
-                        </ul>
-                    </div>
-
-                    <div class="rule-section">
-                        <h4>⚖️ 2. 核心思路</h4>
-                        <p>情书的核心不是“抽到大牌就赢”，而是<strong>在信息极少的情况下，尽量推断别人手里是什么，并让自己留到最后的那张牌更有价值</strong>。<br>
-                        你一边想办法淘汰对手，一边又不能把自己的身份暴露得太明显；有时要主动进攻，有时反而要装得很普通。它本质上是一个<strong>超轻量的读牌、读人、读局势</strong>游戏。</p>
-                    </div>
-
-                    <div class="rule-section">
-                        <h4>⚠️ 3. 常见误区</h4>
-                        <ul>
-                            <li><strong>误区 1</strong>：只记自己手牌，不记别人弃牌。这会让你失去最关键的信息来源。</li>
-                            <li><strong>误区 2</strong>：觉得高数字牌一定最强。数值高只是在回合结束时更容易赢，但很多低数字牌的效果反而更关键。</li>
-                            <li><strong>误区 3</strong>：看到能淘汰人就立刻打。有时过早暴露你的判断和手牌思路，反而会让后续更难打。</li>
-                        </ul>
-                    </div>
-
-                    <div class="rule-section">
-                        <h4>🚀 4. 进阶技巧</h4>
-                        <ul>
-                            <li><strong>技巧 1</strong>：多看弃牌顺序。不只是看“出了什么”，还要看“为什么现在出这张”。</li>
-                            <li><strong>技巧 2</strong>：学会倒推。某张关键牌已经出现几次、某位玩家又没有被淘汰，就能推断他手里不太可能是什么。</li>
-                            <li><strong>技巧 3</strong>：终局别只想着淘汰人。当牌库快空时，保住一张高亲近度手牌本身就是重要路线。</li>
-                            <li><strong>技巧 4</strong>：在多人局里，别太早树敌。5–8 人时信息更乱，过早打得太凶，反而容易成为全桌的共同目标。</li>
-                        </ul>
-                    </div>
-
-                    <div class="rule-section">
-                        <h4>👥 5. 人数差异</h4>
-                        <ul>
-                            <li><strong>2 人局</strong>：信息最透明，因为会额外公开移出 3 张牌，推理感最强，也更像一场小型心理战</li>
-                            <li><strong>3–4 人局</strong>：是最经典的节奏，既有推理也有运气，适合入门</li>
-                            <li><strong>5–6 人局</strong>：局势开始更乱，互动更多，读牌难度提高</li>
-                            <li><strong>7–8 人局</strong>：更偏热闹与混战，豪华版新增角色的存在感会明显增强</li>
-                            <li><strong>更多人数 / 特殊模式</strong>：豪华版的额外角色让 5–8 人也能顺畅进行，但建议第一次先用 2–4 人规则熟悉基础牌感</li>
-                        </ul>
-                    </div>
-                `
-            },
-            '炸弹猫': {
-                content: `
-                    <div class="rule-section">
-                        <h4>💡 1. 新手开局建议</h4>
-                        <ul>
-                            <li>前期先别乱交功能牌，因为这时牌库还厚，抽到爆炸猫咪的风险通常没那么高。规则页也明确建议前期更适合省牌。</li>
-                            <li>优先理解三张最重要的节奏牌：<strong>Skip、Attack、See the Future</strong>。这三种牌最能决定你会不会踩雷。</li>
-                            <li>第一局先学会数牌库剩余数量。规则直接提到，可以通过数剩余牌来估算自己爆炸的概率。</li>
-                        </ul>
-                    </div>
-
-                    <div class="rule-section">
-                        <h4>⚖️ 2. 核心思路</h4>
-                        <p>《爆炸猫咪》的核心不是“谁牌强”，而是<strong>谁能更好地管理抽牌风险</strong>。你每回合都在想一件事：<br>
-                        我现在该不该抽？<br>
-                        如果我怀疑顶牌有猫，是跳过、攻击甩锅，还是先看未来再洗牌？<br>
-                        它本质上是一个“<strong>把风险往后推、把风险甩给别人</strong>”的游戏。越到后期，牌库越薄，信息越关键，场面也越刺激。</p>
-                    </div>
-
-                    <div class="rule-section">
-                        <h4>⚠️ 3. 常见误区</h4>
-                        <ul>
-                            <li><strong>误区 1</strong>：一拿到功能牌就立刻打。很多牌在后期价值更高，尤其当你怀疑顶牌有爆炸猫咪时。</li>
-                            <li><strong>误区 2</strong>：觉得 Attack 只是“让别人多抽一张”。实际上它是强制对方多走回合，而且能叠加，节奏破坏力非常大。</li>
-                            <li><strong>误区 3</strong>：忽视 Nope。这张牌的强度很高，既能保命，也能拆别人关键操作。</li>
-                        </ul>
-                    </div>
-
-                    <div class="rule-section">
-                        <h4>🚀 4. 进阶技巧</h4>
-                        <ul>
-                            <li><strong>技巧 1</strong>：先看未来再决定要不要跳过或洗牌。这样你的行动不是“赌”，而是基于信息做选择。</li>
-                            <li><strong>技巧 2</strong>：如果你用 Defuse 把爆炸猫咪塞回牌库，尽量结合当前局势决定位置；规则允许你秘密放回任意位置。</li>
-                            <li><strong>技巧 3</strong>：善用攻击转移压力。特别是你怀疑顶牌危险时，Attack 往往比单纯 Skip 更有进攻性。</li>
-                            <li><strong>技巧 4</strong>：记住特殊连招。
-                                <ul>
-                                    <li><strong>两张同名牌</strong>：可当特殊组合使用，随机偷另一位玩家 1 张手牌</li>
-                                    <li><strong>三张同名牌</strong>：可点名要一张特定牌，对方有就必须给你<br>
-                                    这条规则不仅适用于猫咪牌，也适用于任意同名牌。</li>
-                                </ul>
-                            </li>
-                        </ul>
-                    </div>
-
-                    <div class="rule-section">
-                        <h4>👥 5. 人数差异</h4>
-                        <ul>
-                            <li><strong>2 人局</strong>：对抗更直接，规则还推荐使用“快速变体”——先随机移出约三分之一牌库，再放入爆炸猫咪，让节奏更快。</li>
-                            <li><strong>3 人局</strong>：仍适合快速变体，信息和互动都比 2 人更丰富。</li>
-                            <li><strong>4 人局</strong>：经典人数，攻击、反制、甩锅感会很明显。</li>
-                            <li><strong>5 人局</strong>：最热闹，场上反制最多，但你留牌的安全感通常更低；此外 5 人局只会有 <strong>1 张额外 Defuse</strong> 洗回牌库。</li>
-                            <li><strong>更多人数 / 特殊模式</strong>：这份规则对应的是 <strong>Original Edition，支持 2–5 人</strong>。</li>
-                        </ul>
-                    </div>
-                `
-            },
-            '卡波': {
-                content: `
-                    <div class="rule-section">
-                        <h4>💡 1. 新手开局建议</h4>
-                        <ul>
-                            <li>第一局先专注两件事：<strong>记住自己起手看过的两张牌</strong>，以及<strong>分清什么时候该从牌库抽、什么时候该拿弃牌</strong></li>
-                            <li>不要太早喊 CABO，除非你对自己的低分非常有把握</li>
-                            <li>明置牌信息更公开，所以要学会根据场上明牌推测别人还盖着什么牌。</li>
-                        </ul>
-                    </div>
-
-                    <div class="rule-section">
-                        <h4>⚖️ 2. 核心思路</h4>
-                        <p>CABO 的核心不是“抽到小牌就赢”，而是<strong>在记忆、情报和换牌时机之间做判断</strong>。你一边要优化自己面前的四张牌，一边还要想：这张功能牌该用来补记忆、偷看别人，还是强行换掉高分牌？真正厉害的玩家，往往不是记得最多的人，而是<strong>最会在不确定里做低风险决定的人</strong>。</p>
-                    </div>
-
-                    <div class="rule-section">
-                        <h4>⚠️ 3. 常见误区</h4>
-                        <ul>
-                            <li><strong>误区 1</strong>：只顾着换小牌，不主动记信息。结果玩到后面连自己哪张是大牌都忘了。</li>
-                            <li><strong>误区 2</strong>：看到能喊 CABO 就马上喊。其他人还有最后一回合，经常会被反超。</li>
-                            <li><strong>误区 3</strong>：忽视明置牌的信息。弃牌换来的牌会持续公开，这是很重要的推理线索。</li>
-                        </ul>
-                    </div>
-
-                    <div class="rule-section">
-                        <h4>🚀 4. 进阶技巧</h4>
-                        <ul>
-                            <li><strong>技巧 1</strong>：优先处理你确定是高分的牌。比起“追求完美布局”，先把确定的大坑换掉更稳。</li>
-                            <li><strong>技巧 2</strong>：PEEK 和 SPY 不只是看牌，更是在帮你建立“记忆锚点”。知道一两张关键牌的位置，价值非常高。</li>
-                            <li><strong>技巧 3</strong>：SWAP 很适合在你不确定自己牌时当作高波动手段。但如果你已经记得很清楚，盲换反而可能把好牌换走。</li>
-                            <li><strong>技巧 4</strong>：喊 CABO 前，不只要看自己低不低，还要看别人是否有机会用最后一回合大幅降分。</li>
-                        </ul>
-                    </div>
-
-                    <div class="rule-section">
-                        <h4>👥 5. 人数差异</h4>
-                        <ul>
-                            <li><strong>2 人局</strong>：更偏记牌和心理战，彼此信息针对性很强</li>
-                            <li><strong>3 人局</strong>：情报互动最均衡，既能偷看也更容易形成判断</li>
-                            <li><strong>4 人局</strong>：场面信息最多，但变数也最大，喊 CABO 的风险会明显提高</li>
-                            <li><strong>更多人数 / 特殊模式</strong>：支持 <strong>2–4 人</strong>。</li>
-                        </ul>
-                    </div>
-                `
-            },
-            '7连翻': {
-                content: `
-                    <div class="rule-section">
-                        <h4>💡 1. 新手开局建议</h4>
-                        <ul>
-                            <li>第一局先记住最核心的一条：<strong>不是牌越多越好，而是不能翻到重复数字</strong></li>
-                            <li>前期分数不高时，可以适度激进一点；但手里已经有几张高数字时，再贪一张往往很容易翻车</li>
-                            <li>先熟悉 <strong>Freeze、Flip Three、Second Chance</strong> 这 3 张行动牌，再去考虑更细的时机博弈，会容易很多</li>
-                        </ul>
-                    </div>
-
-                    <div class="rule-section">
-                        <h4>⚖️ 2. 核心思路</h4>
-                        <p>《Flip 7》的核心就是<strong>押运气里的风险管理</strong>。你每次都在想同一件事：<br>
-                        我现在停手，分数够不够？<br>
-                        我如果继续翻，翻到新数字的收益值不值得承担撞重复的风险？<br>
-                        因为大数字在牌堆里数量更多，所以它们一方面更容易出现，另一方面也更容易在后期把你炸掉。这个游戏看似简单，实际上非常吃“什么时候收”和“什么时候把压力丢给别人”。</p>
-                    </div>
-
-                    <div class="rule-section">
-                        <h4>⚠️ 3. 常见误区</h4>
-                        <ul>
-                            <li><strong>误区 1</strong>：看到分数低就一直贪。低分并不意味着安全，尤其当你已经有不少不同数字时，重复概率会迅速上升。</li>
-                            <li><strong>误区 2</strong>：忽视修正牌。有时多一张 <strong>+8</strong> 或 <strong>+10</strong>，比硬拼第 6、第 7 张数字牌更稳。</li>
-                            <li><strong>误区 3</strong>：行动牌随便丢。Freeze 和 Flip Three 在关键时机对领先玩家使用，价值会高很多。</li>
-                        </ul>
-                    </div>
-
-                    <div class="rule-section">
-                        <h4>🚀 4. 进阶技巧</h4>
-                        <ul>
-                            <li><strong>技巧 1</strong>：分数领先时，少赌一点。既然目标是先冲到 200，领先方很多时候更该保分，而不是表演极限翻牌。</li>
-                            <li><strong>技巧 2</strong>：Second Chance 在高风险阶段价值最高。若你已经有 4–5 张不同数字，再多一层保险会让你更敢冲。</li>
-                            <li><strong>技巧 3</strong>：Freeze 可以当“强制收手”。对已经拿到不错分数、但还想继续赌的人使用，能直接锁住他的当前收益，同时阻止他继续冲高。</li>
-                            <li><strong>技巧 4</strong>：Flip Three 适合给最不想继续翻牌的人。它能强迫对手在不想冒险的时候连续吃牌，风险和戏剧性都很高。</li>
-                        </ul>
-                    </div>
-
-                    <div class="rule-section">
-                        <h4>👥 5. 人数差异</h4>
-                        <ul>
-                            <li><strong>3 人局</strong>：节奏最快，停手与追分判断更直接，比较容易看出谁领先</li>
-                            <li><strong>4–6 人局</strong>：互动感更强，行动牌影响也更明显，整体是最热闹的区间</li>
-                            <li><strong>更多人数</strong>：规则没有设置很低的上限上界，但说明书提到 <strong>超过 18 人</strong>时建议使用 <strong>两副牌</strong>进行游戏。</li>
-                            <li><strong>特殊模式</strong>：规则书还提到，若人数只有 <strong>2 人或更少</strong>，可以把它当成挑战模式，尝试在 <strong>5 轮以内冲到 200 分</strong>。不过标准推荐人数仍是 <strong>3 人以上</strong>。</li>
-                        </ul>
-                    </div>
-                `
-            },
-            '现代艺术': {
-                content: `
-                    <div class="rule-section">
-                        <h4>💡 1. 新手开局建议</h4>
-                        <ul>
-                            <li>第一局先记住一件事：<strong>你出的牌不只是“卖东西”，也是在给市场定方向</strong></li>
-                            <li>不要一看到自己喜欢的艺术家就猛买，先看他这轮有没有机会进前三</li>
-                            <li>先熟悉 <strong>5 种拍卖方式</strong>，尤其是定价拍卖和双重拍卖，这两种最容易让新手失误</li>
-                        </ul>
-                    </div>
-
-                    <div class="rule-section">
-                        <h4>⚖️ 2. 核心思路</h4>
-                        <p>《现代艺术》的核心不是“谁拍卖喊价更凶”，而是<strong>谁更会操纵市场预期</strong>。你既要想怎么把自己打出的画卖个好价，也要想哪些画值得买回去等轮末升值。很多时候，真正重要的不是单张画值不值，而是<strong>你能不能把某个艺术家推进前三，或者把别人已经囤的艺术家挤出前三</strong>。</p>
-                    </div>
-
-                    <div class="rule-section">
-                        <h4>⚠️ 3. 常见误区</h4>
-                        <ul>
-                            <li><strong>误区 1</strong>：只把自己当卖家。其实买家身份同样重要，轮末卖给银行的收益常常才是大头。</li>
-                            <li><strong>误区 2</strong>：高价抢热门艺术家一定赚。如果热度被别人转走，你可能高位接盘。</li>
-                            <li><strong>误区 3</strong>：忽视回合结束节奏。谁来打出“第 5 张”往往会直接改变整轮收益结构。</li>
-                        </ul>
-                    </div>
-
-                    <div class="rule-section">
-                        <h4>🚀 4. 进阶技巧</h4>
-                        <ul>
-                            <li><strong>技巧 1</strong>：学会控制“第 5 张”。你能不能让某艺术家在最赚的时候结轮，往往比多赢一张画更重要。</li>
-                            <li><strong>技巧 2</strong>：拍卖师有时不该把牌卖太贵。如果你更想自己低价吃下，或想让市场继续升温，过高报价反而可能害自己。</li>
-                            <li><strong>技巧 3</strong>：观察别人手里可能还剩哪些艺术家。因为手牌会跨轮保留，信息积累会越来越重要。</li>
-                            <li><strong>技巧 4</strong>：双重拍卖是强节奏工具。它不只是两张一起卖，更是在强行放大某位艺术家的存在感。</li>
-                        </ul>
-                    </div>
-
-                    <div class="rule-section">
-                        <h4>👥 5. 人数差异</h4>
-                        <ul>
-                            <li><strong>3 人局</strong>：控制感更强，更容易推测别人手里还有什么；规则书还提供了可选的<strong>“神秘玩家”变体</strong>，会额外翻出一手虚拟牌参与统计，让市场更不确定。</li>
-                            <li><strong>4 人局</strong>：通常最均衡，拍卖竞争和价格博弈都比较舒服</li>
-                            <li><strong>5 人局</strong>：市场波动最大，双重拍卖和热门艺术家会被推得更快，场面更混乱也更热闹</li>
-                            <li><strong>更多人数 / 特殊模式</strong>：标准规则支持 <strong>3–5 人</strong>；3 人可加入“神秘玩家”变体。</li>
-                        </ul>
-                    </div>
-                `
-            },
-            '纸牌帮': {
-                content: `
-                    <div class="rule-section">
-                        <h4>💡 1. 新手开局建议</h4>
-                        <ul>
-                            <li>第一局先专注一件事：<strong>判断相对强弱，不要急着精确到“我是什么牌型”</strong>。很多时候先分出强、中、弱就已经够用了。</li>
-                            <li>前两轮先保守估计，到了 <strong>Turn / River</strong> 再根据公共牌补齐后的信息大胆调整。</li>
-                            <li>建议第一局直接玩<strong>基础模式</strong>，先别加挑战卡、专家卡、工具扩展。规则书也建议先完整体验一次基础游戏，再决定是否加难度。</li>
-                        </ul>
-                    </div>
-
-                    <div class="rule-section">
-                        <h4>⚖️ 2. 核心思路</h4>
-                        <p>The Gang 的核心不是“学会德州扑克”，而是<strong>学会在不能明说的情况下同步彼此判断</strong>。<br>
-                        你每轮拿筹码时，都在回答同一个问题：<br>
-                        <strong>以现在已知的信息，我的牌大概比队友强还是弱？</strong><br>
-                        而且这个判断必须随着公共牌不断修正。真正关键的不是单人判断有多准，而是<strong>全队最终能否排出一致、正确的相对顺序</strong>。</p>
-                    </div>
-
-                    <div class="rule-section">
-                        <h4>⚠️ 3. 常见误区</h4>
-                        <ul>
-                            <li><strong>误区 1</strong>：把它当成普通扑克来玩。普通扑克里会虚张声势，这里规则明确写了：<strong>你绝对不想 bluff</strong>。</li>
-                            <li><strong>误区 2</strong>：只看自己牌强不强，不看别人筹码变化。实际上这游戏最重要的信息之一，就是别人的判断如何随着公共牌改变。</li>
-                            <li><strong>误区 3</strong>：觉得公共牌很强时大家都差不多。这反而最容易出现真平手、踢脚比较和细节误判，需要更仔细看最佳五张。</li>
-                        </ul>
-                    </div>
-
-                    <div class="rule-section">
-                        <h4>🚀 4. 进阶技巧</h4>
-                        <ul>
-                            <li><strong>技巧 1</strong>：Pre-Flop 先做粗排。起手两张牌阶段信息最少，先把自己放在大概区间，比一开始就硬猜精确名次更稳。</li>
-                            <li><strong>技巧 2</strong>：重点看“谁在升、谁在降”。白→黄→橙→红的筹码变化，本身就是团队交流语言。</li>
-                            <li><strong>技巧 3</strong>：摊牌前先 mentally 过一遍牌型表。特别是一对、两对、三条、顺子、同花、葫芦之间，很多新手会在中段牌型判断上出错。</li>
-                            <li><strong>技巧 4</strong>：遇到公共牌很满时，主动考虑“真平手”可能。因为这会影响你是否需要强行把两个玩家排得很开。</li>
-                        </ul>
-                    </div>
-
-                    <div class="rule-section">
-                        <h4>👥 5. 人数差异</h4>
-                        <ul>
-                            <li><strong>3–4 人局</strong>：信息压力较低，也更容易看懂彼此筹码变化，适合教学和第一次玩。规则书也提到，若是 3 人且都很懂扑克，可能会感觉偏简单。</li>
-                            <li><strong>5–6 人局</strong>：明显更难，因为参与者一多，相对排序和公共信息解读都会变复杂；说明书还特别给了一个<strong>简化变体</strong>，可加入 <strong>1 个 exit chip</strong> 来降低难度。</li>
-                            <li><strong>7–10 人局</strong>：需要使用豪华版的 <strong>More Players</strong> 扩展。会加入 <strong>0 星、7 星、8 星筹码</strong>，以及 <strong>exit chip</strong>；拿到 exit chip 的玩家不参与最终摊牌顺序检查。</li>
-                            <li><strong>更多人数 / 特殊模式</strong>：豪华版还提供 <strong>Advanced / Professional / Master Thief</strong> 模式，以及 Joker、工具、Dealer 等迷你扩展，适合熟悉基础玩法后再加。</li>
-                        </ul>
-                    </div>
-                `
-            },
-        };
-
-        let currentModalData = {
-            ruleContent: '',
-            guideContent: ''
-        };
-
-        function switchModalTab(tab) {
-            const isRule = tab === 'rule';
-            const ruleBtn = document.getElementById('modalRuleBtn');
-            const guideBtn = document.getElementById('modalGuideBtn');
-            const body = document.getElementById('modalBodyContent');
-
-            if (!ruleBtn || !guideBtn || !body) return;
-
-            ruleBtn.classList.toggle('active', isRule);
-            guideBtn.classList.toggle('active', !isRule);
-            body.innerHTML = isRule ? currentModalData.ruleContent : currentModalData.guideContent;
+        if (!show) continue;
+
+        var tagsHtml = '';
+        for (var t = 0; t < g.tags.length; t++) {
+            tagsHtml += '<span class="tag tag-mech">' + escHtml(g.tags[t]) + '</span>';
         }
 
-        function openRulesModal(gameName, event) {
-            event.preventDefault();
-            event.stopPropagation();
+        html += '<div class="game-detail-card" data-min="' + g.minP + '" data-max="' + g.maxP + '">';
+        html += '  <div class="gd-header">';
+        html += '    <div class="gd-icon" style="background:' + colorBg(g.color) + '">' + g.icon + '</div>';
+        html += '    <div class="flex-1">';
+        html += '      <div class="gd-name">' + escHtml(g.name) + '</div>';
+        html += '      <div class="gd-en-name">' + escHtml(g.enName) + '</div>';
+        html += '      <div class="gd-rating">';
+        html += '        <span class="gd-star">' + starsHtml(g.rating) + '</span>';
+        html += '        <span class="gd-rating-num">' + escHtml(g.rating) + '</span>';
+        html += '      </div>';
+        html += '    </div>';
+        html += '    <button class="rules-btn" onclick="openRules(\'' + g.id + '\', event)" title="规则">📖</button>';
+        html += '  </div>';
+        html += '  <div class="gd-stats">';
+        html += '    <div class="gd-stat">👥 推荐 ' + escHtml(g.recP) + '人</div>';
+        html += '    <div class="gd-stat">⏱ ' + escHtml(g.duration) + '</div>';
+        html += '    <div class="gd-stat">🎂 ' + escHtml(g.age) + '</div>';
+        html += '    <div class="gd-stat">📊 ' + escHtml(g.difficulty) + '</div>';
+        html += '  </div>';
+        html += '  <div class="gd-desc">' + escHtml(g.desc) + '</div>';
+        html += '  <div class="gd-tags">' + tagsHtml + '</div>';
+        html += '  <div class="gd-btn-row">';
+        html += '    <a href="' + g.href + '" class="btn btn-primary btn-block">进入游戏</a>';
+        html += '  </div>';
+        html += '</div>';
+    }
 
-            document.getElementById('modalGameTitle').innerText = gameName;
+    container.innerHTML = html;
+}
 
-            const rules = gameRulesData[gameName] || {
-                content: `
-                    <div class="rule-section">
-                        <h4>暂无详细规则</h4>
-                        <p>请在 gameRulesData 中为 ${gameName} 添加 content 配置。</p>
-                    </div>
-                `
-            };
+// ============================================
+// Filter chip click handler
+// ============================================
+function handleFilterClick(chip) {
+    var scroll = document.getElementById('filterScroll');
+    if (!scroll) return;
+    var chips = scroll.querySelectorAll('.filter-chip');
+    for (var i = 0; i < chips.length; i++) {
+        chips[i].classList.remove('active');
+    }
+    chip.classList.add('active');
+    var players = parseInt(chip.getAttribute('data-players')) || 0;
+    renderGameCards(players);
+}
 
-            const guide = gameGuideData[`${gameName}`] || {
-                content: `
-                    <div class="rule-section">
-                        <h4>${gameName} 攻略（占位符）</h4>
-                        <p>这里是 ${gameName} 的攻略占位符内容，请按需替换为正式攻略。</p>
-                    </div>
-                `
-            };
+// ============================================
+// Rules sheet state
+// ============================================
+var currentGameId = null;
+var currentTab = 'rule';
 
-            currentModalData.ruleContent = rules.content;
-            currentModalData.guideContent = guide.content;
-            switchModalTab('rule');
+// ============================================
+// Open rules sheet for a game
+// ============================================
+function openRules(gameId, event) {
+    if (event) {
+        event.preventDefault();
+        event.stopPropagation();
+    }
 
-            document.getElementById('rulesModal').classList.add('show');
-        }
+    // Find game
+    var game = null;
+    for (var i = 0; i < GAMES.length; i++) {
+        if (GAMES[i].id === gameId) { game = GAMES[i]; break; }
+    }
+    if (!game) return;
 
-        function closeRulesModal() {
-            document.getElementById('rulesModal').classList.remove('show');
-        }
-    </script>
-</body>
+    currentGameId = gameId;
+    currentTab = 'rule';
 
-</html>
+    document.getElementById('sheetTitle').textContent = '📖 ' + game.name;
+    updateRulesContent();
+
+    document.getElementById('rulesSheet').classList.add('show');
+}
+
+// ============================================
+// Close rules sheet
+// ============================================
+function closeRules() {
+    document.getElementById('rulesSheet').classList.remove('show');
+}
+
+// ============================================
+// Switch between rule/guide tabs
+// ============================================
+function switchRulesTab(tab) {
+    currentTab = tab;
+    var ruleBtn = document.getElementById('sheetRuleBtn');
+    var guideBtn = document.getElementById('sheetGuideBtn');
+
+    if (ruleBtn && guideBtn) {
+        ruleBtn.classList.toggle('active', tab === 'rule');
+        guideBtn.classList.toggle('active', tab === 'guide');
+    }
+
+    updateRulesContent();
+}
+
+// ============================================
+// Update rules content based on current game + tab
+// ============================================
+function updateRulesContent() {
+    if (!currentGameId) return;
+
+    var game = null;
+    for (var i = 0; i < GAMES.length; i++) {
+        if (GAMES[i].id === currentGameId) { game = GAMES[i]; break; }
+    }
+    if (!game) return;
+
+    var content = currentTab === 'rule' ? game.rule : game.guide;
+    document.getElementById('sheetContent').innerHTML = content || '<p>暂无内容</p>';
+}
+
+// ============================================
+// Initial render
+// ============================================
+renderGameCards(0);
+</script>
+{% endblock %}
