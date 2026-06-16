@@ -2,842 +2,659 @@
 
 {% block title %}卡波 - 记忆博弈 · 极限换牌{% endblock %}
 
+{% block body_class %}no-tab-bar{% endblock %}
+
+{% block nav_left %}
+<a href="/" class="top-nav-back"><i class="ph-bold ph-arrow-left"></i> 返回</a>
+{% endblock %}
+
+{% block nav_title %}
+<i class="ph-fill ph-magic-wand text-orange" style="margin-right:4px;"></i> 卡波
+{% endblock %}
+
+{% block nav_right %}
+<button class="btn btn-sm btn-secondary" onclick="resetGame()">重置</button>
+{% endblock %}
+
 {% block extra_head %}
-<style>
-
-            @import url('https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@800&family=ZCOOL+KuaiLe&display=swap');
-            /* 动画关键帧 */
-
-            /* 卡牌悬浮动画 */
-            @keyframes floatCard1 {
-
-                0%,
-                100% {
-                    transform: translateY(0px) rotate(-12deg);
-                }
-
-                50% {
-                    transform: translateY(-15px) rotate(-10deg);
-                }
-            }
-
-            @keyframes floatCard2 {
-
-                0%,
-                100% {
-                    transform: translateY(0px) rotate(-4deg);
-                }
-
-                50% {
-                    transform: translateY(12px) rotate(-6deg);
-                }
-            }
-
-            @keyframes floatCard3 {
-
-                0%,
-                100% {
-                    transform: translateY(0px) rotate(6deg);
-                }
-
-                50% {
-                    transform: translateY(-10px) rotate(8deg);
-                }
-            }
-
-            @keyframes floatCard4 {
-
-                0%,
-                100% {
-                    transform: translateY(0px) rotate(15deg);
-                }
-
-                50% {
-                    transform: translateY(15px) rotate(12deg);
-                }
-            }
-
-            /* 独角兽与魔法光晕呼吸动画 */
-            @keyframes pulseMagic {
-
-                0%,
-                100% {
-                    filter: drop-shadow(0 0 10px rgba(16, 185, 129, 0.4));
-                    opacity: 0.7;
-                }
-
-                50% {
-                    filter: drop-shadow(0 0 25px rgba(52, 211, 153, 0.8));
-                    opacity: 1;
-                }
-            }
-
-            /* 萤火虫/星光飘飞动画 */
-            @keyframes fireflyUp {
-                0% {
-                    transform: translateY(0) scale(0.5);
-                    opacity: 0;
-                }
-
-                20% {
-                    opacity: 0.8;
-                    transform: translateY(-20px) scale(1);
-                }
-
-                80% {
-                    opacity: 0.8;
-                    transform: translateY(-80px) scale(0.8);
-                }
-
-                100% {
-                    transform: translateY(-100px) scale(0.3);
-                    opacity: 0;
-                }
-            }
-
-            /* 标题文字浮现与发光 */
-            @keyframes textGlow {
-
-                0%,
-                100% {
-                    filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.2));
-                }
-
-                50% {
-                    filter: drop-shadow(0 0 18px rgba(167, 139, 250, 0.6));
-                }
-            }
-
-            /* CSS类绑定 */
-            .card-1 {
-                animation: floatCard1 5s ease-in-out infinite;
-                transform-origin: center;
-            }
-
-            .card-2 {
-                animation: floatCard2 6s ease-in-out infinite 1s;
-                transform-origin: center;
-            }
-
-            .card-3 {
-                animation: floatCard3 5.5s ease-in-out infinite 0.5s;
-                transform-origin: center;
-            }
-
-            .card-4 {
-                animation: floatCard4 4.5s ease-in-out infinite 1.5s;
-                transform-origin: center;
-            }
-
-            .unicorn-glow {
-                animation: pulseMagic 4s infinite alternate ease-in-out;
-            }
-
-            .text-main {
-                font-family: 'Fredoka One', cursive;
-                font-size: 76px;
-                fill: url(#text-grad);
-                text-anchor: middle;
-                letter-spacing: 10px;
-                animation: textGlow 3s infinite alternate ease-in-out;
-            }
-
-            .text-sub {
-                font-family: 'ZCOOL KuaiLe', cursive;
-                font-size: 36px;
-                fill: #d8b4fe;
-                text-anchor: middle;
-                letter-spacing: 20px;
-                filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.6));
-                transform: translateX(10px);
-            }
-
-            .ff-1 {
-                animation: fireflyUp 4s linear infinite;
-            }
-
-            .ff-2 {
-                animation: fireflyUp 5s linear infinite 1.5s;
-            }
-
-            .ff-3 {
-                animation: fireflyUp 3.5s linear infinite 2s;
-            }
-
-            .ff-4 {
-                animation: fireflyUp 6s linear infinite 0.5s;
-            }
-
-            .ff-5 {
-                animation: fireflyUp 4.5s linear infinite 3s;
-            }
-        
-</style>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@800&family=ZCOOL+KuaiLe&display=swap" rel="stylesheet">
 <style>
-    body {
-        /* standard body */
+    /* ---- SVG Animations ---- */
+    @keyframes floatCard1 {
+        0%,100% { transform: translateY(0px) rotate(-12deg); }
+        50% { transform: translateY(-15px) rotate(-10deg); }
+    }
+    @keyframes floatCard2 {
+        0%,100% { transform: translateY(0px) rotate(-4deg); }
+        50% { transform: translateY(12px) rotate(-6deg); }
+    }
+    @keyframes floatCard3 {
+        0%,100% { transform: translateY(0px) rotate(6deg); }
+        50% { transform: translateY(-10px) rotate(8deg); }
+    }
+    @keyframes floatCard4 {
+        0%,100% { transform: translateY(0px) rotate(15deg); }
+        50% { transform: translateY(15px) rotate(12deg); }
+    }
+    @keyframes pulseMagic {
+        0%,100% { filter: drop-shadow(0 0 10px rgba(16,185,129,0.4)); opacity: 0.7; }
+        50% { filter: drop-shadow(0 0 25px rgba(52,211,153,0.8)); opacity: 1; }
+    }
+    @keyframes fireflyUp {
+        0% { transform: translateY(0) scale(0.5); opacity: 0; }
+        20% { opacity: 0.8; transform: translateY(-20px) scale(1); }
+        80% { opacity: 0.8; transform: translateY(-80px) scale(0.8); }
+        100% { transform: translateY(-100px) scale(0.3); opacity: 0; }
+    }
+    @keyframes textGlow {
+        0%,100% { filter: drop-shadow(0 0 8px rgba(255,255,255,0.2)); }
+        50% { filter: drop-shadow(0 0 18px rgba(167,139,250,0.6)); }
     }
 
-    .cabo-title {
-        font-size: 2.2rem;
-        font-weight: 800;
+    .card-1 { animation: floatCard1 5s ease-in-out infinite; transform-origin: center; }
+    .card-2 { animation: floatCard2 6s ease-in-out infinite 1s; transform-origin: center; }
+    .card-3 { animation: floatCard3 5.5s ease-in-out infinite 0.5s; transform-origin: center; }
+    .card-4 { animation: floatCard4 4.5s ease-in-out infinite 1.5s; transform-origin: center; }
+    .unicorn-glow { animation: pulseMagic 4s infinite alternate ease-in-out; }
+
+    .ff-1 { animation: fireflyUp 4s linear infinite; }
+    .ff-2 { animation: fireflyUp 5s linear infinite 1.5s; }
+    .ff-3 { animation: fireflyUp 3.5s linear infinite 2s; }
+    .ff-4 { animation: fireflyUp 6s linear infinite 0.5s; }
+    .ff-5 { animation: fireflyUp 4.5s linear infinite 3s; }
+
+    /* ---- Score Badge ---- */
+    .cabo-score-badge {
+        font-size: 1.8rem; font-weight: 800;
+        color: var(--color-text); line-height: 1;
         letter-spacing: -0.04em;
-        background: var(--hero-gradient-cabo);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
-        margin-bottom: var(--space-xs);
+    }
+    .cabo-score-badge.danger { color: var(--color-red); }
+
+    .cabo-bust-label {
+        font-size: 0.7rem; font-weight: 700;
+        color: var(--color-red); text-transform: uppercase;
+        letter-spacing: 0.05em; margin-top: 2px;
     }
 
-    .score-badge {
-        font-size: 1.8rem;
-        font-weight: 800;
-        color: var(--apple-black);
-        line-height: 1;
-        letter-spacing: -0.04em;
+    /* ---- Cabo Picker Chips ---- */
+    .cabo-chip-row {
+        display: flex; flex-wrap: wrap; gap: 8px;
     }
-
-    .score-badge.danger {
-        color: var(--apple-red);
-    }
-
-    .bust-label {
-        font-size: 0.7rem;
-        font-weight: 700;
-        color: var(--apple-red);
-        text-transform: uppercase;
-        letter-spacing: 0.05em;
-        margin-top: 2px;
-    }
-
-    .history-trail {
-        font-size: 0.8rem;
-        color: var(--apple-gray);
-        margin-top: 4px;
-        font-weight: 500;
-    }
-
-    .rank-num {
-        width: 32px;
-        height: 32px;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 0.85rem;
-        font-weight: 700;
-        color: white;
-        flex-shrink: 0;
-        margin-right: var(--space-md);
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    }
-
-    .rank-1 {
-        background: var(--apple-orange);
-        color: white;
-        box-shadow: 0 4px 12px rgba(255, 149, 0, 0.3);
-    }
-
-    .rank-other {
-        background: var(--apple-gray-light);
-        color: var(--apple-gray);
-        box-shadow: none;
-    }
-
-    .apple-sheet {
-        background: var(--apple-bg);
-        border-top-left-radius: var(--radius-xl);
-        border-top-right-radius: var(--radius-xl);
-        box-shadow: var(--shadow-lg);
-    }
-
-    .sheet-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: var(--space-lg);
-    }
-
-    .sheet-header h4 {
-        font-size: 1.25rem;
-        font-weight: 700;
-        letter-spacing: -0.02em;
-    }
-
-    .sheet-close {
-        width: 44px;
-        height: 44px;
-        border-radius: 22px;
-        background: rgba(0, 0, 0, 0.06);
-        border: none;
-        font-size: 1rem;
+    .cabo-chip {
+        font-family: var(--font-stack);
+        padding: 10px 18px; border-radius: 20px;
+        border: 1px solid rgba(0,0,0,0.1);
+        background: rgba(255,255,255,0.8);
+        font-size: 0.95rem; font-weight: 600;
         cursor: pointer;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: var(--apple-gray);
-        font-family: var(--font-family);
-        transition: background 0.2s;
+        transition: all 0.3s cubic-bezier(0.25,1,0.5,1);
+        color: var(--color-text);
+        box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    }
+    .cabo-chip:active { transform: scale(0.95); }
+    .cabo-chip.active {
+        background: var(--color-orange); border-color: var(--color-orange);
+        color: white; box-shadow: 0 4px 12px rgba(255,149,0,0.3);
+        transform: translateY(-2px);
+    }
+    .cabo-chip.none-active {
+        background: var(--color-text-secondary); border-color: var(--color-text-secondary);
+        color: white; box-shadow: 0 4px 12px rgba(134,134,139,0.3);
+        transform: translateY(-2px);
+    }
+    .cabo-chip.kamikaze-active {
+        background: var(--color-red); border-color: var(--color-red);
+        color: white; box-shadow: 0 4px 16px rgba(255,59,48,0.4);
+        transform: translateY(-2px);
     }
 
-    .sheet-close:hover {
-        background: rgba(0, 0, 0, 0.1);
-    }
-
-    .score-row {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding: 16px var(--space-md);
-        border-bottom: 0.5px solid rgba(0, 0, 0, 0.06);
-        background: var(--apple-white);
-        margin-bottom: 8px;
+    /* ---- Score Row ---- */
+    .cabo-score-row {
+        display: flex; align-items: center; justify-content: space-between;
+        padding: 16px; border-bottom: 0.5px solid var(--color-border);
+        background: var(--color-surface); margin-bottom: 8px;
         border-radius: 16px;
     }
-
-    .score-row:last-child {
-        border-bottom: none;
-    }
-
-    .score-row label {
-        font-size: 1.1rem;
-        font-weight: 600;
-    }
-
-    .score-row input {
-        width: 100px;
-        text-align: center;
-        font-size: 1.1rem;
-        font-weight: 600;
-        background: var(--apple-bg);
+    .cabo-score-row label { font-size: 1.1rem; font-weight: 600; }
+    .cabo-score-row input {
+        width: 100px; text-align: center;
+        font-size: 1.1rem; font-weight: 600;
+        background: var(--color-bg);
         border: 1px solid var(--apple-gray-light);
-        border-radius: 12px;
-        box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.02);
+        border-radius: 12px; padding: 12px;
+        box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);
+    }
+    .cabo-score-row input:focus {
+        background: #fff; border-color: var(--color-blue);
+        box-shadow: 0 0 0 3px rgba(0,113,227,0.2);
     }
 
-    .score-row input:focus {
-        background: #fff;
-        border-color: var(--apple-blue);
-        box-shadow: 0 0 0 3px rgba(0, 113, 227, 0.2);
-    }
-
-    .cabo-picker {
-        background: var(--apple-white);
+    /* ---- Picker Box ---- */
+    .cabo-picker-box {
+        background: var(--color-surface);
         border-radius: var(--radius-md);
         padding: var(--space-lg);
         margin-top: var(--space-lg);
         border: 1px solid var(--apple-gray-light);
     }
-
-    .cabo-picker-label {
-        font-size: 0.9rem;
-        font-weight: 600;
+    .cabo-picker-box .picker-label {
+        font-size: 0.9rem; font-weight: 600;
         margin-bottom: var(--space-sm);
         display: block;
-        color: var(--apple-gray);
+        color: var(--color-text-secondary);
     }
 
-    .cabo-chips {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 8px;
-    }
-
-    .cabo-chip {
-        font-family: var(--font-family);
-        padding: 10px 18px;
-        border-radius: 20px;
-        border: 1px solid rgba(0, 0, 0, 0.1);
-        background: rgba(255, 255, 255, 0.8);
-        font-size: 0.95rem;
-        font-weight: 600;
-        cursor: pointer;
-        transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
-        color: var(--apple-black);
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-    }
-
-    .cabo-chip:active {
-        transform: scale(0.95);
-    }
-
-    .cabo-chip.active {
-        background: var(--apple-orange);
-        border-color: var(--apple-orange);
-        color: white;
-        box-shadow: 0 4px 12px rgba(255, 149, 0, 0.3);
-        transform: translateY(-2px);
-    }
-
-    .cabo-chip.none-active {
-        background: var(--apple-gray);
-        border-color: var(--apple-gray);
-        color: white;
-        box-shadow: 0 4px 12px rgba(134, 134, 139, 0.3);
-        transform: translateY(-2px);
-    }
-
-    .cabo-chip.kamikaze-active {
-        background: var(--apple-red);
-        border-color: var(--apple-red);
-        color: white;
-        box-shadow: 0 4px 16px rgba(255, 59, 48, 0.4);
-        transform: translateY(-2px);
-    }
-
-    /* Game Over Overlay */
-    .gameover-overlay {
-        position: fixed;
-        inset: 0;
-        background: rgba(0, 0, 0, 0.4);
+    /* ---- Game Over Overlay ---- */
+    .cabo-gameover-overlay {
+        position: fixed; inset: 0;
+        background: rgba(0,0,0,0.4);
         backdrop-filter: blur(20px);
         -webkit-backdrop-filter: blur(20px);
         z-index: 20000;
-        display: flex;
-        align-items: center;
-        justify-content: center;
+        display: flex; align-items: center; justify-content: center;
         padding: var(--space-lg);
     }
-
-    .gameover-card {
-        background: var(--apple-white);
+    .cabo-gameover-card {
+        background: var(--color-surface);
         border-radius: var(--radius-xl);
         padding: var(--space-xl);
-        width: 100%;
-        max-width: 400px;
+        width: 100%; max-width: 400px;
         text-align: center;
         box-shadow: var(--shadow-lg);
-        animation: popIn 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+        animation: popInCabo 0.5s cubic-bezier(0.25,1,0.5,1);
+    }
+    @keyframes popInCabo {
+        from { transform: scale(0.8); opacity: 0; }
+        to { transform: scale(1); opacity: 1; }
+    }
+    .cabo-gameover-emoji {
+        font-size: 4rem; margin-bottom: var(--space-md); display: block;
+    }
+    .cabo-gameover-title {
+        font-size: 1.8rem; font-weight: 800;
+        letter-spacing: -0.03em; margin-bottom: var(--space-xs);
+    }
+    .cabo-gameover-subtitle {
+        font-size: 1rem; color: var(--color-text-secondary);
+        font-weight: 500; margin-bottom: var(--space-lg);
+    }
+    .cabo-gameover-results { text-align: left; margin-bottom: var(--space-lg); }
+    .cabo-go-player {
+        display: flex; align-items: center; justify-content: space-between;
+        padding: 12px 16px; border-radius: 14px;
+        margin-bottom: 6px; background: rgba(0,0,0,0.03);
+    }
+    .cabo-go-player.winner {
+        background: rgba(255,149,0,0.1);
+        border: 1px solid rgba(255,149,0,0.2);
+    }
+    .cabo-go-player-name {
+        font-weight: 600; font-size: 1rem;
+        display: flex; align-items: center; gap: 8px;
+    }
+    .cabo-go-player-score {
+        font-weight: 800; font-size: 1.2rem; letter-spacing: -0.02em;
     }
 
-    @keyframes popIn {
-        from {
-            transform: scale(0.8);
-            opacity: 0;
-        }
-
-        to {
-            transform: scale(1);
-            opacity: 1;
-        }
+    /* ---- Sheet close button ---- */
+    .cabo-sheet-close {
+        width: 44px; height: 44px; border-radius: 22px;
+        background: rgba(0,0,0,0.06); border: none;
+        font-size: 1rem; cursor: pointer;
+        display: flex; align-items: center; justify-content: center;
+        color: var(--color-text-secondary);
+        font-family: var(--font-stack);
+        transition: background 0.2s;
     }
+    .cabo-sheet-close:hover { background: rgba(0,0,0,0.1); }
 
-    .gameover-emoji {
-        font-size: 4rem;
-        margin-bottom: var(--space-md);
-        display: block;
-    }
-
-    .gameover-title {
-        font-size: 1.8rem;
-        font-weight: 800;
-        letter-spacing: -0.03em;
-        margin-bottom: var(--space-xs);
-    }
-
-    .gameover-subtitle {
-        font-size: 1rem;
-        color: var(--apple-gray);
-        font-weight: 500;
-        margin-bottom: var(--space-lg);
-    }
-
-    .gameover-results {
-        text-align: left;
-        margin-bottom: var(--space-lg);
-    }
-
-    .gameover-player {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding: 12px 16px;
-        border-radius: 14px;
-        margin-bottom: 6px;
-        background: rgba(0, 0, 0, 0.03);
-    }
-
-    .gameover-player.winner {
-        background: rgba(255, 149, 0, 0.1);
-        border: 1px solid rgba(255, 149, 0, 0.2);
-    }
-
-    .gameover-player-name {
-        font-weight: 600;
-        font-size: 1rem;
-        display: flex;
-        align-items: center;
-        gap: 8px;
-    }
-
-    .gameover-player-score {
-        font-weight: 800;
-        font-size: 1.2rem;
-        letter-spacing: -0.02em;
-    }
-
-    .gameover-actions {
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-    }
-
-    /* Leaderboard section */
-    .section-title {
-        font-size: 1.4rem;
-        font-weight: 800;
-        letter-spacing: -0.03em;
-        margin-bottom: var(--space-md);
-        margin-top: var(--space-xl);
-        display: flex;
-        align-items: center;
-        gap: 8px;
-    }
-
-
-
-    /* Vue Transitions */
-    .slide-up-enter-active,
-    .slide-up-leave-active {
-        transition: opacity 0.4s cubic-bezier(0.25, 1, 0.5, 1), transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
-    }
-
-    .slide-up-enter-from,
-    .slide-up-leave-to {
-        opacity: 0;
-        transform: translateY(100%);
-    }
-
-    .fade-enter-active,
-    .fade-leave-active {
-        transition: opacity 0.35s ease;
-    }
-
-    .fade-enter-from,
-    .fade-leave-to {
-        opacity: 0;
-    }
+    /* ---- Sheet body scroll ---- */
+    .cabo-sheet-scroll { flex: 1; overflow-y: auto; }
 </style>
 {% endblock %}
 
-{% block nav_title %}
-<i class="ph-fill ph-magic-wand text-orange" style="margin-right: 4px;"></i> 卡波
-{% endblock %}
-
-{% block nav_right %}
-<button class="apple-btn apple-btn-sm apple-btn-secondary" style="min-height: 44px;" onclick="window.caboApp.resetGame()">重置</button>
-{% endblock %}
-
 {% block content %}
-{% raw %}
-<div id="app" v-cloak>
-    <!-- Hero -->
-    <div class="game-header-wrapper" v-pre>
-        {% endraw %}
-        {% include 'header.svg' %}
-        {% raw %}
-    </div>
+<!-- Hero SVG -->
+<div class="game-header-wrapper">
+    {% include 'header.svg' %}
+</div>
 
-    <!-- Add Player -->
-    <div class="apple-card mb-md">
-        <div class="apple-input-group">
-            <input v-model="newPlayerName" class="apple-input" placeholder="输入玩家名字" @keyup.enter="addPlayer" :disabled="isLoading">
-            <button class="apple-btn apple-btn-primary" @click="addPlayer" :disabled="isLoading">
-                <i v-if="!isLoading" class="ph-bold ph-plus"></i>
-                <div v-else class="apple-spinner" style="width: 16px; height: 16px; border-width: 2px;"></div>
+<!-- Add Player -->
+<div class="card mb-md">
+    <div class="d-flex gap-sm">
+        <input id="cabo-new-player-input" class="input-field flex-1" placeholder="输入玩家名字" onkeydown="if(event.key==='Enter')addPlayer()">
+        <button id="cabo-add-btn" class="btn btn-primary" onclick="addPlayer()">
+            <span id="cabo-add-btn-text"><i class="ph-bold ph-plus"></i></span>
+        </button>
+    </div>
+</div>
+
+<!-- Players List -->
+<div id="cabo-players-section">
+    <div class="list mb-md">
+        <div class="list-header d-flex justify-between">
+            <span id="cabo-list-header-left">排行榜 (0 轮)</span>
+            <span id="cabo-list-header-right"></span>
+        </div>
+        <div id="cabo-players-list">
+            <div class="text-center text-muted" style="padding:var(--space-xl);">请添加玩家开始计分</div>
+        </div>
+    </div>
+</div>
+
+<!-- FAB: Score Button -->
+<div class="apple-fab" id="cabo-fab">
+    <button class="btn btn-primary btn-lg" id="cabo-score-btn"
+        style="width:260px;box-shadow:0 8px 24px rgba(0,113,227,0.3);border-radius:30px;background:rgba(0,113,227,0.85);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);"
+        onclick="openInputSheet()">
+        <i class="ph-bold ph-pencil-simple" style="margin-right:8px;"></i> 记分
+    </button>
+</div>
+
+<!-- Leaderboard Section -->
+<leaderboard-section
+    api-url="/cabo/api/leaderboard"
+    empty-icon="👻"
+    empty-text="还没人玩过呢，快去开一局！"
+    show-avg-score
+    avg-score-label="均分"
+></leaderboard-section>
+
+<!-- Bottom Spacer -->
+<div style="height:120px;width:100%;"></div>
+
+<!-- Input Sheet Overlay -->
+<div class="sheet-overlay" id="cabo-input-sheet" style="display:none;">
+    <div class="sheet-content">
+        <div class="sheet-handle"></div>
+        <div class="d-flex justify-between items-center" style="margin-bottom:var(--space-lg);padding:0 var(--space-lg);">
+            <h4 style="margin:0;" id="cabo-sheet-title">录入分数 · 第 1 轮</h4>
+            <button class="cabo-sheet-close" onclick="closeInputSheet()">✕</button>
+        </div>
+
+        <div class="cabo-sheet-scroll" style="padding:0 var(--space-lg);">
+            <!-- Kamikaze Picker -->
+            <div class="cabo-picker-box" style="margin-top:0;">
+                <span class="picker-label">神风特攻队</span>
+                <div class="cabo-chip-row" id="cabo-kamikaze-chips">
+                    <!-- Rendered via JS -->
+                </div>
+            </div>
+
+            <!-- Kamikaze hint -->
+            <div id="cabo-kamikaze-hint" style="display:none;"></div>
+
+            <!-- Score Inputs -->
+            <div id="cabo-score-inputs">
+                <!-- Rendered via JS -->
+            </div>
+
+            <!-- Cabo Picker -->
+            <div class="cabo-picker-box" id="cabo-caller-picker">
+                <span class="picker-label">谁喊了 Cabo?</span>
+                <div class="cabo-chip-row" id="cabo-caller-chips">
+                    <!-- Rendered via JS -->
+                </div>
+            </div>
+        </div>
+
+        <div style="padding:var(--space-lg);">
+            <button class="btn btn-primary btn-block btn-lg" id="cabo-submit-btn"
+                style="box-shadow:0 8px 24px rgba(52,199,89,0.3);border-radius:20px;"
+                onclick="submitRound()">
+                <span id="cabo-submit-btn-text">确认提交</span>
             </button>
         </div>
     </div>
-
-    <!-- Players List -->
-    <div class="apple-list mb-md">
-        <div class="apple-list-header d-flex justify-between">
-            <span>排行榜 ({{ roundCount }} 轮)</span>
-            <span v-if="gameStatus === 'active'">Round {{ roundCount + 1 }}</span>
-            <span v-else class="text-red fw-700">已结束</span>
-        </div>
-
-        <div v-if="players.length === 0" class="text-center text-muted" style="padding: var(--space-xl);">
-            请添加玩家开始计分
-        </div>
-
-        <div v-for="(p, idx) in players" :key="p.name" class="apple-list-item"
-            :style="!p.is_safe ? 'opacity: 0.45;' : ''">
-            <div class="rank-num" :class="idx===0 && roundCount>0 ? 'rank-1' : 'rank-other'">{{ idx+1 }}</div>
-            <div class="apple-list-item-content">
-                <div class="apple-list-item-title">{{ p.name }}</div>
-                <div class="history-trail">{{ p.history.join(' + ') }}</div>
-            </div>
-            <div style="text-align: right;">
-                <div class="score-badge" :class="{'danger': p.total_score > 100}">{{ p.total_score }}</div>
-                <div v-if="!p.is_safe" class="bust-label">爆!</div>
-            </div>
-        </div>
-    </div>
-
-    <!-- FAB: Score Button -->
-    <div class="apple-fab" v-if="gameStatus === 'active'">
-        <button class="apple-btn apple-btn-primary apple-btn-lg"
-            style="width: 260px; box-shadow: 0 8px 24px rgba(0,113,227,0.3); border-radius: 30px; background: rgba(0, 113, 227, 0.85); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);"
-            @click="showInput=true" :disabled="players.length<2">
-            <i class="ph-bold ph-pencil-simple" style="margin-right:8px;"></i> 记分
-        </button>
-    </div>
-
-    <!-- ===== LEADERBOARD SECTION (inline below game) ===== -->
-    <div id="inline-leaderboard-section">
-        <div class="section-title" style="margin-top: var(--space-xl); margin-bottom: var(--space-md);">🏆 历史排行榜
-        </div>
-        <div class="apple-list mb-xl">
-            <div v-if="leaderboard.length === 0" class="text-center text-muted" style="padding: var(--space-xl);">
-                <div class="empty-state">
-                    <span class="empty-icon">👻</span>
-                    还没人玩过呢，快去开一局！
-                </div>
-            </div>
-            <div v-else>
-                <div v-for="(item, idx) in leaderboard" :key="item.name" class="apple-list-item" :style="item.mastery === 'provisional' ? 'opacity:0.65;' : ''">
-                    <div class="rank-num"
-                        :class="idx === 0 ? 'rank-1' : (idx === 1 ? 'rank-2' : (idx === 2 ? 'rank-3' : 'rank-other'))">
-                        {{ idx === 0 ? '👑' : idx + 1 }}
-                    </div>
-
-                    <div class="apple-list-item-content">
-                        <div class="apple-list-item-title">{{ item.name }} <span v-if="item.mastery === 'expert'" style="font-size:0.7rem;color:var(--apple-orange);font-weight:700;">👑专精</span><span v-else-if="item.mastery === 'rookie'" style="font-size:0.7rem;color:var(--apple-blue);font-weight:600;">🔰新手</span><span v-else style="font-size:0.7rem;color:var(--apple-gray);font-weight:600;">⏳定级中</span></div>
-                        <div class="history-trail">{{ item.total_games }}局 · 胜{{ item.wins }}场 · 战力{{ item.win_rate }}% · 胜率{{ item.smoothed_rate }}%</div>
-                    </div>
-
-                    <div style="text-align: right; display: flex; align-items: center; gap: 16px;">
-                        <div style="text-align: right;">
-                            <div class="history-trail" style="font-size: 0.7rem; margin-bottom: 2px;">均分</div>
-                            <div class="score-badge" style="font-size: 1.2rem; color: var(--apple-blue);">{{
-                                item.avg_score }}</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Bottom Spacer to prevent FAB clipping -->
-        <div style="height: 120px; width: 100%;"></div>
-    </div>
-
-    <!-- Input Sheet -->
-    <transition name="slide-up">
-        <div v-if="showInput" class="apple-sheet" style="animation: none;">
-            <div class="apple-sheet-handle"></div>
-
-            <div class="sheet-header">
-                <h4 style="margin:0;">录入分数 · 第 {{ roundCount+1 }} 轮</h4>
-                <button class="sheet-close" @click="showInput=false">✕</button>
-            </div>
-
-            <div style="flex: 1; overflow-y: auto;">
-                <!-- Kamikaze Picker (at top) -->
-                <div class="cabo-picker" style="margin-top: 0;">
-                    <span class="cabo-picker-label">神风特攻队</span>
-                    <div class="cabo-chips">
-                        <button class="cabo-chip" :class="{'none-active': kamikazePlayer === null}"
-                            @click="clearKamikaze">无</button>
-                        <button v-for="p in players" class="cabo-chip"
-                            :class="{'kamikaze-active': kamikazePlayer===p.name}" @click="setKamikaze(p.name)">💀 {{
-                            p.name }}</button>
-                    </div>
-                </div>
-
-                <!-- Kamikaze active hint -->
-                <div v-if="kamikazePlayer" class="apple-alert apple-alert-danger"
-                    style="margin-top: var(--space-md); border-radius: 14px;">
-                    💀 <strong>{{ kamikazePlayer }}</strong> 触发神风特攻队！得 0 分，其他人各 +50 分
-                </div>
-
-                <!-- Score inputs (hidden when kamikaze) -->
-                <template v-if="kamikazePlayer === null">
-                    <div v-for="p in players" :key="'in-'+p.name" class="score-row">
-                        <label>{{ p.name }}</label>
-                        <input type="number" inputmode="numeric" pattern="\d*" v-model.number="inputs[p.name]" class="apple-input"
-                            style="width: 100px; text-align: center; padding: 12px;" placeholder="0">
-                    </div>
-
-                    <!-- Cabo Picker -->
-                    <div class="cabo-picker">
-                        <span class="cabo-picker-label">谁喊了 Cabo?</span>
-                        <div class="cabo-chips">
-                            <button class="cabo-chip" :class="{'none-active': caboCaller===null}"
-                                @click="caboCaller=null">无 / 摸牌结束</button>
-                            <button v-for="p in players" class="cabo-chip" :class="{'active': caboCaller===p.name}"
-                                @click="caboCaller=p.name">{{ p.name
-                                }}</button>
-                        </div>
-                    </div>
-                </template>
-            </div>
-
-            <div class="mt-lg">
-                <button class="apple-btn apple-btn-success apple-btn-block apple-btn-lg"
-                    style="box-shadow: 0 8px 24px rgba(52,199,89,0.3); border-radius: 20px;"
-                    @click="submitRound" :disabled="isLoading">
-                    <span v-if="!isLoading">确认提交</span>
-                    <div v-else class="apple-spinner" style="width: 20px; height: 20px; border-width: 2px; margin: 0 auto;"></div>
-                </button>
-            </div>
-        </div>
-    </transition>
-
-    <!-- Game Over Overlay -->
-    <transition name="fade">
-        <div v-if="showGameOver" class="gameover-overlay" @click.self="showGameOver=false">
-            <div class="gameover-card">
-                <span class="gameover-emoji">🏆</span>
-                <div class="gameover-title">游戏结束!</div>
-                <div class="gameover-subtitle">恭喜 <strong>{{ gameOverWinner }}</strong> 获胜</div>
-
-                <div class="gameover-results">
-                    <div v-for="(p, idx) in players" :key="'go-'+p.name" class="gameover-player"
-                        :class="{'winner': p.name === gameOverWinner}">
-                        <div class="gameover-player-name">
-                            <span v-if="p.name === gameOverWinner">👑</span>
-                            <span>{{ p.name }}</span>
-                        </div>
-                        <div class="gameover-player-score"
-                            :style="p.name === gameOverWinner ? 'color: var(--apple-orange)' : (!p.is_safe ? 'color: var(--apple-red)' : '')">
-                            {{ p.total_score }}
-                        </div>
-                    </div>
-                </div>
-
-                <div class="gameover-actions">
-                    <button class="apple-btn apple-btn-primary apple-btn-block apple-btn-lg"
-                        style="border-radius: 16px;" @click="showGameOver=false;">
-                        <i class="ph-bold ph-check" style="margin-right: 6px;"></i> 确认
-                    </button>
-                    <button class="apple-btn apple-btn-secondary apple-btn-block apple-btn-lg"
-                        style="border-radius: 16px;" @click="resetGame(); showGameOver=false;">
-                        <i class="ph-bold ph-arrow-clockwise" style="margin-right: 6px;"></i> 新游戏
-                    </button>
-                </div>
-            </div>
-        </div>
-    </transition>
-
-</div>
 </div>
 
-<script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
-<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<!-- Game Over Overlay -->
+<div id="cabo-gameover-overlay" class="cabo-gameover-overlay" style="display:none;" onclick="if(event.target===this)hideGameOver()">
+    <div class="cabo-gameover-card">
+        <span class="cabo-gameover-emoji">🏆</span>
+        <div class="cabo-gameover-title">游戏结束!</div>
+        <div class="cabo-gameover-subtitle">恭喜 <strong id="cabo-winner-name"></strong> 获胜</div>
+
+        <div class="cabo-gameover-results" id="cabo-gameover-results">
+            <!-- Rendered via JS -->
+        </div>
+
+        <div class="d-flex flex-col gap-sm">
+            <button class="btn btn-primary btn-block btn-lg" style="border-radius:16px;" onclick="hideGameOver()">
+                <i class="ph-bold ph-check" style="margin-right:6px;"></i> 确认
+            </button>
+            <button class="btn btn-secondary btn-block btn-lg" style="border-radius:16px;" onclick="resetGame();hideGameOver();">
+                <i class="ph-bold ph-arrow-clockwise" style="margin-right:6px;"></i> 新游戏
+            </button>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_body %}
+<script src="/static/components.js"></script>
 <script>
-    const {
-        createApp
-    } = Vue;
-    const app = createApp({
-        data() {
-            return {
-                players: [],
-                roundCount: 0,
-                gameStatus: 'active',
-                newPlayerName: '',
-                showInput: false,
-                inputs: {},
-                caboCaller: null,
-                kamikazePlayer: null,
-                leaderboard: [],
-                showGameOver: false,
-                gameOverWinner: '',
-                isLoading: false
+    var state = {
+        players: [],
+        roundCount: 0,
+        gameStatus: 'active',
+        inputs: {},
+        caboCaller: null,
+        kamikazePlayer: null,
+        showGameOver: false,
+        gameOverWinner: '',
+        isLoading: false
+    };
+
+    // ---- Init ----
+    refresh();
+    // Leaderboard is handled by <leaderboard-section> element
+
+    // ---- API Helpers ----
+    async function refresh() {
+        try {
+            var data = await api('/cabo/api/status');
+            state.players = data.players || [];
+            state.roundCount = data.round_count || 0;
+            state.gameStatus = data.game_status || 'active';
+            renderPlayers();
+            updateUI();
+        } catch (e) {
+            console.error('refresh error:', e);
+        }
+    }
+
+    async function addPlayer() {
+        var input = document.getElementById('cabo-new-player-input');
+        var name = input.value.trim();
+        if (!name) return;
+
+        state.isLoading = true;
+        updateAddBtnState();
+        try {
+            await api('/cabo/api/add_player', { method: 'POST', body: { name: name } });
+            input.value = '';
+            await refresh();
+        } catch (e) {
+            showToast('添加失败', 'error');
+        } finally {
+            state.isLoading = false;
+            updateAddBtnState();
+        }
+    }
+
+    function updateAddBtnState() {
+        var btn = document.getElementById('cabo-add-btn');
+        var text = document.getElementById('cabo-add-btn-text');
+        if (state.isLoading) {
+            btn.disabled = true;
+            text.innerHTML = '<div class="apple-spinner" style="width:16px;height:16px;border-width:2px;"></div>';
+        } else {
+            btn.disabled = false;
+            text.innerHTML = '<i class="ph-bold ph-plus"></i>';
+        }
+    }
+
+    async function resetGame() {
+        if (!await showConfirm('确定要清空所有数据并重置对局吗？', '清空重置', '点错了')) return;
+        try {
+            await api('/cabo/api/reset', { method: 'POST' });
+            state.gameStatus = 'active';
+            state.showGameOver = false;
+            document.getElementById('cabo-gameover-overlay').style.display = 'none';
+            await refresh();
+            // Refresh leaderboard
+            var lb = document.querySelector('leaderboard-section');
+            if (lb && lb.refresh) lb.refresh();
+        } catch (e) {
+            showToast('重置失败', 'error');
+        }
+    }
+
+    // ---- Kamikaze / Cabo Picker ----
+    function setKamikaze(name) {
+        state.kamikazePlayer = name;
+        state.caboCaller = null;
+        renderInputSheet();
+    }
+
+    function clearKamikaze() {
+        state.kamikazePlayer = null;
+        renderInputSheet();
+    }
+
+    function setCaboCaller(name) {
+        state.caboCaller = name;
+        renderInputSheet();
+    }
+
+    function clearCaboCaller() {
+        state.caboCaller = null;
+        renderInputSheet();
+    }
+
+    // ---- Input Sheet ----
+    function openInputSheet() {
+        if (state.players.length < 2) {
+            showToast('至少需要2名玩家', 'error');
+            return;
+        }
+        // Clear previous inputs
+        state.inputs = {};
+        state.caboCaller = null;
+        state.kamikazePlayer = null;
+        state.showInput = true;
+        renderInputSheet();
+        document.getElementById('cabo-input-sheet').style.display = '';
+        document.getElementById('cabo-input-sheet').classList.add('show');
+        document.getElementById('cabo-sheet-title').textContent = '录入分数 · 第 ' + (state.roundCount + 1) + ' 轮';
+    }
+
+    function closeInputSheet() {
+        state.showInput = false;
+        document.getElementById('cabo-input-sheet').classList.remove('show');
+        setTimeout(function() {
+            if (!state.showInput) {
+                document.getElementById('cabo-input-sheet').style.display = 'none';
             }
-        },
-        mounted() {
-            this.refresh();
-            this.fetchLeaderboard();
-        },
-        methods: {
-            async refresh() {
-                try {
-                    const res = await axios.get('/cabo/api/status');
-                    this.players = res.data.players;
-                    this.roundCount = res.data.round_count;
-                    this.gameStatus = res.data.game_status || 'active';
-                } catch (e) { }
-            },
-            async fetchLeaderboard() {
-                try {
-                    const res = await axios.get('/cabo/api/leaderboard');
-                    this.leaderboard = res.data;
-                } catch (e) { }
-            },
-            async addPlayer() {
-                if (!this.newPlayerName.trim()) return;
-                this.isLoading = true;
-                try {
-                    await axios.post('/cabo/api/add_player', {
-                        name: this.newPlayerName
-                    });
-                    this.newPlayerName = '';
-                    await this.refresh();
-                } catch (e) {
-                    showToast("添加失败", "error");
-                } finally {
-                    this.isLoading = false;
-                }
-            },
-            async resetGame() {
-                if (!await window.showConfirm("确定要清空所有数据并重置对局吗？", "清空重置", "点错了")) return;
-                try {
-                    await axios.post('/cabo/api/reset');
-                    this.gameStatus = 'active';
-                    this.showGameOver = false;
-                    this.refresh();
-                } catch (e) { }
-            },
-            setKamikaze(name) {
-                this.kamikazePlayer = name;
-                this.caboCaller = null;
-            },
-            clearKamikaze() {
-                this.kamikazePlayer = null;
-            },
-            async submitRound() {
-                // Fill missing inputs (only needed for normal scoring)
-                if (!this.kamikazePlayer) {
-                    this.players.forEach(p => {
-                        if (this.inputs[p.name] === undefined) this.inputs[p.name] = 0;
-                    });
-                }
+        }, 350);
+    }
 
-                const payload = {
-                    raw_scores: this.kamikazePlayer ? {} : this.inputs,
-                    cabo_caller: this.kamikazePlayer ? null : this.caboCaller,
-                    kamikaze_player: this.kamikazePlayer || null
-                };
+    function renderInputSheet() {
+        var title = document.getElementById('cabo-sheet-title');
+        if (title) title.textContent = '录入分数 · 第 ' + (state.roundCount + 1) + ' 轮';
 
-                this.isLoading = true;
-                try {
-                    const res = await axios.post('/cabo/api/submit_round', payload);
-                    this.showInput = false;
-                    this.inputs = {};
-                    this.caboCaller = null;
-                    this.kamikazePlayer = null;
+        // Kamikaze chips
+        var kamikazeChips = document.getElementById('cabo-kamikaze-chips');
+        if (!kamikazeChips) return;
+        var kamHtml = '<button class="cabo-chip' + (state.kamikazePlayer === null ? ' none-active' : '') + '" onclick="clearKamikaze()">无</button>';
+        for (var i = 0; i < state.players.length; i++) {
+            var p = state.players[i];
+            kamHtml += '<button class="cabo-chip' + (state.kamikazePlayer === p.name ? ' kamikaze-active' : '') + '" onclick="setKamikaze(\'' + escHtml(p.name) + '\')">💀 ' + escHtml(p.name) + '</button>';
+        }
+        kamikazeChips.innerHTML = kamHtml;
 
-                    if (res.data.status === 'game_over') {
-                        this.gameOverWinner = res.data.winner;
-                        await this.refresh();
-                        await this.fetchLeaderboard();
-                        this.showGameOver = true;
-                    } else {
-                        await this.refresh();
-                    }
-                } catch (e) {
-                    showToast("提交失败", "error");
-                } finally {
-                    this.isLoading = false;
-                }
+        // Kamikaze hint
+        var hint = document.getElementById('cabo-kamikaze-hint');
+        if (state.kamikazePlayer) {
+            hint.style.display = '';
+            hint.innerHTML = '<div class="alert alert-danger" style="margin-top:var(--space-md);border-radius:14px;">💀 <strong>' + escHtml(state.kamikazePlayer) + '</strong> 触发神风特攻队！得 0 分，其他人各 +50 分</div>';
+        } else {
+            hint.style.display = 'none';
+        }
+
+        // Score inputs
+        var scoreInputs = document.getElementById('cabo-score-inputs');
+        var callerPicker = document.getElementById('cabo-caller-picker');
+
+        if (state.kamikazePlayer !== null) {
+            scoreInputs.innerHTML = '';
+            callerPicker.style.display = 'none';
+        } else {
+            var scoreHtml = '';
+            for (var j = 0; j < state.players.length; j++) {
+                var sp = state.players[j];
+                var val = state.inputs[sp.name] !== undefined ? state.inputs[sp.name] : '';
+                scoreHtml += '<div class="cabo-score-row"><label>' + escHtml(sp.name) + '</label><input type="number" inputmode="numeric" class="cabo-score-input" data-player="' + escHtml(sp.name) + '" value="' + val + '" placeholder="0" onchange="updateInputValue(this)" oninput="updateInputValue(this)"></div>';
+            }
+            scoreInputs.innerHTML = scoreHtml;
+
+            // Cabo caller chips
+            callerPicker.style.display = '';
+            var callerChips = document.getElementById('cabo-caller-chips');
+            var callHtml = '<button class="cabo-chip' + (state.caboCaller === null ? ' none-active' : '') + '" onclick="clearCaboCaller()">无 / 摸牌结束</button>';
+            for (var k = 0; k < state.players.length; k++) {
+                var cp = state.players[k];
+                callHtml += '<button class="cabo-chip' + (state.caboCaller === cp.name ? ' active' : '') + '" onclick="setCaboCaller(\'' + escHtml(cp.name) + '\')">' + escHtml(cp.name) + '</button>';
+            }
+            callerChips.innerHTML = callHtml;
+        }
+    }
+
+    function updateInputValue(el) {
+        var playerName = el.getAttribute('data-player');
+        state.inputs[playerName] = parseInt(el.value) || 0;
+    }
+
+    async function submitRound() {
+        // Fill missing inputs for non-kamikaze rounds
+        if (!state.kamikazePlayer) {
+            for (var i = 0; i < state.players.length; i++) {
+                var p = state.players[i];
+                if (state.inputs[p.name] === undefined) state.inputs[p.name] = 0;
             }
         }
-    });
-    window.caboApp = app.mount('#app');
+
+        var payload = {
+            raw_scores: state.kamikazePlayer ? {} : state.inputs,
+            cabo_caller: state.kamikazePlayer ? null : state.caboCaller,
+            kamikaze_player: state.kamikazePlayer || null
+        };
+
+        state.isLoading = true;
+        updateSubmitBtnState();
+        try {
+            var res = await api('/cabo/api/submit_round', { method: 'POST', body: payload });
+            closeInputSheet();
+            state.inputs = {};
+            state.caboCaller = null;
+            state.kamikazePlayer = null;
+
+            if (res.status === 'game_over') {
+                state.gameOverWinner = res.winner;
+                state.showGameOver = true;
+                await refresh();
+                var lb = document.querySelector('leaderboard-section');
+                if (lb && lb.refresh) lb.refresh();
+                showGameOver();
+            } else {
+                await refresh();
+            }
+        } catch (e) {
+            showToast('提交失败', 'error');
+        } finally {
+            state.isLoading = false;
+            updateSubmitBtnState();
+        }
+    }
+
+    function updateSubmitBtnState() {
+        var btn = document.getElementById('cabo-submit-btn');
+        var text = document.getElementById('cabo-submit-btn-text');
+        if (state.isLoading) {
+            btn.disabled = true;
+            text.innerHTML = '<div class="apple-spinner" style="width:20px;height:20px;border-width:2px;margin:0 auto;"></div>';
+        } else {
+            btn.disabled = false;
+            text.textContent = '确认提交';
+        }
+    }
+
+    // ---- Game Over Overlay ----
+    function showGameOver() {
+        document.getElementById('cabo-winner-name').textContent = state.gameOverWinner;
+        var resultsEl = document.getElementById('cabo-gameover-results');
+        var html = '';
+        for (var i = 0; i < state.players.length; i++) {
+            var p = state.players[i];
+            var isWinner = p.name === state.gameOverWinner;
+            var scoreColor = isWinner ? 'var(--color-orange)' : (!p.is_safe ? 'var(--color-red)' : '');
+            html += '<div class="cabo-go-player' + (isWinner ? ' winner' : '') + '">' +
+                '<div class="cabo-go-player-name">' +
+                (isWinner ? '<span>👑</span>' : '') +
+                '<span>' + escHtml(p.name) + '</span>' +
+                '</div>' +
+                '<div class="cabo-go-player-score" style="' + (scoreColor ? 'color:' + scoreColor : '') + '">' +
+                p.total_score +
+                '</div>' +
+                '</div>';
+        }
+        resultsEl.innerHTML = html;
+        document.getElementById('cabo-gameover-overlay').style.display = '';
+    }
+
+    function hideGameOver() {
+        document.getElementById('cabo-gameover-overlay').style.display = 'none';
+    }
+
+    // ---- Players List Rendering ----
+    function renderPlayers() {
+        var listEl = document.getElementById('cabo-players-list');
+        if (!listEl) return;
+
+        if (state.players.length === 0) {
+            listEl.innerHTML = '<div class="text-center text-muted" style="padding:var(--space-xl);">请添加玩家开始计分</div>';
+            return;
+        }
+
+        var html = '';
+        for (var i = 0; i < state.players.length; i++) {
+            var p = state.players[i];
+            var rankClass = (i === 0 && state.roundCount > 0) ? 'rank-1' : 'rank-other';
+            var rankContent = (i === 0 && state.roundCount > 0) ? '👑' : (i + 1);
+            var dangerClass = p.total_score > 100 ? ' danger' : '';
+            var opacity = p.is_safe ? '' : ' style="opacity:0.45;"';
+
+            html += '<div class="list-item"' + opacity + '>' +
+                '<div class="rank-badge ' + rankClass + '">' + rankContent + '</div>' +
+                '<div class="list-item-content">' +
+                '<div class="list-item-title">' + escHtml(p.name) + '</div>' +
+                '<div class="history-trail">' + escHtml(p.history.join(' + ')) + '</div>' +
+                '</div>' +
+                '<div style="text-align:right;">' +
+                '<div class="cabo-score-badge' + dangerClass + '">' + p.total_score + '</div>' +
+                (p.is_safe ? '' : '<div class="cabo-bust-label">爆!</div>') +
+                '</div>' +
+                '</div>';
+        }
+        listEl.innerHTML = html;
+    }
+
+    function updateUI() {
+        // Update header
+        document.getElementById('cabo-list-header-left').textContent = '排行榜 (' + state.roundCount + ' 轮)';
+
+        var headerRight = document.getElementById('cabo-list-header-right');
+        if (state.gameStatus === 'active') {
+            headerRight.textContent = 'Round ' + (state.roundCount + 1);
+            headerRight.className = '';
+        } else {
+            headerRight.textContent = '已结束';
+            headerRight.className = 'text-red fw-700';
+        }
+
+        // Update FAB
+        var fab = document.getElementById('cabo-fab');
+        var scoreBtn = document.getElementById('cabo-score-btn');
+        if (state.gameStatus === 'active') {
+            fab.style.display = '';
+            scoreBtn.disabled = state.players.length < 2;
+        } else {
+            fab.style.display = 'none';
+        }
+    }
 </script>
-{% endraw %}
 {% endblock %}
