@@ -7,960 +7,366 @@
 
             @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Noto+Serif+SC:wght@700;900&display=swap');
 
-            /* 动画关键帧定义 */
             @keyframes swordDrop {
-                0% {
-                    transform: translateY(-200px);
-                    opacity: 0;
-                    filter: drop-shadow(0 0 0px rgba(255, 255, 255, 0));
-                }
-
-                60% {
-                    transform: translateY(10px);
-                    opacity: 1;
-                }
-
-                80% {
-                    transform: translateY(-5px);
-                }
-
-                100% {
-                    transform: translateY(0);
-                    opacity: 1;
-                    filter: drop-shadow(0 0 15px rgba(226, 232, 240, 0.4));
-                }
+                0% { transform: translateY(-200px); opacity: 0; filter: drop-shadow(0 0 0px rgba(255, 255, 255, 0)); }
+                60% { transform: translateY(10px); opacity: 1; }
+                80% { transform: translateY(-5px); }
+                100% { transform: translateY(0); opacity: 1; filter: drop-shadow(0 0 15px rgba(226, 232, 240, 0.4)); }
             }
-
             @keyframes shieldFadeIn {
-                0% {
-                    transform: scale(0.9);
-                    opacity: 0;
-                }
-
-                50% {
-                    opacity: 0;
-                }
-
-                100% {
-                    transform: scale(1);
-                    opacity: 1;
-                }
+                0% { transform: scale(0.9); opacity: 0; }
+                50% { opacity: 0; }
+                100% { transform: scale(1); opacity: 1; }
             }
-
             @keyframes bannerExpand {
-                0% {
-                    transform: scaleX(0);
-                    opacity: 0;
-                }
-
-                70% {
-                    transform: scaleX(0);
-                    opacity: 0;
-                }
-
-                100% {
-                    transform: scaleX(1);
-                    opacity: 1;
-                }
+                0% { transform: scaleX(0); opacity: 0; }
+                70% { transform: scaleX(0); opacity: 0; }
+                100% { transform: scaleX(1); opacity: 1; }
             }
-
             @keyframes textReveal {
-                0% {
-                    opacity: 0;
-                    filter: blur(10px);
-                    transform: translateY(10px);
-                }
-
-                80% {
-                    opacity: 0;
-                    filter: blur(10px);
-                    transform: translateY(10px);
-                }
-
-                100% {
-                    opacity: 1;
-                    filter: blur(0px);
-                    transform: translateY(0);
-                }
+                0% { opacity: 0; filter: blur(10px); transform: translateY(10px); }
+                80% { opacity: 0; filter: blur(10px); transform: translateY(10px); }
+                100% { opacity: 1; filter: blur(0px); transform: translateY(0); }
             }
-
             @keyframes pulseBlue {
-
-                0%,
-                100% {
-                    fill-opacity: 0.6;
-                    filter: drop-shadow(0 0 10px rgba(37, 99, 235, 0.5));
-                }
-
-                50% {
-                    fill-opacity: 0.9;
-                    filter: drop-shadow(0 0 25px rgba(37, 99, 235, 0.9));
-                }
+                0%, 100% { fill-opacity: 0.6; filter: drop-shadow(0 0 10px rgba(37, 99, 235, 0.5)); }
+                50% { fill-opacity: 0.9; filter: drop-shadow(0 0 25px rgba(37, 99, 235, 0.9)); }
             }
-
             @keyframes pulseRed {
-
-                0%,
-                100% {
-                    fill-opacity: 0.6;
-                    filter: drop-shadow(0 0 10px rgba(220, 38, 38, 0.5));
-                }
-
-                50% {
-                    fill-opacity: 0.9;
-                    filter: drop-shadow(0 0 25px rgba(220, 38, 38, 0.9));
-                }
+                0%, 100% { fill-opacity: 0.6; filter: drop-shadow(0 0 10px rgba(220, 38, 38, 0.5)); }
+                50% { fill-opacity: 0.9; filter: drop-shadow(0 0 25px rgba(220, 38, 38, 0.9)); }
             }
-
             @keyframes particleFloat {
-                0% {
-                    transform: translateY(0) scale(1);
-                    opacity: 0;
-                }
-
-                20% {
-                    opacity: 0.8;
-                }
-
-                80% {
-                    opacity: 0.6;
-                }
-
-                100% {
-                    transform: translateY(-80px) scale(0.3);
-                    opacity: 0;
-                }
+                0% { transform: translateY(0) scale(1); opacity: 0; }
+                20% { opacity: 0.8; }
+                80% { opacity: 0.6; }
+                100% { transform: translateY(-80px) scale(0.3); opacity: 0; }
             }
-
-            /* 元素类样式分配 */
-            .anim-sword {
-                animation: swordDrop 1.5s cubic-bezier(0.25, 1, 0.5, 1) forwards;
-                transform-origin: center;
-            }
-
-            .anim-shield {
-                animation: shieldFadeIn 1.5s cubic-bezier(0.25, 1, 0.5, 1) forwards;
-                transform-origin: center;
-            }
-
-            .anim-banner {
-                animation: bannerExpand 2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-                transform-origin: center;
-            }
-
-            .anim-text {
-                animation: textReveal 2.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-            }
-
-            .shield-blue-side {
-                animation: pulseBlue 4s infinite alternate ease-in-out;
-            }
-
-            .shield-red-side {
-                animation: pulseRed 4s infinite alternate ease-in-out;
-            }
-
-            .particle {
-                opacity: 0;
-                animation: particleFloat 3s infinite linear;
-            }
-
-            /* 文本样式 */
+            .anim-sword { animation: swordDrop 1.5s cubic-bezier(0.25, 1, 0.5, 1) forwards; transform-origin: center; }
+            .anim-shield { animation: shieldFadeIn 1.5s cubic-bezier(0.25, 1, 0.5, 1) forwards; transform-origin: center; }
+            .anim-banner { animation: bannerExpand 2s cubic-bezier(0.16, 1, 0.3, 1) forwards; transform-origin: center; }
+            .anim-text { animation: textReveal 2.5s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+            .shield-blue-side { animation: pulseBlue 4s infinite alternate ease-in-out; }
+            .shield-red-side { animation: pulseRed 4s infinite alternate ease-in-out; }
+            .particle { opacity: 0; animation: particleFloat 3s infinite linear; }
             .text-eng-sub {
-                font-family: 'Cinzel', serif;
-                font-weight: 700;
-                font-size: 16px;
-                fill: #94a3b8;
-                letter-spacing: 12px;
-                text-anchor: middle;
+                font-family: 'Cinzel', serif; font-weight: 700; font-size: 16px;
+                fill: #94a3b8; letter-spacing: 12px; text-anchor: middle;
             }
-
             .text-eng-main {
-                font-family: 'Cinzel', serif;
-                font-weight: 900;
-                font-size: 56px;
-                fill: url(#gold-grad);
-                letter-spacing: 20px;
-                text-anchor: middle;
-                /* 修复letter-spacing导致的偏移 */
+                font-family: 'Cinzel', serif; font-weight: 900; font-size: 56px;
+                fill: url(#gold-grad); letter-spacing: 20px; text-anchor: middle;
                 transform: translateX(10px);
             }
-
             .text-zh-main {
-                font-family: 'Noto Serif SC', serif;
-                font-weight: 900;
-                font-size: 32px;
-                fill: url(#gold-grad-light);
-                letter-spacing: 24px;
-                text-anchor: middle;
-                transform: translateX(12px);
-                filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.8));
+                font-family: 'Noto Serif SC', serif; font-weight: 900; font-size: 32px;
+                fill: url(#gold-grad-light); letter-spacing: 24px; text-anchor: middle;
+                transform: translateX(12px); filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.8));
             }
-        
+
 </style>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Noto+Serif+SC:wght@700;900&display=swap" rel="stylesheet">
 <style>
-    body {
-        padding-bottom: 80px;
-    }
-
-    /* ---- Page Hero ---- */
+    body { padding-bottom: 80px; }
 
     .role-img {
-        max-height: 280px;
-        border-radius: 16px;
-        margin-bottom: var(--space-md);
+        max-height: 280px; border-radius: 16px; margin-bottom: var(--space-md);
         box-shadow: 0 16px 32px rgba(0, 0, 0, 0.15);
         transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.4s;
     }
-
     .role-img:hover {
         transform: scale(1.03) translateY(-4px);
         box-shadow: 0 24px 48px rgba(0, 0, 0, 0.25);
     }
 
     .vision-intel-card {
-        position: relative;
-        overflow: hidden;
-        border-radius: 28px;
+        position: relative; overflow: hidden; border-radius: 28px;
         border: 1px solid rgba(255, 255, 255, 0.12);
         background: rgba(18, 18, 18, 0.72);
         backdrop-filter: saturate(180%) blur(24px);
         -webkit-backdrop-filter: saturate(180%) blur(24px);
-        box-shadow: 
-            inset 0 1px 1px rgba(255, 255, 255, 0.1),
-            0 24px 48px rgba(0, 0, 0, 0.5);
+        box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.1), 0 24px 48px rgba(0, 0, 0, 0.5);
         animation: visionReveal 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
     }
-
     @keyframes visionReveal {
         0% { opacity: 0; transform: translateY(20px) scale(0.98); }
         100% { opacity: 1; transform: translateY(0) scale(1); }
     }
-
-    .vision-intel-card::before,
-    .vision-intel-card::after {
-        content: "";
-        position: absolute;
-        border-radius: 999px;
-        filter: blur(60px);
-        pointer-events: none;
-        opacity: 0;
-        z-index: 1;
+    .vision-intel-card::before, .vision-intel-card::after {
+        content: ""; position: absolute; border-radius: 999px; filter: blur(60px);
+        pointer-events: none; opacity: 0; z-index: 1;
     }
-
     .vision-intel-content {
-        position: relative;
-        z-index: 2;
-        min-height: 240px;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        text-align: center;
-        padding: 32px 24px 20px;
+        position: relative; z-index: 2; min-height: 240px;
+        display: flex; flex-direction: column; align-items: center;
+        text-align: center; padding: 32px 24px 20px;
     }
-
     .vision-intel-title {
-        margin-top: auto;
-        color: #f5f5f7;
-        font-size: clamp(1.8rem, 5vw, 2.4rem);
-        line-height: 1.05;
-        font-weight: 900;
-        letter-spacing: -0.02em;
+        margin-top: auto; color: #f5f5f7;
+        font-size: clamp(1.8rem, 5vw, 2.4rem); line-height: 1.05;
+        font-weight: 900; letter-spacing: -0.02em;
         font-family: "Noto Serif SC", serif;
         text-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
         background: linear-gradient(180deg, #ffffff 0%, rgba(255,255,255,0.8) 100%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
+        -webkit-background-clip: text; -webkit-text-fill-color: transparent;
     }
-
     .vision-intel-subtitle {
-        margin-top: 10px;
-        color: rgba(245, 245, 247, 0.6);
-        font-size: 0.7rem;
-        letter-spacing: 0.12em;
-        text-transform: uppercase;
-        font-weight: 700;
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
+        margin-top: 10px; color: rgba(245, 245, 247, 0.6);
+        font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase;
+        font-weight: 700; display: inline-flex; align-items: center; gap: 8px;
     }
-
     .vision-intel-names {
-        margin-top: auto;
-        color: #ffffff;
-        font-size: 1.05rem;
-        letter-spacing: -0.01em;
-        font-weight: 700;
-        padding: 12px 12px 4px;
+        margin-top: auto; color: #ffffff; font-size: 1.05rem;
+        letter-spacing: -0.01em; font-weight: 700; padding: 12px 12px 4px;
         text-shadow: 0 2px 8px rgba(0,0,0,0.3);
     }
 
-    /* ---- Character Themes (Refined) ---- */
-
+    /* Character Themes */
     .vision-theme-evil-team::before {
-        width: 380px;
-        height: 380px;
-        left: 50%;
-        top: 50%;
-        transform: translate(-50%, -50%);
+        width: 380px; height: 380px; left: 50%; top: 50%; transform: translate(-50%, -50%);
         background: radial-gradient(circle, rgba(255, 69, 58, 0.7) 0%, rgba(255, 69, 58, 0.2) 40%, rgba(255, 69, 58, 0) 70%);
         opacity: 1;
     }
-
     .vision-theme-merlin::before {
-        width: 380px;
-        height: 380px;
-        left: 50%;
-        top: 50%;
-        transform: translate(-50%, -50%);
+        width: 380px; height: 380px; left: 50%; top: 50%; transform: translate(-50%, -50%);
         background: radial-gradient(circle, rgba(255, 214, 10, 0.6) 0%, rgba(255, 159, 10, 0.2) 45%, rgba(255, 159, 10, 0) 70%);
         opacity: 1;
     }
-
     .vision-theme-percival::before {
-        width: 320px;
-        height: 320px;
-        left: -40px;
-        top: -60px;
+        width: 320px; height: 320px; left: -40px; top: -60px;
         background: radial-gradient(circle, rgba(191, 90, 242, 0.6) 0%, rgba(191, 90, 242, 0.2) 40%, rgba(191, 90, 242, 0) 70%);
         opacity: 1;
     }
-
     .vision-theme-percival::after {
-        width: 340px;
-        height: 340px;
-        right: -60px;
-        bottom: -80px;
+        width: 340px; height: 340px; right: -60px; bottom: -80px;
         background: radial-gradient(circle, rgba(10, 132, 255, 0.6) 0%, rgba(10, 132, 255, 0.2) 45%, rgba(10, 132, 255, 0) 70%);
         opacity: 1;
     }
-
     .vision-theme-oberon::before {
-        width: 380px;
-        height: 380px;
-        left: 50%;
-        top: 50%;
-        transform: translate(-50%, -50%);
+        width: 380px; height: 380px; left: 50%; top: 50%; transform: translate(-50%, -50%);
         background: radial-gradient(circle, rgba(142, 142, 147, 0.3) 0%, rgba(142, 142, 147, 0.1) 40%, rgba(142, 142, 147, 0) 70%);
         opacity: 1;
     }
-
     .vision-theme-loyal::before {
-        width: 360px;
-        height: 360px;
-        left: 50%;
-        top: 50%;
-        transform: translate(-50%, -50%);
+        width: 360px; height: 360px; left: 50%; top: 50%; transform: translate(-50%, -50%);
         background: radial-gradient(circle, rgba(245, 245, 247, 0.15) 0%, rgba(245, 245, 247, 0.05) 30%, rgba(245, 245, 247, 0) 70%);
         opacity: 1;
     }
-
     .vision-theme-lancelot-good::before {
-        width: 380px;
-        height: 380px;
-        left: 45%;
-        top: 45%;
-        transform: translate(-50%, -50%);
+        width: 380px; height: 380px; left: 45%; top: 45%; transform: translate(-50%, -50%);
         background: radial-gradient(circle, rgba(10, 132, 255, 0.65) 0%, rgba(10, 132, 255, 0.2) 40%, rgba(10, 132, 255, 0) 70%);
         opacity: 1;
     }
-
     .vision-theme-lancelot-good::after {
-        width: 200px;
-        height: 200px;
-        right: -60px;
-        bottom: -60px;
+        width: 200px; height: 200px; right: -60px; bottom: -60px;
         background: radial-gradient(circle, rgba(255, 69, 58, 0.3) 0%, rgba(255, 69, 58, 0.1) 40%, rgba(255, 69, 58, 0) 70%);
         opacity: 1;
     }
-
     .vision-theme-lancelot-evil::before {
-        width: 360px;
-        height: 360px;
-        left: 50%;
-        top: 50%;
-        transform: translate(-50%, -50%);
+        width: 360px; height: 360px; left: 50%; top: 50%; transform: translate(-50%, -50%);
         background: radial-gradient(circle, rgba(255, 59, 48, 0.65) 0%, rgba(255, 59, 48, 0.2) 40%, rgba(255, 59, 48, 0) 70%);
         opacity: 1;
     }
-
     .vision-theme-lancelot-evil::after {
-        width: 300px;
-        height: 300px;
-        right: -50px;
-        top: -60px;
+        width: 300px; height: 300px; right: -50px; top: -60px;
         background: radial-gradient(circle, rgba(94, 92, 230, 0.5) 0%, rgba(48, 176, 199, 0.2) 40%, rgba(94, 92, 230, 0) 70%);
         opacity: 1;
     }
 
     .vision-alert-badge {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        width: 24px;
-        height: 24px;
-        border-radius: 999px;
+        display: inline-flex; align-items: center; justify-content: center;
+        width: 24px; height: 24px; border-radius: 999px;
         border: 1px solid rgba(255, 255, 255, 0.2);
         background: rgba(255, 255, 255, 0.12);
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-        font-size: 0.8rem;
-        color: #ffffff;
+        font-size: 0.8rem; color: #ffffff;
     }
-
     .team-display {
-        background: var(--apple-bg);
-        border-radius: var(--radius-md);
-        padding: var(--space-md);
-        text-align: center;
-        margin: var(--space-md) 0;
+        background: var(--apple-bg); border-radius: var(--radius-md);
+        padding: var(--space-md); text-align: center; margin: var(--space-md) 0;
     }
-
     .team-display .names {
-        font-size: 1.25rem;
-        font-weight: 700;
-        color: var(--apple-black);
-        letter-spacing: -0.02em;
+        font-size: 1.25rem; font-weight: 700; color: var(--apple-black); letter-spacing: -0.02em;
     }
-
     .vote-overlay {
-        position: fixed;
-        inset: 0;
-        background: rgba(0, 0, 0, 0.4);
-        backdrop-filter: blur(20px);
-        -webkit-backdrop-filter: blur(20px);
-        z-index: 10000;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        padding: var(--space-lg);
+        position: fixed; inset: 0; background: rgba(0, 0, 0, 0.4);
+        backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+        z-index: 10000; display: flex; flex-direction: column;
+        justify-content: center; align-items: center; padding: var(--space-lg);
     }
-
-    .vote-overlay h2 {
-        color: white;
-        margin-bottom: var(--space-xl);
-        font-size: 1.8rem;
-        letter-spacing: -0.04em;
+    .vote-overlay h2 { color: white; margin-bottom: var(--space-xl); font-size: 1.8rem; letter-spacing: -0.04em; }
+    .vote-team-box, .lady-result-box {
+        background: rgba(40, 40, 44, 0.85); backdrop-filter: blur(20px);
+        padding: var(--space-lg) var(--space-xl); border-radius: var(--radius-xl);
+        margin-bottom: var(--space-xl); text-align: center; width: 85%;
+        max-width: 340px; box-shadow: var(--shadow-lg); color: white;
     }
-
-    .vote-team-box,
-    .lady-result-box {
-        background: rgba(40, 40, 44, 0.85);
-        backdrop-filter: blur(20px);
-        padding: var(--space-lg) var(--space-xl);
-        border-radius: var(--radius-xl);
-        margin-bottom: var(--space-xl);
-        text-align: center;
-        width: 85%;
-        max-width: 340px;
-        box-shadow: var(--shadow-lg);
-        color: white;
-    }
-
-    .vote-team-box strong {
-        font-size: 1.4rem;
-        font-weight: 800;
-        letter-spacing: -0.02em;
-        color: white;
-    }
-
-    .lady-result-box .alignment-good {
-        color: var(--apple-blue);
-        font-size: 2rem;
-        font-weight: 800;
-        margin-top: 10px;
-    }
-
-    .lady-result-box .alignment-evil {
-        color: var(--apple-red);
-        font-size: 2rem;
-        font-weight: 800;
-        margin-top: 10px;
-    }
-
+    .vote-team-box strong { font-size: 1.4rem; font-weight: 800; letter-spacing: -0.02em; color: white; }
+    .lady-result-box .alignment-good { color: var(--apple-blue); font-size: 2rem; font-weight: 800; margin-top: 10px; }
+    .lady-result-box .alignment-evil { color: var(--apple-red); font-size: 2rem; font-weight: 800; margin-top: 10px; }
     .vote-btn-big {
-        width: 85%;
-        max-width: 320px;
-        padding: 16px;
-        border-radius: var(--radius-xl);
-        font-size: 1.25rem;
-        font-weight: 700;
-        letter-spacing: -0.01em;
-        border: none;
-        margin: 8px 0;
-        cursor: pointer;
-        transition: all var(--transition-fast);
-        font-family: var(--font-family);
-        background: rgba(255, 255, 255, 0.15);
-        color: white;
-        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+        width: 85%; max-width: 320px; padding: 16px; border-radius: var(--radius-xl);
+        font-size: 1.25rem; font-weight: 700; letter-spacing: -0.01em; border: none;
+        margin: 8px 0; cursor: pointer; transition: all var(--transition-fast);
+        font-family: var(--font-family); background: rgba(255, 255, 255, 0.15);
+        color: white; box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
     }
-
-    .vote-btn-big.green {
-        background: var(--apple-green);
-    }
-
-    .vote-btn-big.red {
-        background: var(--apple-red);
-    }
-
-    .vote-btn-big.blue {
-        background: var(--apple-blue);
-    }
-
-    .vote-btn-big:active {
-        transform: scale(0.96);
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    }
-
-    .vote-btn-big:hover:not(:disabled) {
-        transform: translateY(-2px);
-        box-shadow: 0 12px 32px rgba(0, 0, 0, 0.2);
-    }
-
-    .vote-btn-big:disabled {
-        opacity: 0.4;
-        pointer-events: none;
-    }
+    .vote-btn-big.green { background: var(--apple-green); }
+    .vote-btn-big.red { background: var(--apple-red); }
+    .vote-btn-big.blue { background: var(--apple-blue); }
+    .vote-btn-big:active { transform: scale(0.96); box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); }
+    .vote-btn-big:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 12px 32px rgba(0, 0, 0, 0.2); }
+    .vote-btn-big:disabled { opacity: 0.4; pointer-events: none; }
 
     .lady-target-btn {
-        padding: 16px;
-        border-radius: 20px;
-        font-size: 1.15rem;
-        font-weight: 700;
-        border: none;
-        background: rgba(255, 255, 255, 0.15);
-        backdrop-filter: blur(10px);
-        color: white;
-        cursor: pointer;
-        transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
-        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
-        width: 100%;
+        padding: 16px; border-radius: 20px; font-size: 1.15rem; font-weight: 700;
+        border: none; background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(10px);
+        color: white; cursor: pointer; transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1); width: 100%;
     }
-
-    .lady-target-btn:not(:disabled):hover {
-        background: rgba(255, 255, 255, 0.25);
-        transform: translateY(-2px);
-    }
-
-    .lady-target-btn:not(:disabled):active {
-        transform: scale(0.96);
-    }
-
-    .lady-target-list {
-        display: flex;
-        flex-direction: column;
-        gap: 8px;
-        width: 85%;
-        max-width: 320px;
-    }
+    .lady-target-btn:not(:disabled):hover { background: rgba(255, 255, 255, 0.25); transform: translateY(-2px); }
+    .lady-target-btn:not(:disabled):active { transform: scale(0.96); }
+    .lady-target-list { display: flex; flex-direction: column; gap: 8px; width: 85%; max-width: 320px; }
 
     .error-toast {
-        position: fixed;
-        top: 24px;
-        left: 50%;
-        transform: translateX(-50%);
-        z-index: 20000;
-        padding: 14px 28px;
-        border-radius: 30px;
-        background: rgba(255, 59, 48, 0.9);
-        backdrop-filter: blur(10px);
-        color: white;
-        font-size: 0.95rem;
-        font-weight: 600;
-        box-shadow: 0 12px 24px rgba(255, 59, 48, 0.3);
-        letter-spacing: -0.01em;
+        position: fixed; top: 24px; left: 50%; transform: translateX(-50%); z-index: 20000;
+        padding: 14px 28px; border-radius: 30px; background: rgba(255, 59, 48, 0.9);
+        backdrop-filter: blur(10px); color: white; font-size: 0.95rem; font-weight: 600;
+        box-shadow: 0 12px 24px rgba(255, 59, 48, 0.3); letter-spacing: -0.01em;
     }
-
     .count-control {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: var(--space-lg);
-        margin: var(--space-lg) 0;
-        background: rgba(0, 0, 0, 0.03);
-        border-radius: 24px;
-        padding: 12px;
+        display: flex; align-items: center; justify-content: center; gap: var(--space-lg);
+        margin: var(--space-lg) 0; background: rgba(0, 0, 0, 0.03);
+        border-radius: 24px; padding: 12px;
     }
-
     .count-control .count-display {
-        font-size: 2.5rem;
-        font-weight: 800;
-        min-width: 60px;
-        text-align: center;
-        letter-spacing: -0.04em;
-        color: var(--apple-black);
+        font-size: 2.5rem; font-weight: 800; min-width: 60px;
+        text-align: center; letter-spacing: -0.04em; color: var(--apple-black);
     }
-
     .count-btn {
-        width: 48px;
-        height: 48px;
-        border-radius: 50%;
-        border: none;
-        background: var(--apple-white);
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-        font-size: 1.5rem;
-        font-weight: 500;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
-        color: var(--apple-blue);
+        width: 48px; height: 48px; border-radius: 50%; border: none;
+        background: var(--apple-white); box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        font-size: 1.5rem; font-weight: 500; cursor: pointer;
+        display: flex; align-items: center; justify-content: center;
+        transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1); color: var(--apple-blue);
     }
-
-    .count-btn:active {
-        transform: scale(0.9);
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
-    }
-
+    .count-btn:active { transform: scale(0.9); box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04); }
     .config-preview {
-        background: rgba(0, 0, 0, 0.03);
-        border-radius: 16px;
-        padding: var(--space-lg);
-        font-size: 0.9rem;
-        font-weight: 500;
-        color: var(--apple-gray);
-        margin-bottom: var(--space-lg);
-        line-height: 1.6;
+        background: rgba(0, 0, 0, 0.03); border-radius: 16px; padding: var(--space-lg);
+        font-size: 0.9rem; font-weight: 500; color: var(--apple-gray);
+        margin-bottom: var(--space-lg); line-height: 1.6;
     }
-
-    .status-box {
-        text-align: center;
-        padding: var(--space-2xl) 0;
-    }
-
+    .status-box { text-align: center; padding: var(--space-2xl) 0; }
     .status-count {
-        font-size: 4rem;
-        font-weight: 800;
-        color: var(--apple-black);
-        letter-spacing: -0.04em;
+        font-size: 4rem; font-weight: 800; color: var(--apple-black); letter-spacing: -0.04em;
     }
-
-    .status-count .total {
-        font-size: 1.5rem;
-        font-weight: 600;
-        color: var(--apple-gray);
+    .status-count .total { font-size: 1.5rem; font-weight: 600; color: var(--apple-gray); }
+    .chips-wrap { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
+    .chip {
+        padding: 8px 16px; font-size: 0.9rem; border-radius: 20px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04); font-weight: 600;
     }
-
-    .chips-wrap {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 8px;
-        justify-content: center;
-    }
-
-    .apple-chip {
-        padding: 8px 16px;
-        font-size: 0.9rem;
-        border-radius: 20px;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-        font-weight: 600;
-    }
-
-    .lb-section {
-        padding: var(--space-xl) 0;
-    }
-
+    .lb-section { padding: var(--space-xl) 0; }
     .lb-title {
-        font-size: 1.4rem;
-        font-weight: 800;
-        text-align: center;
-        margin-bottom: var(--space-md);
-        letter-spacing: -0.03em;
+        font-size: 1.4rem; font-weight: 800; text-align: center;
+        margin-bottom: var(--space-md); letter-spacing: -0.03em;
     }
-
-
-
     .lancelot-toggle {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: var(--space-sm);
-        margin: var(--space-md) 0;
-        font-size: 0.9rem;
+        display: flex; align-items: center; justify-content: center;
+        gap: var(--space-sm); margin: var(--space-md) 0; font-size: 0.9rem;
     }
-
-    .lancelot-toggle label {
-        cursor: pointer;
-        color: var(--apple-gray);
-        font-weight: 600;
-    }
-
-    .toggle-switch {
-        position: relative;
-        width: 50px;
-        height: 30px;
-    }
-
-    .toggle-switch input {
-        opacity: 0;
-        width: 0;
-        height: 0;
-    }
-
+    .lancelot-toggle label { cursor: pointer; color: var(--apple-gray); font-weight: 600; }
+    .toggle-switch { position: relative; width: 50px; height: 30px; }
+    .toggle-switch input { opacity: 0; width: 0; height: 0; }
     .toggle-slider {
-        position: absolute;
-        inset: 0;
-        background: var(--apple-gray-light);
-        border-radius: 30px;
-        cursor: pointer;
-        transition: 0.3s;
+        position: absolute; inset: 0; background: var(--apple-gray-light);
+        border-radius: 30px; cursor: pointer; transition: 0.3s;
         box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
     }
-
     .toggle-slider::before {
-        content: '';
-        position: absolute;
-        width: 24px;
-        height: 24px;
-        left: 3px;
-        bottom: 3px;
-        background: white;
-        border-radius: 50%;
-        transition: 0.3s;
-        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+        content: ''; position: absolute; width: 24px; height: 24px;
+        left: 3px; bottom: 3px; background: white; border-radius: 50%;
+        transition: 0.3s; box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
     }
+    .toggle-switch input:checked + .toggle-slider { background: var(--apple-blue); }
+    .toggle-switch input:checked + .toggle-slider::before { transform: translateX(20px); }
 
-    .toggle-switch input:checked+.toggle-slider {
-        background: var(--apple-blue);
-    }
-
-    .toggle-switch input:checked+.toggle-slider::before {
-        transform: translateX(20px);
-    }
-
-    .apple-dot {
-        position: relative;
-    }
-
+    .dot { position: relative; }
     .swap-badge {
-        position: absolute;
-        top: -6px;
-        right: -6px;
-        font-size: 0.6rem;
-        width: 16px;
-        height: 16px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        border-radius: 50%;
-        background: var(--apple-orange);
-        color: white;
-        font-weight: 700;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        position: absolute; top: -6px; right: -6px; font-size: 0.6rem;
+        width: 16px; height: 16px; display: flex; align-items: center;
+        justify-content: center; border-radius: 50%;
+        background: var(--apple-orange); color: white;
+        font-weight: 700; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
     }
-
-    .swap-badge.no-swap {
-        background: var(--apple-gray-light);
-        color: var(--apple-gray);
-    }
-
-    .alignment-swap-indicator {
-        display: inline-block;
-        animation: pulse-glow 1.5s ease-in-out infinite;
-    }
-
-    @keyframes pulse-glow {
-        0%, 100% { opacity: 1; }
-        50% { opacity: 0.4; }
-    }
-
+    .swap-badge.no-swap { background: var(--apple-gray-light); color: var(--apple-gray); }
+    .alignment-swap-indicator { display: inline-block; animation: pulse-glow 1.5s ease-in-out infinite; }
+    @keyframes pulse-glow { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
     @keyframes pulseSwap {
         0% { box-shadow: 0 0 0 0 rgba(255, 149, 0, 0.6); }
         70% { box-shadow: 0 0 0 12px rgba(255, 149, 0, 0); }
         100% { box-shadow: 0 0 0 0 rgba(255, 149, 0, 0); }
     }
+    .dot.swap-active { animation: pulseSwap 2s infinite; }
+    .dot.swap-active:not(.success):not(.fail) { border-color: var(--apple-orange) !important; }
 
-    .apple-dot.swap-active {
-        animation: pulseSwap 2s infinite;
-    }
-
-    /* 只有在没有结果时才显示橙色边框 */
-    .apple-dot.swap-active:not(.success):not(.fail) {
-        border-color: var(--apple-orange) !important;
-
-    }
-
-    .reveal-list {
-        list-style: none;
-        padding: 0;
-    }
-
+    .reveal-list { list-style: none; padding: 0; }
     .reveal-list li {
-        display: flex;
-        justify-content: space-between;
-        padding: 12px 16px;
-        border-bottom: 0.5px solid rgba(0, 0, 0, 0.06);
-        font-size: 1rem;
+        display: flex; justify-content: space-between; padding: 12px 16px;
+        border-bottom: 0.5px solid rgba(0, 0, 0, 0.06); font-size: 1rem;
+    }
+    .reveal-list li:last-child { border-bottom: none; }
+
+    .apple-toggle-input:checked + .apple-toggle-btn {
+        background: var(--apple-blue); border-color: var(--apple-blue);
+        color: white; font-weight: 600; box-shadow: 0 4px 12px rgba(0, 113, 227, 0.3);
     }
 
-    .reveal-list li:last-child {
-        border-bottom: none;
-    }
-
-    .apple-toggle-input:checked+.apple-toggle-btn {
-        background: var(--apple-blue);
-        border-color: var(--apple-blue);
-        color: white;
-        font-weight: 600;
-        box-shadow: 0 4px 12px rgba(0, 113, 227, 0.3);
-    }
-
-    .apple-btn-primary {
-        box-shadow: 0 4px 14px rgba(0, 113, 227, 0.3);
-    }
-
-    .apple-btn-success {
-        box-shadow: 0 4px 14px rgba(52, 199, 89, 0.3);
-    }
-
-    /* Transitions */
-    .fade-enter-active,
-    .fade-leave-active {
-        transition: opacity 0.4s cubic-bezier(0.25, 1, 0.5, 1), transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
-    }
-
-    .fade-enter-from,
-    .fade-leave-to {
-        opacity: 0;
-        transform: translateY(12px) scale(0.98);
-    }
-
-    .overlay-enter-active,
-    .overlay-leave-active {
-        transition: opacity 0.4s cubic-bezier(0.25, 1, 0.5, 1), backdrop-filter 0.4s;
-    }
-
-    .overlay-enter-from,
-    .overlay-leave-to {
-        opacity: 0;
-        backdrop-filter: blur(0px);
-    }
-
-    .slide-up-enter-active,
-    .slide-up-leave-active {
-        transition: opacity 0.4s cubic-bezier(0.25, 1, 0.5, 1), transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
-    }
-
-    .slide-up-enter-from,
-    .slide-up-leave-to {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-
-    /* ---- 结算界面 Apple 风格优化 ---- */
-    .victory-hero {
-        font-size: 4.5rem;
-        margin-bottom: 8px;
-        filter: drop-shadow(0 8px 16px rgba(0,0,0,0.1));
-    }
-
+    .victory-hero { font-size: 4.5rem; margin-bottom: 8px; filter: drop-shadow(0 8px 16px rgba(0,0,0,0.1)); }
     .victory-title {
-        font-size: clamp(2.2rem, 6vw, 3.2rem);
-        font-weight: 900;
-        letter-spacing: -0.04em;
-        margin-bottom: 8px;
-        background-clip: text;
-        -webkit-background-clip: text;
+        font-size: clamp(2.2rem, 6vw, 3.2rem); font-weight: 900;
+        letter-spacing: -0.04em; margin-bottom: 8px;
+        background-clip: text; -webkit-background-clip: text;
     }
-
-    .victory-blue {
-        background-image: linear-gradient(135deg, #0071e3 0%, #4facfe 100%);
-        color: transparent;
-    }
-
-    .victory-red {
-        background-image: linear-gradient(135deg, #ff3b30 0%, #ff8008 100%);
-        color: transparent;
-    }
-
+    .victory-blue { background-image: linear-gradient(135deg, #0071e3 0%, #4facfe 100%); color: transparent; }
+    .victory-red { background-image: linear-gradient(135deg, #ff3b30 0%, #ff8008 100%); color: transparent; }
     .assassin-result {
-        display: inline-flex;
-        align-items: center;
-        padding: 10px 24px;
-        background: rgba(255, 59, 48, 0.08);
-        border-radius: 30px;
-        color: var(--apple-red);
-        font-size: 1.05rem;
-        font-weight: 600;
+        display: inline-flex; align-items: center; padding: 10px 24px;
+        background: rgba(255, 59, 48, 0.08); border-radius: 30px;
+        color: var(--apple-red); font-size: 1.05rem; font-weight: 600;
         margin-bottom: var(--space-xl);
         box-shadow: inset 0 0 0 1px rgba(255, 59, 48, 0.15), 0 8px 16px rgba(255, 59, 48, 0.08);
     }
-
     .reveal-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
-        gap: 12px;
-        margin-bottom: var(--space-2xl);
+        display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+        gap: 12px; margin-bottom: var(--space-2xl);
     }
-
     .reveal-card {
-        background: rgba(128, 128, 128, 0.06);
-        border-radius: 20px;
-        padding: 20px 12px;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        text-align: center;
+        background: rgba(128, 128, 128, 0.06); border-radius: 20px; padding: 20px 12px;
+        display: flex; flex-direction: column; align-items: center;
+        justify-content: center; text-align: center;
         transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), background 0.4s;
         box-shadow: inset 0 1px 0 rgba(255,255,255,0.1);
     }
-
-    .reveal-card:hover {
-        transform: translateY(-4px) scale(1.02);
-        background: rgba(128, 128, 128, 0.1);
-    }
-
-    .reveal-card .name {
-        font-size: 1.1rem;
-        font-weight: 700;
-        margin-bottom: 8px;
-        color: var(--apple-black);
-        letter-spacing: -0.01em;
-    }
-
+    .reveal-card:hover { transform: translateY(-4px) scale(1.02); background: rgba(128, 128, 128, 0.1); }
+    .reveal-card .name { font-size: 1.1rem; font-weight: 700; margin-bottom: 8px; color: var(--apple-black); letter-spacing: -0.01em; }
     .reveal-card .role {
-        font-size: 0.85rem;
-        font-weight: 600;
-        padding: 4px 12px;
-        border-radius: 12px;
-        background: rgba(255, 255, 255, 0.6);
-        box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        font-size: 0.85rem; font-weight: 600; padding: 4px 12px; border-radius: 12px;
+        background: rgba(255, 255, 255, 0.6); box-shadow: 0 2px 8px rgba(0,0,0,0.04);
     }
-
     @media (prefers-color-scheme: dark) {
         .reveal-card .role { background: rgba(0, 0, 0, 0.25); }
         .reveal-card .name { color: #f5f5f7; }
     }
+    .btn-pill { border-radius: 999px; padding: 16px 24px; font-weight: 600; font-size: 1.15rem; display: flex; align-items: center; justify-content: center; gap: 8px; transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1); }
+    .action-buttons-group { display: flex; gap: 16px; justify-content: center; margin-bottom: var(--space-xl); }
+    @media (max-width: 480px) { .action-buttons-group { flex-direction: column; } }
 
-    .apple-btn-pill {
-        border-radius: 999px;
-        padding: 16px 24px;
-        font-weight: 600;
-        font-size: 1.15rem;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 8px;
-        transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
-    }
-
-    .action-buttons-group {
-        display: flex;
-        gap: 16px;
-        justify-content: center;
-        margin-bottom: var(--space-xl);
-    }
-
-    @media (max-width: 480px) {
-        .action-buttons-group { flex-direction: column; }
-    }
+    #lady-toggle-input:checked + .toggle-slider { background: var(--apple-purple, #af52de) !important; }
 </style>
+<script src="https://unpkg.com/echarts@5.5.0/dist/echarts.min.js"></script>
 {% endblock %}
 
 {% block nav_title %}
@@ -968,1239 +374,1444 @@
 {% endblock %}
 
 {% block content %}
-{% raw %}
-<div id="app" class="bg-transition-slow" :class="{'bg-phase-vote': voteTeamActive, 'bg-phase-mission': missionActive}" v-cloak>
+<div id="avalon-app" class="bg-transition-slow">
 
     <!-- Hero -->
-    <div class="game-header-wrapper" v-pre>
-        {% endraw %}
+    <div class="game-header-wrapper">
         {% include 'header.svg' %}
-        {% raw %}
     </div>
 
     <!-- Error Toast -->
-    <transition name="slide-up">
-        <div v-if="errorMsg" class="error-toast">{{ errorMsg }}</div>
-    </transition>
+    <div id="avalon-error-toast" class="error-toast" style="display:none"></div>
 
-    <style>
-        /* Setup switch style specific overrides */
-        #lady-toggle-input:checked+.toggle-slider {
-            background: var(--apple-purple, #af52de) !important;
-        }
-    </style>
+    <!-- Main dynamic content -->
+    <div id="avalon-content"></div>
 
-    <!-- Step 1: Join / Setup -->
-    <div v-if="step === 1" class="apple-section">
+    <!-- Overlays (hidden by default, shown/hidden by JS) -->
 
-        <div v-if="status === 'empty' || status === 'ended'" class="apple-card">
-            <h4 class="mb-md">创建新房间</h4>
-            <p class="text-sm text-muted mb-md">标准包配置</p>
+    <!-- Team Vote Overlay -->
+    <div id="overlay-team-vote" class="vote-overlay" style="display:none">
+        <h2>同意这个队伍吗?</h2>
+        <div id="overlay-team-vote-box" class="vote-team-box"></div>
+        <button class="vote-btn-big green" onclick="avalon_submitTeamVote('approve')">👍 同意</button>
+        <button class="vote-btn-big red" onclick="avalon_submitTeamVote('reject')">👎 反对</button>
+    </div>
 
-            <div class="count-control">
-                <button class="count-btn" @click="decrementPlayerCount()">−</button>
-                <div class="count-display">{{ playerCount }}</div>
-                <button class="count-btn" @click="incrementPlayerCount()">+</button>
-            </div>
+    <!-- Mission Vote Overlay -->
+    <div id="overlay-mission-vote" class="vote-overlay" style="display:none">
+        <h2>执行任务</h2>
+        <button id="overlay-mission-success" class="vote-btn-big blue" onclick="avalon_voteMission('success')">🛡️ 成功</button>
+        <button id="overlay-mission-fail" class="vote-btn-big red" onclick="avalon_voteMission('fail')">🗡️ 失败</button>
+        <div id="overlay-mission-hint-good" style="color: rgba(255,255,255,0.5); margin-top: var(--space-sm); font-size: 0.85rem; display:none;">好人只能投成功</div>
+        <div id="overlay-mission-hint-mustfail" style="color: rgba(255,255,255,0.5); margin-top: var(--space-sm); font-size: 0.85rem; display:none;">当前阵营为邪恶的兰斯洛特必须投失败</div>
+    </div>
 
-            <!-- 湖中仙女开关 (8人局及以上) -->
-            <div v-if="playerCount >= 8" class="lancelot-toggle">
-                <span>🧚 启用湖中仙女</span>
-                <div class="toggle-switch">
-                    <input type="checkbox" id="lady-toggle-input" v-model="ladyOfLakeEnabled">
-                    <label for="lady-toggle-input" class="toggle-slider"></label>
-                </div>
-            </div>
+    <!-- Lady of Lake Overlay -->
+    <div id="overlay-lady-lake" class="vote-overlay" style="display:none">
+        <h2>🧚 湖中仙女</h2>
+        <p style="color: rgba(255,255,255,0.7); margin-bottom: var(--space-lg); text-align: center;">选择一名玩家查验其阵营</p>
+        <div id="overlay-lady-lake-list" class="lady-target-list"></div>
+    </div>
 
-            <!-- 王者之剑开关 (8-12人局可选) -->
-            <div v-if="playerCount >= 8" class="lancelot-toggle">
-                <span>🗡️ 启用王者之剑</span>
-                <div class="toggle-switch">
-                    <input type="checkbox" id="excalibur-toggle-input" v-model="excaliburEnabled">
-                    <label for="excalibur-toggle-input" class="toggle-slider"></label>
-                </div>
-            </div>
-
-            <!-- 兰斯洛特开关 (10人和12人局) -->
-            <div v-if="playerCount === 10 || playerCount === 12" class="lancelot-toggle">
-                <span>⚔️ 启用兰斯洛特</span>
-                <div class="toggle-switch" :style="playerCount === 12 ? 'opacity: 0.6; pointer-events: none;' : ''">
-                    <input type="checkbox" id="lancelot-toggle-input" v-model="lancelotEnabled"
-                        :disabled="playerCount === 12">
-                    <label for="lancelot-toggle-input" class="toggle-slider"></label>
-                </div>
-            </div>
-
-            <div class="config-preview" v-html="getConfigPreview()"></div>
-
-            <button class="apple-btn apple-btn-success apple-btn-block apple-btn-lg" @click="createGame">开新局</button>
+    <!-- Lady of Lake Result Overlay -->
+    <div id="overlay-lady-result" class="vote-overlay" style="display:none" onclick="avalon_closeLadyResult()">
+        <h2>🧚 查验结果</h2>
+        <div class="lady-result-box">
+            <div id="lady-result-target" class="fw-700 mb-md" style="font-size:1.1rem;"></div>
+            <div id="lady-result-alignment"></div>
+            <p class="text-sm text-muted mt-md">你可以自由选择公布或隐瞒此结果</p>
         </div>
+        <p style="color: rgba(255,255,255,0.4); margin-top: var(--space-lg); font-size: 0.85rem;">点击任意处关闭</p>
+    </div>
 
-        <div class="apple-card">
-            <h4 class="mb-md">加入游戏</h4>
-            <input v-model="myName" class="apple-input mb-md" placeholder="输入你的姓名">
+    <!-- Excalibur Assign Overlay -->
+    <div id="overlay-excalibur-assign" class="vote-overlay" style="display:none">
+        <h2>🗡️ 分配王者之剑</h2>
+        <p style="color: rgba(255,255,255,0.7); margin-bottom: var(--space-lg); text-align: center;">选择一名队员持有王者之剑</p>
+        <div id="overlay-excalibur-assign-list" class="lady-target-list"></div>
+    </div>
 
-            <div v-if="status === 'joining'" class="apple-alert apple-alert-info mb-md">
-                <div class="d-flex justify-between items-center">
-                    <span class="apple-tag apple-tag-blue">等待中</span>
-                    <span class="fw-700">{{ currentCount }} / {{ targetCount }} 人</span>
-                </div>
-                <div class="text-muted text-sm mt-sm">已加入: {{ allPlayers.join(', ') }}</div>
-            </div>
+    <!-- Excalibur Decide Overlay -->
+    <div id="overlay-excalibur-decide" class="vote-overlay" style="display:none">
+        <h2>🗡️ 王者之剑</h2>
+        <p style="color: rgba(255,255,255,0.7); margin-bottom: var(--space-lg); text-align: center;">选择一名队员替换其投票并查看结果，或跳过</p>
+        <div id="overlay-excalibur-decide-list" class="lady-target-list"></div>
+        <button class="lady-target-btn" style="background: rgba(255,255,255,0.08); margin-top: 8px; max-width:320px;" onclick="avalon_useExcalibur(null)">
+            ✕ 不使用
+        </button>
+    </div>
 
-            <div v-if="status === 'joining'">
-                <button class="apple-btn apple-btn-primary apple-btn-block" @click="joinGame"
-                    :disabled="!myName">加入房间</button>
-            </div>
-            <div v-if="status === 'active' || status === 'assassin' || status === 'ended'">
-                <div class="apple-alert apple-alert-info mb-md">游戏已开始或已结束，输入名字进入</div>
-                <button class="apple-btn apple-btn-primary apple-btn-block" style="background: var(--apple-orange);"
-                    @click="joinGame" :disabled="!myName">进入房间</button>
-            </div>
-            <div v-if="status === 'empty'" class="text-center text-muted" style="padding: var(--space-lg) 0;">
-                当前无房间，请先创建
-            </div>
+    <!-- Excalibur Result Overlay -->
+    <div id="overlay-excalibur-result" class="vote-overlay" style="display:none" onclick="avalon_closeExcaliburResult()">
+        <h2>🗡️ 王者之剑结果</h2>
+        <div class="lady-result-box">
+            <div id="excalibur-result-target" class="fw-700 mb-md" style="font-size:1.1rem;"></div>
+            <div id="excalibur-result-vote"></div>
+            <div id="excalibur-result-replace" style="margin-top: var(--space-md); font-size: 0.85rem; color: rgba(255,255,255,0.5);">已替换投票，点击任意处关闭</div>
         </div>
     </div>
 
-    <!-- Avalon Leaderboard -->
-    <div v-if="step === 1" id="inline-leaderboard-section">
-        <div class="section-title" style="margin-top: var(--space-xl); margin-bottom: var(--space-md);">🏆 历史排行榜
-        </div>
-        <div class="apple-list mb-xl">
-            <div v-if="lbData.length === 0" class="text-center text-muted" style="padding: var(--space-xl);">
-                <div class="empty-state">
-                    <span class="empty-icon">👻</span>
-                    还没人玩过呢，快去开一局！
-                </div>
-            </div>
-            <div v-else>
-                <div v-for="(p, i) in lbData" :key="p.name" class="apple-list-item" :style="p.mastery === 'provisional' ? 'opacity:0.65;' : ''">
-                    <div class="rank-num"
-                        :class="i === 0 ? 'rank-1' : (i === 1 ? 'rank-2' : (i === 2 ? 'rank-3' : 'rank-other'))">
-                        {{ i === 0 ? '👑' : i + 1 }}
-                    </div>
-
-                    <div class="apple-list-item-content">
-                        <div class="apple-list-item-title">{{ p.name }} <span v-if="p.mastery === 'expert'" style="font-size:0.7rem;color:var(--apple-orange);font-weight:700;">👑专精</span><span v-else-if="p.mastery === 'rookie'" style="font-size:0.7rem;color:var(--apple-blue);font-weight:600;">🔰新手</span><span v-else style="font-size:0.7rem;color:var(--apple-gray);font-weight:600;">⏳定级中</span></div>
-                        <div class="history-trail">{{ p.total }}局 · 胜{{ p.wins }}场 · 战力{{ p.win_rate }}% · 胜率{{ p.smoothed_rate }}%</div>
-                    </div>
-
-                    <div style="text-align: right; display: flex; align-items: center; gap: 16px;">
-                        <div style="text-align: right;">
-                            <div class="history-trail" style="font-size: 0.7rem; margin-bottom: 2px;">均分</div>
-                            <div class="score-badge" style="font-size: 1.2rem; color: var(--apple-blue);">{{ p.avg_score }}</div>
-                        </div>
-                        <div style="text-align: right; width: 40px;">
-                            <div class="history-trail" style="font-size: 0.7rem; margin-bottom: 2px;">胜负</div>
-                            <div class="score-badge" style="font-size: 1.1rem; color: var(--apple-gray);">{{ p.wins }}-{{ p.total - p.wins }}</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Step 2: Lobby -->
-    <div v-if="step === 2" class="apple-section">
-        <div class="apple-card">
-            <div v-if="status === 'joining'" class="status-box">
-                <p class="text-muted mb-sm">等待玩家加入...</p>
-                <div class="status-count">{{ currentCount }} <span class="total">/ {{ targetCount }}</span>
-                </div>
-                <div class="d-flex justify-center mt-md">
-                    <div class="apple-spinner"></div>
-                </div>
-                <p class="text-sm text-muted mt-md">满员后自动发牌开始</p>
-            </div>
-            <div v-else-if="status === 'active'" class="status-box">
-                <h3 class="text-green">游戏开始!</h3>
-            </div>
-
-            <div class="chips-wrap mt-md">
-                <span v-for="p in allPlayers" class="apple-chip" :class="{me: p===myName}">{{ p }}</span>
-            </div>
-
-            <div class="text-center mt-lg"
-                style="border-top: 0.5px solid rgba(0,0,0,0.06); padding-top: var(--space-md);">
-                <button class="apple-btn apple-btn-sm apple-btn-outline"
-                    style="color: var(--apple-red); border-color: rgba(255,59,48,0.3);" @click="resetGame">重置游戏</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Step 3: Main Game -->
-    <div v-if="step === 3 && status !== 'ended'" class="apple-section" style="padding-top: var(--space-md);">
-
-        <!-- Identity -->
-        <div class="apple-card mb-md">
-            <div class="d-flex justify-between items-center mb-md">
-                <h5 style="margin:0;">你的身份</h5>
-                <button class="apple-btn apple-btn-sm apple-btn-secondary" @click="showRole=!showRole">{{
-                    showRole?'隐藏':'显示' }}</button>
-            </div>
-            <div v-if="showRole">
-                <div class="apple-role" :class="isCurrentlyEvil() ? 'evil' : 'good'">
-                    <img :src="getRoleImage(myRole)" class="role-img role-card-anim" v-if="myRole"
-                        style="display:block; margin:0 auto;">
-                    <div style="font-size:1.2rem;">{{ roleMap[myRole] || myRole }}</div>
-                    <!-- 兰斯洛特阵营状态 -->
-                    <div v-if="currentAlignment" class="mt-sm text-sm"
-                        :class="currentAlignment === 'evil' ? 'text-red' : 'text-blue'">
-                        <span :class="{'alignment-swap-indicator': lancelotSwapped}">
-                            {{ currentAlignment === 'evil' ? '⚡ 当前阵营: 邪恶' : '🛡️ 当前阵营: 正义' }}
-                        </span>
-                    </div>
-                </div>
-                <div class="mt-md">
-                    <div class="fw-600 text-sm mb-sm">你的视野</div>
-                    <div class="vision-intel-card" :class="getVisionThemeClass()">
-                        <div class="vision-intel-content">
-                            <div class="vision-intel-title">{{ getVisionPanelMeta().title }}</div>
-                            <div class="vision-intel-subtitle">
-                                {{ getVisionPanelMeta().subtitle }}
-                            </div>
-                            <div class="vision-intel-names">{{ getVisionNamesText() }}</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Assassin Phase -->
-        <div v-if="status === 'assassin'" class="apple-card text-center mb-md" style="border: 2px solid var(--apple-red);">
-            <h3 class="text-red mb-lg"><i class="ph-fill ph-skull"></i> 刺杀阶段</h3>
-            <p class="text-muted mb-lg">好人完成了3个任务！{{ getAssassinRoleName() }}正在选择刺杀目标...</p>
-
-            <div v-if="canAssassinate()">
-                <h5 class="mb-md">选择刺杀目标 (猜测梅林)</h5>
-                <div class="apple-toggle-grid">
-                    <template v-for="p in allPlayers" :key="'kill-'+p">
-                        <button class="apple-btn apple-btn-outline"
-                            style="color: var(--apple-red); border-color: rgba(255,59,48,0.3);" @click="assassinate(p)">
-                            {{ p }}
-                        </button>
-                    </template>
-                </div>
-            </div>
-            <div v-else class="text-muted">等待{{ getAssassinRoleName() }}选择...</div>
-        </div>
-
-        <!-- Mission Progress -->
-        <div class="apple-card mb-md text-center">
-            <div class="apple-dots mb-md">
-                <div v-for="i in 5" class="apple-dot"
-                    :class="[getMissionStatusClass(i), {current: i === missionHistory.length + 1}, {'swap-active': lancelotSwapReveal[i-1] === true}]">
-                    <span>{{ i }}</span>
-                    <span class="sub" v-if="missionHistory[i-1]">{{ missionHistory[i-1].fail_count }}坏</span>
-                    <!-- 兰斯洛特转换牌徽标 -->
-                    <span
-                        v-if="lancelotEnabled && lancelotSwapReveal[i-1] !== null && lancelotSwapReveal[i-1] !== undefined"
-                        class="swap-badge" :class="{'no-swap': !lancelotSwapReveal[i-1]}">
-                        <i v-if="lancelotSwapReveal[i-1]" class="ph-bold ph-arrows-clockwise"></i>
-                        <i v-else class="ph-bold ph-minus"></i>
-                    </span>
-                </div>
-            </div>
-            <div class="text-sm text-muted">
-                流局: <span class="fw-700 text-red">{{ voteFailCount }}/5</span>
-                &nbsp;|&nbsp; 第 {{ missionHistory.length + 1 }} 轮需 <span class="fw-700">{{ requiredTeamSize
-                    }}</span> 人
-            </div>
-            <div class="text-sm mt-xs" v-if="captain">
-                👑 当前队长: <span class="fw-700 text-orange">{{ captain }}</span>
-            </div>
-            <!-- 湖中仙女持有者 -->
-            <div class="text-sm mt-xs" v-if="ladyOfLakeHolder">
-                🧚 湖中仙女: <span class="fw-700" style="color: var(--apple-purple, #af52de);">{{ ladyOfLakeHolder
-                    }}</span>
-            </div>
-            <!-- Lancelot Swap Alert -->
-            <div v-if="lancelotEnabled && getLatestSwapStatus() === true" 
-                 class="apple-alert mt-md" 
-                 style="background: var(--apple-orange-light); border: 1px solid rgba(255,149,0,0.3); color: #c27000; border-radius: 12px; padding: 10px;">
-                <i class="ph-bold ph-arrows-clockwise"></i> 阵营已转换！请留意你的身份变化
-            </div>
-        </div>
-
-        <!-- Lady of the Lake Result (仅持有者可见) -->
-        <div v-if="ladyOfLakeResult && ladyOfLakeInspector === myName" class="apple-card mb-md"
-            style="border: 2px solid var(--apple-purple, #af52de);">
-            <h6 class="text-center mb-sm" style="color: var(--apple-purple, #af52de);">🧚 查验结果</h6>
-            <div class="text-center">
-                <strong>{{ ladyOfLakeResult.target }}</strong> 的阵营是:
-                <span :class="ladyOfLakeResult.alignment === 'good' ? 'text-blue fw-700' : 'text-red fw-700'">
-                    {{ ladyOfLakeResult.alignment === 'good' ? '🛡️ 好人' : '🗡️ 坏人' }}
-                </span>
-            </div>
-            <div class="text-sm text-muted text-center mt-sm">你可以选择公布真相或进行伪装</div>
-        </div>
-
-        <!-- Last Vote Snapshot -->
-        <div v-if="Object.keys(lastVoteSnapshot).length" class="apple-card mb-md">
-            <h6 class="mb-sm text-sm text-muted fw-600">上轮投票票型</h6>
-            <div class="chips-wrap">
-                <span v-for="(vote, name) in lastVoteSnapshot" class="apple-chip"
-                    :class="{'approve': vote==='approve', 'reject': vote==='reject'}">
-                    {{ name }} <i class="fas" :class="vote==='approve'?'fa-check text-green':'fa-times text-red'"
-                        style="margin-left:4px;"></i>
-                </span>
-            </div>
-        </div>
-
-        <!-- Vote Team Phase -->
-        <div v-if="voteTeamActive" class="apple-card mb-md" style="border: 2px solid var(--apple-blue);">
-            <h5 class="text-center text-blue mb-md">🗳️ 组队投票中</h5>
-            <div class="team-display">
-                <div class="text-sm text-muted">提议队伍</div>
-                <div class="names">{{ missionTeam.join('、') }}</div>
-            </div>
-            <div class="chips-wrap mt-md">
-                <span v-for="p in allPlayers" class="apple-chip"
-                    :class="{'approve': teamVotes[p]==='approve', 'reject': teamVotes[p]==='reject'}"
-                    :style="!teamVotes[p] ? 'opacity:0.4' : ''">
-                    {{ p }} <i v-if="teamVotes[p]" class="fas" :class="teamVotes[p]==='approve'?'fa-check':'fa-times'"
-                        style="margin-left:4px;"></i>
-                </span>
-            </div>
-            <div v-if="lastVoteResult" class="mt-md apple-alert"
-                :class="lastVoteResult==='approved'?'apple-alert-success':'apple-alert-danger'">
-                投票结果: {{ lastVoteResult==='approved'?'✅ 通过':'❌ 拒绝' }}
-            </div>
-        </div>
-
-        <!-- Propose Team -->
-        <div v-if="!voteTeamActive && !missionActive && !ladyOfLakeActive && status==='active'"
-            class="apple-card mb-md">
-            <div class="d-flex justify-between items-center mb-md">
-                <h5 style="margin:0;">发起组队</h5>
-                <span class="apple-tag apple-tag-orange">需 {{ requiredTeamSize }} 人</span>
-            </div>
-            <div class="apple-toggle-grid mb-md">
-                <template v-for="p in allPlayers" :key="p">
-                    <input type="checkbox" :id="'chk-'+p" :value="p" v-model="selectedTeam" class="apple-toggle-input">
-                    <label :for="'chk-'+p" class="apple-toggle-btn">
-                        {{ p === captain ? '👑' : '' }}{{ p }}
-                    </label>
-                </template>
-            </div>
-            <button class="apple-btn apple-btn-primary apple-btn-block apple-btn-lg" @click="proposeTeam"
-                :disabled="selectedTeam.length !== requiredTeamSize">
-                🚀 发车 ({{ selectedTeam.length }}/{{ requiredTeamSize }})
-            </button>
-        </div>
-
-        <!-- Mission Execution -->
-        <div v-if="missionActive" class="apple-card mb-md" style="border: 2px solid var(--apple-green);">
-            <h5 class="text-center text-green mb-md">⚔️ 任务执行中</h5>
-            <p class="text-center">队员: <strong>{{ missionTeam.join('、') }}</strong></p>
-            <div v-if="!missionTeam.includes(myName)" class="text-center text-muted text-sm mt-md">等待队员出票...
-            </div>
-        </div>
-
-        <!-- Lady of the Lake Active (等待仙女查验) -->
-        <div v-if="ladyOfLakeActive && ladyOfLakeHolder !== myName" class="apple-card mb-md"
-            style="border: 2px solid var(--apple-purple, #af52de);">
-            <h5 class="text-center mb-md" style="color: var(--apple-purple, #af52de);">🧚 湖中仙女查验中</h5>
-            <p class="text-center text-muted">等待 <strong>{{ ladyOfLakeHolder }}</strong> 选择查验目标...</p>
-        </div>
-
-        <!-- Overlay: Vote Team -->
-        <transition name="overlay">
-            <div v-if="voteTeamActive && !teamVotes[myName]" class="vote-overlay">
-                <h2>同意这个队伍吗?</h2>
-                <div class="vote-team-box"><strong>{{ missionTeam.join('、') }}</strong></div>
-                <button class="vote-btn-big green" @click="submitTeamVote('approve')">👍 同意</button>
-                <button class="vote-btn-big red" @click="submitTeamVote('reject')">👎 反对</button>
-            </div>
-        </transition>
-
-        <!-- Overlay: Mission Vote -->
-        <transition name="overlay">
-            <div v-if="missionActive && missionTeam.includes(myName) && !hasActed" class="vote-overlay">
-                <h2>执行任务</h2>
-                <button class="vote-btn-big blue" @click="voteMission('success')" :disabled="isLancelotMustFail()"
-                    :style="isLancelotMustFail()?'opacity:0.35':''">🛡️
-                    成功</button>
-                <button class="vote-btn-big red" @click="voteMission('fail')" :disabled="!isCurrentlyEvil()"
-                    :style="!isCurrentlyEvil()?'opacity:0.35':''">🗡️ 失败</button>
-                <div v-if="!isCurrentlyEvil()"
-                    style="color: rgba(255,255,255,0.5); margin-top: var(--space-sm); font-size: 0.85rem;">
-                    好人只能投成功
-                </div>
-                <div v-if="isLancelotMustFail()"
-                    style="color: rgba(255,255,255,0.5); margin-top: var(--space-sm); font-size: 0.85rem;">
-                    当前阵营为邪恶的兰斯洛特必须投失败
-                </div>
-            </div>
-        </transition>
-
-        <!-- Overlay: Lady of the Lake -->
-        <transition name="overlay">
-            <div v-if="ladyOfLakeActive && ladyOfLakeHolder === myName" class="vote-overlay">
-                <h2>🧚 湖中仙女</h2>
-                <p style="color: rgba(255,255,255,0.7); margin-bottom: var(--space-lg); text-align: center;">
-                    选择一名玩家查验其阵营
-                </p>
-                <div class="lady-target-list">
-                    <button v-for="p in allPlayers" :key="'lady-'+p" class="lady-target-btn"
-                        :disabled="ladyOfLakeHistory.includes(p) || p === myName" @click="inspectPlayer(p)">
-                        {{ p }}
-                        <span v-if="ladyOfLakeHistory.includes(p)" style="font-size:0.75rem; opacity:0.5;">
-                            (已查验)</span>
-                    </button>
-                </div>
-            </div>
-        </transition>
-
-        <!-- Overlay: Lady of Lake Result -->
-        <transition name="overlay">
-            <div v-if="showLadyResult" class="vote-overlay" @click="showLadyResult = false">
-                <h2>🧚 查验结果</h2>
-                <div class="lady-result-box">
-                    <div class="fw-700 mb-md" style="font-size:1.1rem;">{{ ladyResultData.target }}</div>
-                    <div :class="ladyResultData.alignment === 'good' ? 'alignment-good' : 'alignment-evil'">
-                        {{ ladyResultData.alignment === 'good' ? '🛡️ 好人' : '🗡️ 坏人' }}
-                    </div>
-                    <p class="text-sm text-muted mt-md">你可以自由选择公布或隐瞒此结果</p>
-                </div>
-                <p style="color: rgba(255,255,255,0.4); margin-top: var(--space-lg); font-size: 0.85rem;">
-                    点击任意处关闭
-                </p>
-            </div>
-        </transition>
-
-        <!-- Overlay: Excalibur Assign (队长分配王者之剑) -->
-        <transition name="overlay">
-            <div v-if="excaliburPhase === 'assign' && myName === teamProposer" class="vote-overlay">
-                <h2>🗡️ 分配王者之剑</h2>
-                <p style="color: rgba(255,255,255,0.7); margin-bottom: var(--space-lg); text-align: center;">
-                    选择一名队员持有王者之剑
-                </p>
-                <div class="lady-target-list">
-                    <button v-for="p in missionTeam" :key="'exc-'+p" class="lady-target-btn" :disabled="p === myName"
-                        @click="assignExcalibur(p)">
-                        {{ p }}
-                        <span v-if="p === myName" style="font-size:0.75rem; opacity:0.5;">(自己)</span>
-                    </button>
-                </div>
-            </div>
-        </transition>
-
-        <!-- Excalibur Assign waiting (non-captain sees waiting) -->
-        <div v-if="excaliburPhase === 'assign' && myName !== teamProposer" class="apple-card mb-md"
-            style="border: 2px solid var(--apple-orange);">
-            <h5 class="text-center mb-md" style="color: var(--apple-orange);">🗡️ 王者之剑分配中</h5>
-            <p class="text-center text-muted">等待发起人 <strong>{{ teamProposer }}</strong> 分配王者之剑...</p>
-        </div>
-
-        <!-- Excalibur holder badge during mission -->
-        <div v-if="excaliburHolder && excaliburPhase === 'mission' && !missionActive"
-            class="apple-card mb-md text-center" style="border: 2px solid var(--apple-orange);">
-            <p>🗡️ <strong>{{ excaliburHolder }}</strong> 持有王者之剑</p>
-        </div>
-
-        <!-- Overlay: Excalibur Decide (持剑者决策) -->
-        <transition name="overlay">
-            <div v-if="excaliburPhase === 'decide' && myName === excaliburHolder" class="vote-overlay">
-                <h2>🗡️ 王者之剑</h2>
-                <p style="color: rgba(255,255,255,0.7); margin-bottom: var(--space-lg); text-align: center;">
-                    选择一名队员替换其投票并查看结果，或跳过
-                </p>
-                <div class="lady-target-list">
-                    <button v-for="p in missionTeam" :key="'excu-'+p" class="lady-target-btn" @click="useExcalibur(p)">
-                        🗡️ {{ p }}
-                    </button>
-                    <button class="lady-target-btn" style="background: rgba(255,255,255,0.08); margin-top: 8px;"
-                        @click="useExcalibur(null)">
-                        ✕ 不使用
-                    </button>
-                </div>
-            </div>
-        </transition>
-
-        <!-- Excalibur decide waiting (non-holder) -->
-        <div v-if="excaliburPhase === 'decide' && myName !== excaliburHolder" class="apple-card mb-md"
-            style="border: 2px solid var(--apple-orange);">
-            <h5 class="text-center mb-md" style="color: var(--apple-orange);">🗡️ 王者之剑决策中</h5>
-            <p class="text-center text-muted">等待 <strong>{{ excaliburHolder }}</strong> 决定是否使用王者之剑...</p>
-        </div>
-
-        <!-- Overlay: Excalibur Result (持剑者查看结果) -->
-        <transition name="overlay">
-            <div v-if="showExcaliburResult" class="vote-overlay" @click="showExcaliburResult = false">
-                <h2>🗡️ 王者之剑结果</h2>
-                <div class="lady-result-box">
-                    <div class="fw-700 mb-md" style="font-size:1.1rem;">{{ excaliburResultData.target }}</div>
-                    <div :class="excaliburResultData.original_vote === 'fail' ? 'alignment-evil' : 'alignment-good'">
-                        {{ excaliburResultData.original_vote === 'fail' ? '🗡️ 原始投票：失败' : '🛡️ 原始投票：成功' }}
-                    </div>
-                    <div style="margin-top: var(--space-md); font-size: 0.85rem; color: rgba(255,255,255,0.5);">
-                        已替换为{{ excaliburResultData.original_vote === 'fail' ? '成功' : '失败' }}票，点击任意处关闭
-                    </div>
-                </div>
-            </div>
-        </transition>
-    </div>
-
-
-
-    <!-- Game Over -->
-    <div v-if="status === 'ended' && revealedPlayers.length > 0" class="apple-section">
-        <div class="apple-card" style="padding: var(--space-2xl) var(--space-lg); text-align: center; overflow: hidden; position: relative;">
-            
-            <div class="victory-hero">
-                {{ gameWinner === 'good' ? '🛡️' : '🗡️' }}
-            </div>
-            
-            <h2 class="victory-title" :class="gameWinner==='good' ? 'victory-blue' : 'victory-red'">
-                {{ gameWinner === 'good' ? '正义长存' : '暗影降临' }}
-            </h2>
-            
-            <div class="text-muted" style="font-size: 1.25rem; font-weight: 600; letter-spacing: -0.02em; margin-bottom: var(--space-lg);">
-                {{ gameWinner === 'good' ? '好人阵营取得最终胜利' : '邪恶阵营夺取最终胜利' }}
-            </div>
-
-            <div v-if="assassinTarget" class="assassin-result">
-                <span>刺客最终刺杀了 <strong style="margin-left: 4px; font-size: 1.15rem;">{{ assassinTarget }}</strong></span>
-            </div>
-
-            <div style="text-align: left; max-width: 800px; margin: 0 auto;">
-                <h3 style="font-size: 1.3rem; font-weight: 700; margin-bottom: var(--space-md); color: var(--apple-black); padding-left: 4px; letter-spacing: -0.02em;">全员身份揭晓</h3>
-                <div class="reveal-grid">
-                    <div v-for="p in revealedPlayers" :key="p.name" class="reveal-card">
-                        <div class="name">{{ p.name }}</div>
-                        <div class="role" :class="isEvil(p.role) ? 'text-red' : 'text-blue'">
-                            {{ roleMap[p.role] }}
-                        </div>
-                    </div>
-                </div>
-
-                <div class="action-buttons-group">
-                    <button class="apple-btn apple-btn-primary apple-btn-pill" style="flex: 1;" @click="quickRestart">
-                        🔄一键重开
-                    </button>
-                    <button class="apple-btn apple-btn-secondary apple-btn-pill" style="flex: 1;" @click="resetGame">
-                        ⚙️ 更换人数
-                    </button>
-                </div>
-            </div>
-
-            <div id="dashboard-chart" style="width: 100%; height: 400px; margin-top: var(--space-2xl);"></div>
-        </div>
-    </div>
-
-    <!-- Game Controls -->
-    <div v-if="(step === 3 || status === 'assassin' || status === 'active') && status !== 'ended'" class="apple-card text-center"
-        style="background: var(--apple-bg); box-shadow: none; margin-top: var(--space-lg);">
-        <div class="game-controls">
-            <button class="apple-btn apple-btn-sm" style="background: var(--apple-orange); color: white;"
-                @click="quickRestart">🔄 重开</button>
-            <button class="apple-btn apple-btn-sm apple-btn-outline"
-                style="color: var(--apple-red); border-color: rgba(255,59,48,0.3);" @click="endGame">🚪 结束
-        </div>
-
-        <footer class="apple-footer">
-            <p>Avalon © 2026</p>
-        </footer>
-    </div>
 </div>
+{% endblock %}
 
-<script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
-<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-<script src="https://unpkg.com/echarts@5.5.0/dist/echarts.min.js"></script>
+{% block extra_body %}
 <script>
-    const {
-        createApp
-    } = Vue;
-    createApp({
-        data() {
-            return {
-                step: 1,
-                status: 'empty',
-                errorMsg: '',
-                myName: localStorage.getItem('avalon_name') || '',
-                playerCount: 5,
-                lancelotEnabled: false,
-                ladyOfLakeEnabled: true,
-                targetCount: 0,
-                currentCount: 0,
-                allPlayers: [],
-                missionHistory: [],
-                voteFailCount: 0,
-                missionActive: false,
-                missionTeam: [],
-                hasActed: false,
-                myRole: '',
-                visionData: [],
-                showRole: true,
-                voteTeamActive: false,
-                teamVotes: {},
-                lastVoteResult: null,
-                lastVoteSnapshot: {},
-                selectedTeam: [],
-                revealedPlayers: [],
-                captain: null,
-                teamProposer: null,
-                requiredTeamSize: 2,
-                gameWinner: null,
-                assassinTarget: null,
-                // 湖中仙女
-                ladyOfLakeHolder: null,
-                ladyOfLakeActive: false,
-                ladyOfLakeResult: null,
-                ladyOfLakeInspector: null,
-                ladyOfLakeHistory: [],
-                showLadyResult: false,
-                ladyResultData: {},
-                // 兰斯洛特
-                lancelotSwapped: false,
-                lancelotSwapReveal: [],
-                currentAlignment: null,
-                // 刺杀角色
-                assassinRole: null,
-                // 王者之剑
-                excaliburEnabled: false,
-                excaliburHolder: null,
-                excaliburPhase: 'none',
-                excaliburResult: null,
-                showExcaliburResult: false,
-                excaliburResultData: {},
-                // 排行榜
-                lbData: [],
-                history: [],
-                chartRendered: false,
-                cacheBuster: Date.now(),
-                roleMap: {
-                    'Merlin': '梅林',
-                    'Percival': '派西维尔',
-                    'Loyal Servant': '忠臣',
-                    'Morgana': '莫甘娜',
-                    'Assassin': '刺客',
-                    'Mordred': '莫德雷德',
-                    'Oberon': '奥伯伦',
-                    'Minion': '爪牙',
-                    'Lancelot Good': '兰斯洛特(正义)',
-                    'Lancelot Evil': '兰斯洛特(邪恶)'
-                },
-                configPresets: {
-                    5: '🛡️ 好人: 梅林, 派西维尔, 忠臣<br>🗡️ 坏人: 莫甘娜, 刺客',
-                    6: '🛡️ 好人: 梅林, 派西维尔, 忠臣×2<br>🗡️ 坏人: 莫甘娜, 刺客',
-                    7: '🛡️ 好人: 梅林, 派西维尔, 忠臣×2<br>🗡️ 坏人: 莫甘娜, 刺客, 奥伯伦',
-                    8: '🛡️ 好人: 梅林, 派西维尔, 忠臣×3<br>🗡️ 坏人: 莫甘娜, 刺客, 爪牙',
-                    9: '🛡️ 好人: 梅林, 派西维尔, 忠臣×4<br>🗡️ 坏人: 莫甘娜, 刺客, 莫德雷德',
-                    10: '🛡️ 好人: 梅林, 派西维尔, 忠臣×4<br>🗡️ 坏人: 莫甘娜, 刺客, 奥伯伦, 莫德雷德',
-                    '10_lancelot': '🛡️ 好人: 梅林, 派西维尔, 忠臣×3, 兰斯洛特(正义)<br>🗡️ 坏人: 莫甘娜, 莫德雷德, 奥伯伦, 兰斯洛特(邪恶)<br><br><small style="color:var(--apple-orange)">⚠️ 无刺客，莫甘娜执行刺杀</small>',
-                    12: '🛡️ 好人: 梅林, 派西维尔, 忠臣×4, 兰斯洛特(正义)<br>🗡️ 坏人: 莫甘娜, 刺客, 莫德雷德, 奥伯伦, 兰斯洛特(邪恶)',
-                }
-            }
-        },
-        watch: {
-            myName(val) {
-                localStorage.setItem('avalon_name', val);
-            }
-        },
-        mounted() {
-            this.startPolling();
-            this.fetchLeaderboard();
-        },
-        methods: {
-            incrementPlayerCount() {
-                if (this.playerCount === 10) {
-                    this.playerCount = 12;
-                    this.lancelotEnabled = true;
-                } else if (this.playerCount < 10) {
-                    this.playerCount++;
-                }
-            },
-            decrementPlayerCount() {
-                if (this.playerCount === 12) this.playerCount = 10;
-                else if (this.playerCount > 5) this.playerCount--;
-            },
-            getConfigPreview() {
-                let preview;
-                if ((this.playerCount === 10 || this.playerCount === 12) && this.lancelotEnabled) {
-                    preview = this.playerCount === 10 ? this.configPresets['10_lancelot'] : this
-                        .configPresets[12];
-                } else {
-                    preview = this.configPresets[this.playerCount] || this.configPresets[6];
-                }
-                let extraProps = [];
-                if (this.ladyOfLakeEnabled && this.playerCount >= 8) {
-                    extraProps.push('<span style="color:var(--apple-purple,#af52de)">🧚 湖中仙女</span>');
-                }
-                if (this.excaliburEnabled && this.playerCount >= 8) {
-                    extraProps.push('<span style="color:var(--apple-orange)">🗡️ 王者之剑</span>');
-                }
-                if (this.lancelotEnabled && this.playerCount >= 10) {
-                    extraProps.push('<span style="color:var(--apple-red)">⚔️ 兰斯洛特</span>');
-                }
-                if (extraProps.length > 0) {
-                    preview +=
-                        '<br><div style="margin-top:8px; font-weight:600; font-size: 0.85em;">附加选项: ' +
-                        extraProps.join(' | ') + '</div>';
-                }
-                return preview;
-            },
-            async createGame() {
-                try {
-                    await axios.post('/avalon/reset_game', {
-                        player_count: this.playerCount,
-                        lancelot_enabled: this.lancelotEnabled && (this.playerCount ===
-                            10 || this.playerCount === 12),
-                        excalibur_enabled: this.excaliburEnabled && this.playerCount >= 8,
-                        lady_of_lake_enabled: this.ladyOfLakeEnabled && this.playerCount >=
-                            8
-                    });
-                    this.joinGame();
-                } catch (e) {
-                    this.showError(e);
-                }
-            },
-            async joinGame() {
-                if (!this.myName) return;
-                try {
-                    await axios.post('/avalon/join', {
-                        player_name: this.myName
-                    });
-                    this.step = 2;
-                } catch (e) {
-                    this.showError(e);
-                }
-            },
-            async resetGame() {
-                if (!confirm("确定重置并更换人数?")) return;
-                try {
-                    await axios.post('/avalon/clear_game');
-                    this.step = 1;
-                    this.status = 'empty';
-                    this.history = [];
-                    this.chartRendered = false;
-                    this.fetchLeaderboard();
-                } catch (e) { }
-            },
-            async proposeTeam() {
-                if (this.selectedTeam.length !== this.requiredTeamSize) {
-                    return alert(`本轮需要 ${this.requiredTeamSize} 人`);
-                }
-                try {
-                    await axios.post('/avalon/propose_team', {
-                        player_name: this.myName,
-                        team: this.selectedTeam
-                    });
-                    this.selectedTeam = [];
-                } catch (e) {
-                    this.showError(e);
-                }
-            },
-            async submitTeamVote(vote) {
-                try {
-                    await axios.post('/avalon/vote_team', {
-                        player_name: this.myName,
-                        vote
-                    });
-                } catch (e) {
-                    this.showError(e);
-                }
-            },
-            async voteMission(action) {
-                try {
-                    await axios.post('/avalon/vote_mission', {
-                        player_name: this.myName,
-                        action
-                    });
-                    this.hasActed = true;
-                } catch (e) {
-                    this.showError(e);
-                }
-            },
-            async assassinate(target) {
-                if (!confirm(`确定刺杀 ${target}?`)) return;
-                try {
-                    await axios.post('/avalon/assassinate', {
-                        target
-                    });
-                } catch (e) {
-                    this.showError(e);
-                }
-            },
-            async inspectPlayer(target) {
-                if (!confirm(`确定查验 ${target}?`)) return;
-                try {
-                    const res = await axios.post('/avalon/lady_of_lake', {
-                        target
-                    });
-                    this.ladyResultData = {
-                        target,
-                        alignment: res.data.alignment
-                    };
-                    this.showLadyResult = true;
-                } catch (e) {
-                    this.showError(e);
-                }
-            },
-            async quickRestart() {
-                if (!confirm("确定重开？所有玩家将自动加入新局")) return;
-                try {
-                    await axios.post('/avalon/reset_game', {
-                        player_count: this.targetCount || this.playerCount,
-                        lancelot_enabled: this.lancelotEnabled,
-                        excalibur_enabled: this.excaliburEnabled,
-                        lady_of_lake_enabled: this.ladyOfLakeEnabled
-                    });
-                    this.step = 1;
-                    this.history = [];
-                    this.chartRendered = false;
-                } catch (e) {
-                    this.showError(e);
-                }
-            },
-            async endGame() {
-                if (!confirm("确定结束当前游戏？")) return;
-                try {
-                    await axios.post('/avalon/end_game');
-                } catch (e) {
-                    this.showError(e);
-                }
-            },
-            isCurrentlyEvil() {
-                if (this.currentAlignment) {
-                    return this.currentAlignment === 'evil';
-                }
-                return this.isEvil(this.myRole);
-            },
-            isLancelotMustFail() {
-                // 当前处于邪恶阵营的兰斯洛特必须投失败
-                if ((this.myRole === 'Lancelot Good' || this.myRole === 'Lancelot Evil') && this
-                    .isCurrentlyEvil()) {
-                    return true;
-                }
-                return false;
-            },
-            getVisionPanelMeta() {
-                if (["Morgana", "Assassin", "Mordred", "Minion"].includes(this.myRole)) {
-                    return {
-                        theme: "evil-team",
-                        title: "暗影盟友",
-                        subtitle: "已知邪恶阵营"
-                    };
-                }
-                if (this.myRole === "Merlin") {
-                    return {
-                        theme: "merlin",
-                        title: "邪恶印记",
-                        subtitle: "身份未知的爪牙"
-                    };
-                }
-                if (this.myRole === "Percival") {
-                    return {
-                        theme: "percival",
-                        title: "真假先知",
-                        subtitle: "梅林或莫甘娜，请谨慎抉择"
-                    };
-                }
-                if (this.myRole === "Lancelot Good") {
-                    return {
-                        theme: "lancelot-good",
-                        title: "誓约之剑",
-                        subtitle: "等待天明，警惕命运的试炼"
-                    };
-                }
-                if (this.myRole === "Lancelot Evil") {
-                    return {
-                        theme: "lancelot-evil",
-                        title: "堕落之刃",
-                        subtitle: "沉潜暗夜，迎接暗影的凝视"
-                    };
-                }
-                if (this.myRole === "Oberon") {
-                    return {
-                        theme: "oberon",
-                        title: "孤军奋战",
-                        subtitle: "无法确认盟友，请隐蔽行动"
-                    };
-                }
-                return {
-                    theme: "loyal",
-                    title: "长夜无明",
-                    subtitle: "阿瓦隆等待黎明，请保持闭眼"
-                };
-            },
-            getVisionThemeClass() {
-                return `vision-theme-${this.getVisionPanelMeta().theme}`;
-            },
-            getVisionNamesText() {
-                if (!this.visionData.length) {
-                    return "暂无可见目标";
-                }
-                return this.visionData.map(v => {
-                    if ((v.identity || "").includes("兰斯洛特") || (v.identity || "").includes("Lancelot")) {
-                        return `${v.name}（兰斯洛特）`;
-                    }
-                    return v.name;
-                }).join("、");
-            },
-            canAssassinate() {
-                // 判断当前玩家是否可以执行刺杀
-                if (this.assassinRole === this.myRole) return true;
-                // 兼容：原始逻辑
-                if (!this.assassinRole && this.myRole === 'Assassin') return true;
-                return false;
-            },
-            getAssassinRoleName() {
-                if (this.assassinRole) {
-                    return this.roleMap[this.assassinRole] || this.assassinRole;
-                }
-                return '刺客';
-            },
-            async assignExcalibur(target) {
-                try {
-                    await axios.post('/avalon/assign_excalibur', {
-                        target
-                    });
-                } catch (e) {
-                    this.showError(e);
-                }
-            },
-            async useExcalibur(target) {
-                if (target && !confirm(`确定对 ${target} 使用王者之剑？将替换其投票并查看结果`)) return;
-                try {
-                    const res = await axios.post('/avalon/use_excalibur', {
-                        target
-                    });
-                    if (res.data.excalibur_result) {
-                        this.excaliburResultData = res.data.excalibur_result;
-                        this.showExcaliburResult = true;
-                    }
-                } catch (e) {
-                    this.showError(e);
-                }
-            },
-            startPolling() {
-                setInterval(async () => {
-                    if (this.step === 1) {
-                        try {
-                            const res = await axios.get('/avalon/lobby');
-                            const d = res.data;
-                            this.status = d.status;
-                            this.currentCount = d.current_count;
-                            this.allPlayers = d.players || [];
-                            
-                            // Only sync config from server if a game is actually in progress or joining
-                            // This prevents local creation settings from being reset by polling
-                            if (d.status === 'joining' || d.status === 'active' || d.status === 'assassin') {
-                                this.targetCount = d.target_count;
-                                this.lancelotEnabled = d.lancelot_enabled || false;
-                                this.excaliburEnabled = d.excalibur_enabled || false;
-                                if (d.lady_of_lake_enabled !== undefined) {
-                                    this.ladyOfLakeEnabled = d.lady_of_lake_enabled;
-                                }
-                            }
+// ==========================================
+// Avalon - Vanilla JS Rewrite
+// ==========================================
 
-                            const prevPlayers = d.previous_players || [];
-                            if (this.myName && prevPlayers.includes(this.myName) && !d
-                                .players.includes(this.myName) && d.status === 'joining') {
-                                this.joinGame();
-                            }
+// ---- State ----
+var state = {
+    step: 1,
+    status: 'empty',
+    myName: localStorage.getItem('avalon_name') || '',
+    myRole: '',
+    playerCount: 5,
+    lancelotEnabled: false,
+    ladyOfLakeEnabled: true,
+    excaliburEnabled: false,
+    targetCount: 0,
+    currentCount: 0,
+    allPlayers: [],
+    missionHistory: [],
+    voteFailCount: 0,
+    missionActive: false,
+    missionTeam: [],
+    hasActed: false,
+    visionData: [],
+    showRole: true,
+    voteTeamActive: false,
+    teamVotes: {},
+    lastVoteResult: null,
+    lastVoteSnapshot: {},
+    selectedTeam: [],
+    revealedPlayers: [],
+    captain: null,
+    teamProposer: null,
+    requiredTeamSize: 2,
+    gameWinner: null,
+    assassinTarget: null,
+    // Lady of the Lake
+    ladyOfLakeHolder: null,
+    ladyOfLakeActive: false,
+    ladyOfLakeResult: null,
+    ladyOfLakeInspector: null,
+    ladyOfLakeHistory: [],
+    showLadyResult: false,
+    ladyResultData: {},
+    // Lancelot
+    lancelotSwapped: false,
+    lancelotSwapReveal: [],
+    currentAlignment: null,
+    assassinRole: null,
+    // Excalibur
+    excaliburHolder: null,
+    excaliburPhase: 'none',
+    excaliburResult: null,
+    showExcaliburResult: false,
+    excaliburResultData: {},
+    // Leaderboard
+    lbData: [],
+    history: [],
+    chartRendered: false,
+    cacheBuster: Date.now()
+};
 
-                            if (this.myName && d.players.includes(this.myName) && d
-                                .status === 'active') {
-                                this.step = 3;
-                            }
-                        } catch (e) { }
-                        return;
-                    }
+var ROLE_MAP = {
+    'Merlin': '梅林',
+    'Percival': '派西维尔',
+    'Loyal Servant': '忠臣',
+    'Morgana': '莫甘娜',
+    'Assassin': '刺客',
+    'Mordred': '莫德雷德',
+    'Oberon': '奥伯伦',
+    'Minion': '爪牙',
+    'Lancelot Good': '兰斯洛特(正义)',
+    'Lancelot Evil': '兰斯洛特(邪恶)'
+};
 
-                    if (!this.myName) return;
-                    try {
-                        const res = await axios.get(`/avalon/status/${this.myName}`);
-                        const d = res.data;
-                        this.status = d.status;
+var CONFIG_PRESETS = {
+    5: '🛡️ 好人: 梅林, 派西维尔, 忠臣<br>🗡️ 坏人: 莫甘娜, 刺客',
+    6: '🛡️ 好人: 梅林, 派西维尔, 忠臣×2<br>🗡️ 坏人: 莫甘娜, 刺客',
+    7: '🛡️ 好人: 梅林, 派西维尔, 忠臣×2<br>🗡️ 坏人: 莫甘娜, 刺客, 奥伯伦',
+    8: '🛡️ 好人: 梅林, 派西维尔, 忠臣×3<br>🗡️ 坏人: 莫甘娜, 刺客, 爪牙',
+    9: '🛡️ 好人: 梅林, 派西维尔, 忠臣×4<br>🗡️ 坏人: 莫甘娜, 刺客, 莫德雷德',
+    10: '🛡️ 好人: 梅林, 派西维尔, 忠臣×4<br>🗡️ 坏人: 莫甘娜, 刺客, 奥伯伦, 莫德雷德',
+    '10_lancelot': '🛡️ 好人: 梅林, 派西维尔, 忠臣×3, 兰斯洛特(正义)<br>🗡️ 坏人: 莫甘娜, 莫德雷德, 奥伯伦, 兰斯洛特(邪恶)<br><br><small style="color:var(--apple-orange)">⚠️ 无刺客，莫甘娜执行刺杀</small>',
+    12: '🛡️ 好人: 梅林, 派西维尔, 忠臣×4, 兰斯洛特(正义)<br>🗡️ 坏人: 莫甘娜, 刺客, 莫德雷德, 奥伯伦, 兰斯洛特(邪恶)'
+};
 
-                        if (d.status === 'joining') {
-                            const prevPlayers = d.last_vote_snapshot ? [] : (d
-                                .previous_players || []);
-                            if (this.myName && !d.players_list.includes(this.myName)) {
-                                this.step = 1;
-                                this.joinGame();
-                            } else if (this.step > 2) {
-                                this.step = 2;
-                            }
-                        } else if (d.status === 'active' || d.status === 'assassin') {
-                            if (this.step === 2) this.step = 3;
-                        } else if (d.status === 'ended') {
-                            this.revealedPlayers = d.revealed_players;
-                            this.gameWinner = d.game_winner;
-                            this.assassinTarget = d.assassin_target;
-                            this.history = d.history || [];
-                            if (!this.chartRendered && this.history.length > 0) {
-                                this.chartRendered = true;
-                                this.$nextTick(() => { this.renderDashboard(); });
-                            }
-                        } else if (d.status === 'empty') {
-                            this.step = 1;
-                            this.gameWinner = null;
-                            this.assassinTarget = null;
-                            this.revealedPlayers = [];
-                            this.history = [];
-                            this.chartRendered = false;
-                        }
+// ---- Helpers ----
+function isEvil(role) {
+    return ['Morgana', 'Assassin', 'Mordred', 'Oberon', 'Minion', 'Lancelot Evil'].indexOf(role) !== -1;
+}
 
-                        this.currentCount = d.current_count;
-                        this.targetCount = d.target_count;
-                        this.allPlayers = d.players_list;
+function isCurrentlyEvil() {
+    if (state.currentAlignment) return state.currentAlignment === 'evil';
+    return isEvil(state.myRole);
+}
 
-                        if (d.status === 'active' || d.status === 'assassin') {
-                            this.myRole = d.your_role;
-                            this.visionData = d.vision || [];
-                            this.missionHistory = d.mission_history || [];
-                            this.voteFailCount = d.vote_fail_count;
-                            this.missionActive = d.mission_active;
-                            this.missionTeam = d.mission_team || [];
-                            this.hasActed = d.has_acted;
-                            this.voteTeamActive = d.vote_team_active;
-                            this.teamVotes = d.team_votes || {};
-                            this.lastVoteResult = d.last_vote_result;
-                            this.lastVoteSnapshot = d.last_vote_snapshot || {};
-                            this.captain = d.captain;
-                            this.teamProposer = d.team_proposer || d.captain;
-                            this.requiredTeamSize = d.required_team_size;
+function isLancelotMustFail() {
+    if ((state.myRole === 'Lancelot Good' || state.myRole === 'Lancelot Evil') && isCurrentlyEvil()) return true;
+    return false;
+}
 
-                            // 湖中仙女
-                            this.ladyOfLakeHolder = d.lady_of_lake_holder;
-                            this.ladyOfLakeActive = d.lady_of_lake_active;
-                            this.ladyOfLakeResult = d.lady_of_lake_result;
-                            this.ladyOfLakeInspector = d.lady_of_lake_inspector || null;
-                            this.ladyOfLakeHistory = d.lady_of_lake_history || [];
+function isDarkMode() {
+    return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+}
 
-                            // 兰斯洛特
-                            this.lancelotEnabled = d.lancelot_enabled;
-                            this.lancelotSwapped = d.lancelot_swapped;
-                            this.lancelotSwapReveal = d.lancelot_swap_reveal || [];
-                            this.currentAlignment = d.current_alignment;
+function getRoleImage(role) {
+    if (!role) return '';
+    var map = {
+        'Merlin': 'MERLIN.jpg',
+        'Percival': 'PERCIVAL.jpg',
+        'Loyal Servant': 'SERVANT.jpg',
+        'Morgana': 'MORGANA.jpg',
+        'Assassin': 'ASSASSIN.jpg',
+        'Mordred': 'MORDRED.jpg',
+        'Oberon': 'OBERON.jpg',
+        'Minion': 'MINION.jpg',
+        'Lancelot Good': 'LANCELOT(GOOD).jpg',
+        'Lancelot Evil': 'LANCELOT(EVIL).jpg'
+    };
+    return '/avalon/assets/' + (map[role] || 'SERVANT.jpg') + '?v=' + state.cacheBuster;
+}
 
-                            // 刺杀角色
-                            this.assassinRole = d.assassin_role;
+function getVisionPanelMeta() {
+    if (['Morgana', 'Assassin', 'Mordred', 'Minion'].indexOf(state.myRole) !== -1) {
+        return { theme: 'evil-team', title: '暗影盟友', subtitle: '已知邪恶阵营' };
+    }
+    if (state.myRole === 'Merlin') return { theme: 'merlin', title: '邪恶印记', subtitle: '身份未知的爪牙' };
+    if (state.myRole === 'Percival') return { theme: 'percival', title: '真假先知', subtitle: '梅林或莫甘娜，请谨慎抉择' };
+    if (state.myRole === 'Lancelot Good') return { theme: 'lancelot-good', title: '誓约之剑', subtitle: '等待天明，警惕命运的试炼' };
+    if (state.myRole === 'Lancelot Evil') return { theme: 'lancelot-evil', title: '堕落之刃', subtitle: '沉潜暗夜，迎接暗影的凝视' };
+    if (state.myRole === 'Oberon') return { theme: 'oberon', title: '孤军奋战', subtitle: '无法确认盟友，请隐蔽行动' };
+    return { theme: 'loyal', title: '长夜无明', subtitle: '阿瓦隆等待黎明，请保持闭眼' };
+}
 
-                            // 王者之剑
-                            this.excaliburEnabled = d.excalibur_enabled;
-                            this.excaliburHolder = d.excalibur_holder;
-                            this.excaliburPhase = d.excalibur_phase || 'none';
-                            if (d.excalibur_result) {
-                                this.excaliburResult = d.excalibur_result;
-                            }
-                        }
-
-                    } catch (e) { }
-                }, 1000);
-            },
-            getMissionStatusClass(i) {
-                const r = this.missionHistory[i - 1];
-                return r ? (r.result === 'success' ? 'success' : 'fail') : '';
-            },
-            getLatestSwapStatus() {
-                if (!this.lancelotEnabled) return null;
-                const reveals = this.lancelotSwapReveal.filter(r => r !== null && r !== undefined);
-                if (reveals.length === 0) return null;
-                return reveals[reveals.length - 1];
-            },
-            isEvil(role) {
-                return ['Morgana', 'Assassin', 'Mordred', 'Oberon', 'Minion', 'Lancelot Evil'].includes(
-                    role);
-            },
-            getRoleImage(role) {
-                if (!role) return '';
-                const map = {
-                    'Merlin': 'MERLIN.jpg',
-                    'Percival': 'PERCIVAL.jpg',
-                    'Loyal Servant': 'SERVANT.jpg',
-                    'Morgana': 'MORGANA.jpg',
-                    'Assassin': 'ASSASSIN.jpg',
-                    'Mordred': 'MORDRED.jpg',
-                    'Oberon': 'OBERON.jpg',
-                    'Minion': 'MINION.jpg',
-                    'Lancelot Good': 'LANCELOT(GOOD).jpg',
-                    'Lancelot Evil': 'LANCELOT(EVIL).jpg'
-                };
-                return '/avalon/assets/' + (map[role] || 'SERVANT.jpg') + '?v=' + this.cacheBuster;
-            },
-            showError(e) {
-                this.errorMsg = e.response?.data?.detail || "Error";
-                setTimeout(() => this.errorMsg = '', 3000);
-            },
-            async fetchLeaderboard() {
-                try {
-                    const res = await axios.get('/avalon/leaderboard');
-                    this.lbData = res.data.leaderboard || [];
-                } catch (e) { }
-            },
-            renderDashboard() {
-                const dom = document.getElementById('dashboard-chart');
-                if (!dom) return;
-                const myChart = echarts.init(dom, this.isDarkMode() ? 'dark' : 'light');
-                const players = this.revealedPlayers.map(p => p.name);
-                let xAxisData = [];
-                let seriesDataVotes = [];
-                let seriesDataMissions = [];
-                let seriesDataMissionFails = []; // 用于 effectScatter
-                this.history.forEach((h, idx) => {
-                    const label = `R${h.round_num}.${h.proposal_index}`;
-                    xAxisData.push(label);
-                    players.forEach((p, yIndex) => {
-                        const vote = h.votes[p];
-                        if (vote) seriesDataVotes.push([idx, yIndex, vote === 'approve' ? 1 : -1, h.team.includes(p)]);
-                        const mVote = h.mission_votes[p];
-                        if (mVote) {
-                            if (mVote === 'fail') {
-                                seriesDataMissionFails.push([idx, yIndex, -1]);
-                            } else {
-                                seriesDataMissions.push([idx, yIndex, 1]);
-                            }
-                        }
-                    });
-                });
-                myChart.setOption({
-                    backgroundColor: 'transparent',
-                    textStyle: {
-                        fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, Helvetica, Arial, sans-serif'
-                    },
-                    title: { 
-                        text: '对局记录', 
-                        left: 'center', 
-                        top: 15,
-                        textStyle: { 
-                            fontSize: 20, 
-                            fontWeight: 800, 
-                            letterSpacing: 1.5,
-                            color: this.isDarkMode() ? '#ffffff' : '#1d1d1f',
-                            textShadowBlur: 10,
-                            textShadowColor: this.isDarkMode() ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.05)'
-                        } 
-                    },
-                    tooltip: {
-                        trigger: 'item',
-                        backgroundColor: this.isDarkMode() ? 'rgba(28, 28, 30, 0.75)' : 'rgba(255, 255, 255, 0.85)',
-                        borderColor: this.isDarkMode() ? 'rgba(255,255,255,0.15)' : 'rgba(0,0,0,0.08)',
-                        borderWidth: 1,
-                        padding: 0,
-                        textStyle: {
-                            color: this.isDarkMode() ? '#f5f5f7' : '#1d1d1f',
-                        },
-                        extraCssText: 'border-radius: 12px; box-shadow: 0 12px 48px rgba(0, 0, 0, 0.15); backdrop-filter: saturate(150%) blur(20px); -webkit-backdrop-filter: saturate(150%) blur(20px); overflow: hidden;',
-                        formatter: function(params) {
-                            const isDark = this.isDarkMode ? this.isDarkMode() : false;
-                            const textColor = isDark ? '#e5e5ea' : '#333333';
-                            const subTextColor = '#86868b';
-                            
-                            if (params.seriesName === '组队投票') {
-                                const isApprove = params.value[2] === 1;
-                                const headerColor = isApprove ? 'rgba(52, 199, 89, 0.15)' : 'rgba(255, 59, 48, 0.15)';
-                                const iconColor = isApprove ? '#34c759' : '#ff3b30';
-                                
-                                return `
-                                    <div style="background: ${headerColor}; padding: 10px 16px; border-bottom: 1px solid ${isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)'};">
-                                        <span style="font-weight:700; font-size: 14px; color: ${textColor}">${params.name}</span>
-                                    </div>
-                                    <div style="padding: 12px 16px; display:flex; flex-direction: column; gap: 8px;">
-                                        <div style="display:flex; align-items:center; justify-content: space-between; gap: 16px;">
-                                            <span style="color: ${subTextColor}; font-size: 12px;">投票立场</span>
-                                            <span style="font-weight: 600; color: ${iconColor};">
-                                                ${isApprove ? '● 赞成' : '■ 反对'}
-                                            </span>
-                                        </div>
-                                        ${params.value[3] ? `<div style="display:flex; align-items:center; justify-content: space-between; gap: 16px;">
-                                            <span style="color: ${subTextColor}; font-size: 12px;">身份状态</span>
-                                            <span style="font-weight: 500; color: ${textColor};">🛸 在车上</span>
-                                        </div>` : ''}
-                                    </div>`;
-                            } else if (params.seriesName === '任务' || params.seriesName === '关键失败') {
-                                const isSuccess = params.value[2] === 1;
-                                const headerColor = isSuccess ? 'rgba(0, 113, 227, 0.15)' : 'rgba(191, 90, 242, 0.15)';
-                                const iconColor = isSuccess ? '#0071e3' : '#bf5af2';
-                                
-                                return `
-                                    <div style="background: ${headerColor}; padding: 10px 16px; border-bottom: 1px solid ${isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)'};">
-                                        <span style="font-weight:700; font-size: 14px; color: ${textColor}">${params.name}</span>
-                                    </div>
-                                    <div style="padding: 12px 16px;">
-                                        <span style="font-weight: 600; font-size: 15px; color: ${iconColor};">
-                                            ${isSuccess ? '🛡️ 任务成功' : '🗡️ 任务失败'}
-                                        </span>
-                                    </div>`;
-                            }
-                        }.bind(this)
-                    },
-                    grid: { top: 80, bottom: 40, left: 90, right: 40 },
-                    xAxis: { 
-                        type: 'category', 
-                        data: xAxisData, 
-                        axisLine: { show: false },
-                        axisTick: { show: false },
-                        axisLabel: { color: '#86868b', fontWeight: 600, fontSize: 12, margin: 16 },
-                        splitLine: { 
-                            show: true, 
-                            lineStyle: { type: 'dashed', color: this.isDarkMode() ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.06)' } 
-                        } 
-                    },
-                    yAxis: { 
-                        type: 'category', 
-                        data: players, 
-                        axisLine: { show: false },
-                        axisTick: { show: false },
-                        axisLabel: { color: this.isDarkMode() ? '#d2d2d7' : '#1d1d1f', fontWeight: 600, fontSize: 14, margin: 20 },
-                        splitLine: { show: false },
-                        splitArea: { 
-                            show: true, 
-                            areaStyle: { color: [this.isDarkMode() ? 'rgba(255,255,255,0.02)' : 'rgba(0,0,0,0.02)', 'transparent'] } 
-                        }
-                    },
-                    series: [
-                        {
-                            name: '组队投票', type: 'scatter', 
-                            symbolSize: function(val) { return val[3] ? 24 : 14; },
-                            itemStyle: {
-                                color: function(params) { return params.value[2] === 1 ? '#34c759' : '#ff3b30'; },
-                                opacity: function(params) { return params.value[3] ? 1 : 0.65; },
-                                borderColor: function(params) { return params.value[3] ? (this.isDarkMode() ? '#ffffff' : '#ffffff') : 'transparent'; }.bind(this),
-                                borderWidth: function(params) { return params.value[3] ? 2.5 : 0; },
-                                shadowBlur: function(params) { return params.value[3] ? 12 : 4; },
-                                shadowColor: function(params) { return params.value[2] === 1 ? 'rgba(52, 199, 89, 0.4)' : 'rgba(255, 59, 48, 0.4)'; },
-                                shadowOffsetY: 2
-                            },
-                            data: seriesDataVotes
-                        },
-                        {
-                            name: '任务', type: 'scatter', symbol: 'path://M512 0c0 0-33.536 339.968-150.528 456.96C244.48 573.952 0 512 0 512s339.968 33.536 456.96 150.528C573.952 779.52 512 1024 512 1024s33.536-339.968 150.528-456.96C779.52 450.048 1024 512 1024 512s-339.968-33.536-456.96-150.528C450.048 244.48 512 0 512 0z', symbolSize: 28, zlevel: 2,
-                            itemStyle: { 
-                                color: '#0071e3',
-                                shadowBlur: 16,
-                                shadowColor: 'rgba(0, 113, 227, 0.6)',
-                                shadowOffsetY: 4
-                            },
-                            data: seriesDataMissions
-                        },
-                        {
-                            name: '关键失败', type: 'effectScatter', symbol: 'path://M512 0c0 0-33.536 339.968-150.528 456.96C244.48 573.952 0 512 0 512s339.968 33.536 456.96 150.528C573.952 779.52 512 1024 512 1024s33.536-339.968 150.528-456.96C779.52 450.048 1024 512 1024 512s-339.968-33.536-456.96-150.528C450.048 244.48 512 0 512 0z', symbolSize: 32, zlevel: 3,
-                            rippleEffect: {
-                                brushType: 'stroke',
-                                scale: 2.5,
-                                period: 3
-                            },
-                            itemStyle: { 
-                                color: '#bf5af2',
-                                shadowBlur: 20,
-                                shadowColor: 'rgba(191, 90, 242, 0.8)',
-                                shadowOffsetY: 4
-                            },
-                            data: seriesDataMissionFails
-                        }
-                    ]
-                });
-            },
-            isDarkMode() { return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches; }
+function getVisionNamesText() {
+    if (!state.visionData || !state.visionData.length) return '暂无可见目标';
+    var names = [];
+    for (var i = 0; i < state.visionData.length; i++) {
+        var v = state.visionData[i];
+        if ((v.identity || '').indexOf('兰斯洛特') !== -1 || (v.identity || '').indexOf('Lancelot') !== -1) {
+            names.push(window.escHtml(v.name) + '（兰斯洛特）');
+        } else {
+            names.push(window.escHtml(v.name));
         }
-    }).mount('#app');
+    }
+    return names.join('、');
+}
+
+function getMissionStatusClass(i) {
+    var r = state.missionHistory[i - 1];
+    return r ? (r.result === 'success' ? 'success' : 'fail') : '';
+}
+
+function getLatestSwapStatus() {
+    if (!state.lancelotEnabled) return null;
+    var reveals = [];
+    for (var i = 0; i < state.lancelotSwapReveal.length; i++) {
+        if (state.lancelotSwapReveal[i] !== null && state.lancelotSwapReveal[i] !== undefined) {
+            reveals.push(state.lancelotSwapReveal[i]);
+        }
+    }
+    if (reveals.length === 0) return null;
+    return reveals[reveals.length - 1];
+}
+
+function canAssassinate() {
+    if (state.assassinRole === state.myRole) return true;
+    if (!state.assassinRole && state.myRole === 'Assassin') return true;
+    return false;
+}
+
+function getAssassinRoleName() {
+    if (state.assassinRole) return ROLE_MAP[state.assassinRole] || state.assassinRole;
+    return '刺客';
+}
+
+function getConfigPreviewHtml() {
+    var preview;
+    if ((state.playerCount === 10 || state.playerCount === 12) && state.lancelotEnabled) {
+        preview = state.playerCount === 10 ? CONFIG_PRESETS['10_lancelot'] : CONFIG_PRESETS[12];
+    } else {
+        preview = CONFIG_PRESETS[state.playerCount] || CONFIG_PRESETS[6];
+    }
+    var extraProps = [];
+    if (state.ladyOfLakeEnabled && state.playerCount >= 8) {
+        extraProps.push('<span style="color:var(--apple-purple,#af52de)">🧚 湖中仙女</span>');
+    }
+    if (state.excaliburEnabled && state.playerCount >= 8) {
+        extraProps.push('<span style="color:var(--apple-orange)">🗡️ 王者之剑</span>');
+    }
+    if (state.lancelotEnabled && (state.playerCount === 10 || state.playerCount === 12)) {
+        extraProps.push('<span style="color:var(--apple-red)">⚔️ 兰斯洛特</span>');
+    }
+    if (extraProps.length > 0) {
+        preview += '<br><div style="margin-top:8px; font-weight:600; font-size: 0.85em;">附加选项: ' + extraProps.join(' | ') + '</div>';
+    }
+    return preview;
+}
+
+function showError(msg) {
+    var toast = document.getElementById('avalon-error-toast');
+    if (!toast) return;
+    toast.textContent = msg;
+    toast.style.display = '';
+    setTimeout(function() { toast.style.display = 'none'; }, 3000);
+}
+
+// ---- Render Helpers ----
+function h_esc(str) {
+    return (window.escHtml || function(s) {
+        var d = document.createElement('div');
+        d.textContent = s;
+        return d.innerHTML;
+    })(str || '');
+}
+
+// ---- API Actions ----
+async function fetchAndUpdate() {
+    if (state.step === 1) {
+        try {
+            var data = await api('/avalon/lobby');
+            state.status = data.status;
+            state.currentCount = data.current_count;
+            state.allPlayers = data.players || [];
+
+            if (data.status === 'joining' || data.status === 'active' || data.status === 'assassin') {
+                state.targetCount = data.target_count;
+                state.lancelotEnabled = data.lancelot_enabled || false;
+                state.excaliburEnabled = data.excalibur_enabled || false;
+                if (data.lady_of_lake_enabled !== undefined) {
+                    state.ladyOfLakeEnabled = data.lady_of_lake_enabled;
+                }
+            }
+
+            var prevPlayers = data.previous_players || [];
+            if (state.myName && prevPlayers.indexOf(state.myName) !== -1 && data.players.indexOf(state.myName) === -1 && data.status === 'joining') {
+                await avalon_joinGame();
+            }
+            if (state.myName && data.players.indexOf(state.myName) !== -1 && data.status === 'active') {
+                state.step = 3;
+            }
+        } catch (e) { /* silent */ }
+        renderUI();
+        return;
+    }
+
+    if (!state.myName) return;
+    try {
+        var res = await api('/avalon/status/' + state.myName);
+        var d = res;
+        state.status = d.status;
+
+        if (d.status === 'joining') {
+            var pp = d.last_vote_snapshot ? [] : (d.previous_players || []);
+            if (state.myName && (d.players_list || []).indexOf(state.myName) === -1) {
+                state.step = 1;
+                await avalon_joinGame();
+            } else if (state.step > 2) {
+                state.step = 2;
+            }
+        } else if (d.status === 'active' || d.status === 'assassin') {
+            if (state.step === 2) state.step = 3;
+        } else if (d.status === 'ended') {
+            state.revealedPlayers = d.revealed_players || [];
+            state.gameWinner = d.game_winner;
+            state.assassinTarget = d.assassin_target;
+            state.history = d.history || [];
+            if (!state.chartRendered && state.history.length > 0) {
+                state.chartRendered = true;
+                setTimeout(function() { renderDashboard(); }, 200);
+            }
+        } else if (d.status === 'empty') {
+            state.step = 1;
+            state.gameWinner = null;
+            state.assassinTarget = null;
+            state.revealedPlayers = [];
+            state.history = [];
+            state.chartRendered = false;
+        }
+
+        state.currentCount = d.current_count;
+        state.targetCount = d.target_count;
+        state.allPlayers = d.players_list || [];
+
+        if (d.status === 'active' || d.status === 'assassin') {
+            state.myRole = d.your_role;
+            state.visionData = d.vision || [];
+            state.missionHistory = d.mission_history || [];
+            state.voteFailCount = d.vote_fail_count;
+            state.missionActive = d.mission_active;
+            state.missionTeam = d.mission_team || [];
+            state.hasActed = d.has_acted;
+            state.voteTeamActive = d.vote_team_active;
+            state.teamVotes = d.team_votes || {};
+            state.lastVoteResult = d.last_vote_result;
+            state.lastVoteSnapshot = d.last_vote_snapshot || {};
+            state.captain = d.captain;
+            state.teamProposer = d.team_proposer || d.captain;
+            state.requiredTeamSize = d.required_team_size;
+            // Lady of Lake
+            state.ladyOfLakeHolder = d.lady_of_lake_holder;
+            state.ladyOfLakeActive = d.lady_of_lake_active;
+            state.ladyOfLakeResult = d.lady_of_lake_result;
+            state.ladyOfLakeInspector = d.lady_of_lake_inspector || null;
+            state.ladyOfLakeHistory = d.lady_of_lake_history || [];
+            // Lancelot
+            state.lancelotEnabled = d.lancelot_enabled;
+            state.lancelotSwapped = d.lancelot_swapped;
+            state.lancelotSwapReveal = d.lancelot_swap_reveal || [];
+            state.currentAlignment = d.current_alignment;
+            state.assassinRole = d.assassin_role;
+            // Excalibur
+            state.excaliburEnabled = d.excalibur_enabled;
+            state.excaliburHolder = d.excalibur_holder;
+            state.excaliburPhase = d.excalibur_phase || 'none';
+            if (d.excalibur_result) state.excaliburResult = d.excalibur_result;
+        }
+    } catch (e) { /* silent */ }
+
+    renderUI();
+}
+
+// ---- Leaderboard ----
+async function fetchLeaderboard() {
+    try {
+        var res = await api('/avalon/leaderboard');
+        state.lbData = res.leaderboard || [];
+    } catch (e) { /* silent */ }
+}
+
+// ---- User Action Handlers (exposed globally for onclick) ----
+window.avalon_incrementPlayerCount = function() {
+    if (state.playerCount === 10) {
+        state.playerCount = 12;
+        state.lancelotEnabled = true;
+    } else if (state.playerCount < 10) {
+        state.playerCount++;
+    }
+    if (state.playerCount < 8) {
+        state.ladyOfLakeEnabled = false;
+        state.excaliburEnabled = false;
+    }
+    renderUI();
+};
+
+window.avalon_decrementPlayerCount = function() {
+    if (state.playerCount === 12) {
+        state.playerCount = 10;
+    } else if (state.playerCount > 5) {
+        state.playerCount--;
+    }
+    if (state.playerCount < 10) state.lancelotEnabled = false;
+    renderUI();
+};
+
+window.avalon_createGame = async function() {
+    try {
+        await api('/avalon/reset_game', {
+            method: 'POST',
+            body: {
+                player_count: state.playerCount,
+                lancelot_enabled: state.lancelotEnabled && (state.playerCount === 10 || state.playerCount === 12),
+                excalibur_enabled: state.excaliburEnabled && state.playerCount >= 8,
+                lady_of_lake_enabled: state.ladyOfLakeEnabled && state.playerCount >= 8
+            }
+        });
+        await avalon_joinGame();
+    } catch (e) {
+        showError(e.message || 'Error');
+    }
+};
+
+window.avalon_joinGame = async function() {
+    if (!state.myName) return;
+    try {
+        await api('/avalon/join', { method: 'POST', body: { player_name: state.myName } });
+        state.step = 2;
+        renderUI();
+    } catch (e) {
+        showError(e.message || 'Error');
+    }
+};
+
+window.avalon_resetGame = async function() {
+    if (!confirm('确定重置并更换人数?')) return;
+    try {
+        await api('/avalon/clear_game', { method: 'POST' });
+        state.step = 1;
+        state.status = 'empty';
+        state.history = [];
+        state.chartRendered = false;
+        await fetchLeaderboard();
+        renderUI();
+    } catch (e) { /* silent */ }
+};
+
+window.avalon_proposeTeam = async function() {
+    if (state.selectedTeam.length !== state.requiredTeamSize) {
+        return alert('本轮需要 ' + state.requiredTeamSize + ' 人');
+    }
+    try {
+        await api('/avalon/propose_team', {
+            method: 'POST',
+            body: { player_name: state.myName, team: state.selectedTeam }
+        });
+        state.selectedTeam = [];
+        renderUI();
+    } catch (e) {
+        showError(e.message || 'Error');
+    }
+};
+
+window.avalon_submitTeamVote = async function(vote) {
+    try {
+        await api('/avalon/vote_team', {
+            method: 'POST',
+            body: { player_name: state.myName, vote: vote }
+        });
+        renderUI();
+    } catch (e) {
+        showError(e.message || 'Error');
+    }
+};
+
+window.avalon_voteMission = async function(action) {
+    try {
+        await api('/avalon/vote_mission', {
+            method: 'POST',
+            body: { player_name: state.myName, action: action }
+        });
+        state.hasActed = true;
+        renderUI();
+    } catch (e) {
+        showError(e.message || 'Error');
+    }
+};
+
+window.avalon_assassinate = async function(target) {
+    if (!confirm('确定刺杀 ' + target + '?')) return;
+    try {
+        await api('/avalon/assassinate', { method: 'POST', body: { target: target } });
+    } catch (e) {
+        showError(e.message || 'Error');
+    }
+};
+
+window.avalon_inspectPlayer = async function(target) {
+    if (!confirm('确定查验 ' + target + '?')) return;
+    try {
+        var res = await api('/avalon/lady_of_lake', { method: 'POST', body: { target: target } });
+        state.ladyResultData = { target: target, alignment: res.alignment };
+        state.showLadyResult = true;
+        renderUI();
+    } catch (e) {
+        showError(e.message || 'Error');
+    }
+};
+
+window.avalon_assignExcalibur = async function(target) {
+    try {
+        await api('/avalon/assign_excalibur', { method: 'POST', body: { target: target } });
+        renderUI();
+    } catch (e) {
+        showError(e.message || 'Error');
+    }
+};
+
+window.avalon_useExcalibur = async function(target) {
+    if (target && !confirm('确定对 ' + target + ' 使用王者之剑？将替换其投票并查看结果')) return;
+    try {
+        var res = await api('/avalon/use_excalibur', { method: 'POST', body: { target: target } });
+        if (res.excalibur_result) {
+            state.excaliburResultData = res.excalibur_result;
+            state.showExcaliburResult = true;
+        }
+        renderUI();
+    } catch (e) {
+        showError(e.message || 'Error');
+    }
+};
+
+window.avalon_quickRestart = async function() {
+    if (!confirm('确定重开？所有玩家将自动加入新局')) return;
+    try {
+        await api('/avalon/reset_game', {
+            method: 'POST',
+            body: {
+                player_count: state.targetCount || state.playerCount,
+                lancelot_enabled: state.lancelotEnabled,
+                excalibur_enabled: state.excaliburEnabled,
+                lady_of_lake_enabled: state.ladyOfLakeEnabled
+            }
+        });
+        state.step = 1;
+        state.history = [];
+        state.chartRendered = false;
+        renderUI();
+    } catch (e) {
+        showError(e.message || 'Error');
+    }
+};
+
+window.avalon_endGame = async function() {
+    if (!confirm('确定结束当前游戏？')) return;
+    try {
+        await api('/avalon/end_game', { method: 'POST' });
+    } catch (e) {
+        showError(e.message || 'Error');
+    }
+};
+
+window.avalon_toggleRole = function() {
+    state.showRole = !state.showRole;
+    renderUI();
+};
+
+window.avalon_toggleLadyLake = function() {
+    state.ladyOfLakeEnabled = !state.ladyOfLakeEnabled;
+    renderUI();
+};
+
+window.avalon_toggleExcalibur = function() {
+    state.excaliburEnabled = !state.excaliburEnabled;
+    renderUI();
+};
+
+window.avalon_toggleLancelot = function() {
+    if (state.playerCount === 12) return;
+    state.lancelotEnabled = !state.lancelotEnabled;
+    renderUI();
+};
+
+window.avalon_closeLadyResult = function() {
+    state.showLadyResult = false;
+    renderUI();
+};
+
+window.avalon_closeExcaliburResult = function() {
+    state.showExcaliburResult = false;
+    renderUI();
+};
+
+// ---- Player selection for team proposal ----
+window.avalon_toggleTeamMember = function(playerName) {
+    var idx = state.selectedTeam.indexOf(playerName);
+    if (idx === -1) {
+        state.selectedTeam.push(playerName);
+    } else {
+        state.selectedTeam.splice(idx, 1);
+    }
+    // Update the button visual state without full re-render
+    var btn = document.getElementById('team-toggle-' + playerName.replace(/[^a-zA-Z0-9一-鿿]/g, '_'));
+    if (btn) {
+        if (idx === -1) {
+            btn.classList.add('apple-toggle-input-checked');
+            btn.style.background = 'var(--apple-blue)';
+            btn.style.borderColor = 'var(--apple-blue)';
+            btn.style.color = 'white';
+            btn.style.fontWeight = '600';
+        } else {
+            btn.classList.remove('apple-toggle-input-checked');
+            btn.style.background = '';
+            btn.style.borderColor = '';
+            btn.style.color = '';
+            btn.style.fontWeight = '';
+        }
+    }
+    // Update propose button
+    var proposeBtn = document.getElementById('propose-team-btn');
+    if (proposeBtn) {
+        proposeBtn.textContent = '🚀 发车 (' + state.selectedTeam.length + '/' + state.requiredTeamSize + ')';
+        proposeBtn.disabled = state.selectedTeam.length !== state.requiredTeamSize;
+    }
+};
+
+// ---- Render UI ----
+function renderUI() {
+    var content = document.getElementById('avalon-content');
+    if (!content) return;
+
+    // Save name input value before rebuild
+    var nameEl = document.getElementById('avalon-name-input');
+    if (nameEl) state.myName = nameEl.value;
+
+    var html = '';
+
+    if (state.step === 1) {
+        html = renderStep1();
+    } else if (state.step === 2) {
+        html = renderStep2();
+    } else if (state.step === 3 && state.status !== 'ended') {
+        html = renderStep3();
+    }
+
+    // Show game over content even when in step 3
+    if (state.status === 'ended' && state.revealedPlayers.length > 0) {
+        html += renderEnded();
+    }
+
+    content.innerHTML = html;
+
+    // Restore name input
+    var nameInput = document.getElementById('avalon-name-input');
+    if (nameInput) {
+        nameInput.value = state.myName;
+        nameInput.addEventListener('input', function() {
+            state.myName = this.value;
+            localStorage.setItem('avalon_name', this.value);
+        });
+    }
+
+    // Update background
+    var app = document.getElementById('avalon-app');
+    if (app) {
+        app.classList.remove('bg-phase-vote', 'bg-phase-mission');
+        if (state.voteTeamActive) app.classList.add('bg-phase-vote');
+        if (state.missionActive) app.classList.add('bg-phase-mission');
+    }
+
+    // Render overlays
+    renderOverlays();
+
+    // Render chart for ended state
+    if (state.status === 'ended' && state.revealedPlayers.length > 0 && state.history.length > 0 && !state.chartRendered) {
+        state.chartRendered = true;
+        setTimeout(function() { renderDashboard(); }, 300);
+    }
+}
+
+function renderStep1() {
+    var html = '<div class="section">';
+
+    // Create room card
+    if (state.status === 'empty' || state.status === 'ended') {
+        html += '<div class="card">';
+        html += '<h4 class="mb-md">创建新房间</h4>';
+        html += '<p class="text-sm text-muted mb-md">标准包配置</p>';
+
+        // Player count control
+        html += '<div class="count-control">';
+        html += '<button class="count-btn" onclick="avalon_decrementPlayerCount()">−</button>';
+        html += '<div class="count-display">' + state.playerCount + '</div>';
+        html += '<button class="count-btn" onclick="avalon_incrementPlayerCount()">+</button>';
+        html += '</div>';
+
+        // Lady of Lake toggle (8+)
+        if (state.playerCount >= 8) {
+            html += '<div class="lancelot-toggle">';
+            html += '<span>🧚 启用湖中仙女</span>';
+            html += '<div class="toggle-switch">';
+            html += '<input type="checkbox" id="lady-toggle-input"' + (state.ladyOfLakeEnabled ? ' checked' : '') + ' onchange="avalon_toggleLadyLake()">';
+            html += '<label for="lady-toggle-input" class="toggle-slider"></label>';
+            html += '</div></div>';
+        }
+
+        // Excalibur toggle (8+)
+        if (state.playerCount >= 8) {
+            html += '<div class="lancelot-toggle">';
+            html += '<span>🗡️ 启用王者之剑</span>';
+            html += '<div class="toggle-switch">';
+            html += '<input type="checkbox" id="excalibur-toggle-input"' + (state.excaliburEnabled ? ' checked' : '') + ' onchange="avalon_toggleExcalibur()">';
+            html += '<label for="excalibur-toggle-input" class="toggle-slider"></label>';
+            html += '</div></div>';
+        }
+
+        // Lancelot toggle (10 or 12)
+        if (state.playerCount === 10 || state.playerCount === 12) {
+            var lancelotStyle = state.playerCount === 12 ? ' style="opacity:0.6;pointer-events:none;"' : '';
+            html += '<div class="lancelot-toggle">';
+            html += '<span>⚔️ 启用兰斯洛特</span>';
+            html += '<div class="toggle-switch"' + lancelotStyle + '>';
+            html += '<input type="checkbox" id="lancelot-toggle-input"' + (state.lancelotEnabled ? ' checked' : '') + (state.playerCount === 12 ? ' disabled' : '') + ' onchange="avalon_toggleLancelot()">';
+            html += '<label for="lancelot-toggle-input" class="toggle-slider"></label>';
+            html += '</div></div>';
+        }
+
+        // Config preview
+        html += '<div class="config-preview">' + getConfigPreviewHtml() + '</div>';
+        html += '<button class="btn btn-primary btn-block btn-lg" onclick="avalon_createGame()">开新局</button>';
+        html += '</div>';
+    }
+
+    // Join card
+    html += '<div class="card">';
+    html += '<h4 class="mb-md">加入游戏</h4>';
+    html += '<input id="avalon-name-input" class="input-field mb-md" placeholder="输入你的姓名" value="' + h_esc(state.myName) + '">';
+
+    if (state.status === 'joining') {
+        html += '<div class="alert alert-info mb-md">';
+        html += '<div class="d-flex justify-between items-center">';
+        html += '<span class="badge badge-blue">等待中</span>';
+        html += '<span class="fw-700">' + state.currentCount + ' / ' + state.targetCount + ' 人</span>';
+        html += '</div>';
+        html += '<div class="text-muted text-sm mt-sm">已加入: ' + h_esc(state.allPlayers.join(', ')) + '</div>';
+        html += '</div>';
+        html += '<button class="btn btn-primary btn-block" onclick="avalon_joinGame()"' + (!state.myName ? ' disabled' : '') + '>加入房间</button>';
+    } else if (state.status === 'active' || state.status === 'assassin' || state.status === 'ended') {
+        html += '<div class="alert alert-info mb-md">游戏已开始或已结束，输入名字进入</div>';
+        html += '<button class="btn btn-primary btn-block" style="background: var(--apple-orange);" onclick="avalon_joinGame()"' + (!state.myName ? ' disabled' : '') + '>进入房间</button>';
+    } else if (state.status === 'empty') {
+        html += '<div class="text-center text-muted" style="padding: var(--space-lg) 0;">当前无房间，请先创建</div>';
+    }
+    html += '</div>';
+    html += '</div>';
+
+    // Leaderboard section
+    html += '<div id="inline-leaderboard-section">';
+    html += '<div class="section-title" style="margin-top: var(--space-xl); margin-bottom: var(--space-md);">🏆 历史排行榜</div>';
+    html += '<div id="avalon-lb-container">';
+    if (state.lbData.length === 0) {
+        html += '<div class="text-center text-muted" style="padding: var(--space-xl);"><div class="empty-state"><span class="empty-icon">👻</span>还没人玩过呢，快去开一局！</div></div>';
+    } else {
+        html += renderLeaderboardHtml();
+    }
+    html += '</div>';
+    html += '</div>';
+
+    return html;
+}
+
+function renderLeaderboardHtml() {
+    if (!state.lbData || state.lbData.length === 0) {
+        return '<div class="text-center text-muted" style="padding: var(--space-xl);"><div class="empty-state"><span class="empty-icon">👻</span>还没人玩过呢，快去开一局！</div></div>';
+    }
+    var html = '<div class="list">';
+    for (var i = 0; i < state.lbData.length; i++) {
+        var p = state.lbData[i];
+        var rankClass = i === 0 ? 'rank-1' : (i === 1 ? 'rank-2' : (i === 2 ? 'rank-3' : 'rank-other'));
+        var rankDisplay = i === 0 ? '👑' : (i + 1);
+        var opacity = p.mastery === 'provisional' ? 'opacity:0.65;' : '';
+        var masteryBadge = '';
+        if (p.mastery === 'expert') masteryBadge = '<span style="font-size:0.7rem;color:var(--apple-orange);font-weight:700;">👑专精</span>';
+        else if (p.mastery === 'rookie') masteryBadge = '<span style="font-size:0.7rem;color:var(--apple-blue);font-weight:600;">🔰新手</span>';
+        else masteryBadge = '<span style="font-size:0.7rem;color:var(--apple-gray);font-weight:600;">⏳定级中</span>';
+
+        html += '<div class="list-item" style="' + opacity + '">';
+        html += '<div class="rank-num ' + rankClass + '">' + rankDisplay + '</div>';
+        html += '<div class="list-item-content">';
+        html += '<div class="list-item-title">' + h_esc(p.name) + ' ' + masteryBadge + '</div>';
+        html += '<div class="history-trail">' + (p.total || 0) + '局 · 胜' + (p.wins || 0) + '场 · 战力' + (p.smoothed_rate != null ? Number(p.smoothed_rate).toFixed(1) : '--') + '% · 胜率' + (p.win_rate != null ? Number(p.win_rate).toFixed(1) : '--') + '%</div>';
+        html += '</div>';
+        html += '<div style="text-align: right; display: flex; align-items: center; gap: 16px;">';
+        html += '<div style="text-align: right;">';
+        html += '<div class="history-trail" style="font-size: 0.7rem; margin-bottom: 2px;">均分</div>';
+        html += '<div class="score-badge" style="font-size: 1.2rem; color: var(--apple-blue);">' + (p.avg_score != null ? Number(p.avg_score).toFixed(1) : '--') + '</div>';
+        html += '</div>';
+        html += '<div style="text-align: right; width: 40px;">';
+        html += '<div class="history-trail" style="font-size: 0.7rem; margin-bottom: 2px;">胜负</div>';
+        html += '<div class="score-badge" style="font-size: 1.1rem; color: var(--apple-gray);">' + (p.wins || 0) + '-' + ((p.total || 0) - (p.wins || 0)) + '</div>';
+        html += '</div></div></div>';
+    }
+    html += '</div>';
+    return html;
+}
+
+function renderStep2() {
+    var html = '<div class="section"><div class="card">';
+
+    if (state.status === 'joining') {
+        html += '<div class="status-box">';
+        html += '<p class="text-muted mb-sm">等待玩家加入...</p>';
+        html += '<div class="status-count">' + state.currentCount + ' <span class="total">/ ' + state.targetCount + '</span></div>';
+        html += '<div class="d-flex justify-center mt-md"><div class="apple-spinner"></div></div>';
+        html += '<p class="text-sm text-muted mt-md">满员后自动发牌开始</p>';
+        html += '</div>';
+    } else if (state.status === 'active') {
+        html += '<div class="status-box"><h3 class="text-green">游戏开始!</h3></div>';
+    }
+
+    // Player chips
+    html += '<div class="chips-wrap mt-md">';
+    for (var i = 0; i < state.allPlayers.length; i++) {
+        var p = state.allPlayers[i];
+        html += '<span class="chip' + (p === state.myName ? ' me' : '') + '">' + h_esc(p) + '</span>';
+    }
+    html += '</div>';
+
+    html += '<div class="text-center mt-lg" style="border-top: 0.5px solid rgba(0,0,0,0.06); padding-top: var(--space-md);">';
+    html += '<button class="btn btn-sm btn-secondary" style="color: var(--apple-red); border-color: rgba(255,59,48,0.3);" onclick="avalon_resetGame()">重置游戏</button>';
+    html += '</div>';
+    html += '</div></div>';
+
+    return html;
+}
+
+function renderStep3() {
+    var html = '<div class="section" style="padding-top: var(--space-md);">';
+
+    // Identity
+    html += '<div class="card mb-md">';
+    html += '<div class="d-flex justify-between items-center mb-md">';
+    html += '<h5 style="margin:0;">你的身份</h5>';
+    html += '<button class="btn btn-sm btn-secondary" onclick="avalon_toggleRole()">' + (state.showRole ? '隐藏' : '显示') + '</button>';
+    html += '</div>';
+
+    if (state.showRole && state.myRole) {
+        var evilClass = isCurrentlyEvil() ? 'evil' : 'good';
+        html += '<div class="apple-role ' + evilClass + '">';
+        html += '<img src="' + h_esc(getRoleImage(state.myRole)) + '" class="role-img role-card-anim" style="display:block; margin:0 auto;">';
+        html += '<div style="font-size:1.2rem;">' + h_esc(ROLE_MAP[state.myRole] || state.myRole) + '</div>';
+
+        // Lancelot alignment
+        if (state.currentAlignment) {
+            var alignClass = state.currentAlignment === 'evil' ? 'text-red' : 'text-blue';
+            var swapClass = state.lancelotSwapped ? ' alignment-swap-indicator' : '';
+            var alignText = state.currentAlignment === 'evil' ? '⚡ 当前阵营: 邪恶' : '🛡️ 当前阵营: 正义';
+            html += '<div class="mt-sm text-sm ' + alignClass + '"><span class="' + swapClass + '">' + alignText + '</span></div>';
+        }
+        html += '</div>';
+
+        // Vision panel
+        var meta = getVisionPanelMeta();
+        html += '<div class="mt-md">';
+        html += '<div class="fw-600 text-sm mb-sm">你的视野</div>';
+        html += '<div class="vision-intel-card vision-theme-' + meta.theme + '">';
+        html += '<div class="vision-intel-content">';
+        html += '<div class="vision-intel-title">' + h_esc(meta.title) + '</div>';
+        html += '<div class="vision-intel-subtitle">' + h_esc(meta.subtitle) + '</div>';
+        html += '<div class="vision-intel-names">' + getVisionNamesText() + '</div>';
+        html += '</div></div></div>';
+    }
+    html += '</div>';
+
+    // Assassin Phase
+    if (state.status === 'assassin') {
+        html += '<div class="card text-center mb-md" style="border: 2px solid var(--apple-red);">';
+        html += '<h3 class="text-red mb-lg"><i class="ph-fill ph-skull"></i> 刺杀阶段</h3>';
+        html += '<p class="text-muted mb-lg">好人完成了3个任务！' + getAssassinRoleName() + '正在选择刺杀目标...</p>';
+
+        if (canAssassinate()) {
+            html += '<h5 class="mb-md">选择刺杀目标 (猜测梅林)</h5>';
+            html += '<div class="apple-toggle-grid">';
+            for (var i = 0; i < state.allPlayers.length; i++) {
+                var p = state.allPlayers[i];
+                html += '<button class="btn btn-secondary" style="color: var(--apple-red); border-color: rgba(255,59,48,0.3);" onclick="avalon_assassinate(\'' + h_esc(p) + '\')">' + h_esc(p) + '</button>';
+            }
+            html += '</div>';
+        } else {
+            html += '<div class="text-muted">等待' + getAssassinRoleName() + '选择...</div>';
+        }
+        html += '</div>';
+    }
+
+    // Mission Progress
+    html += '<div class="card mb-md text-center">';
+    html += '<div class="dots mb-md">';
+    for (var mi = 1; mi <= 5; mi++) {
+        var dotClass = getMissionStatusClass(mi);
+        var swapActive = state.lancelotSwapReveal[mi - 1] === true;
+        var dotClasses = 'dot ' + dotClass;
+
+        if (mi === state.missionHistory.length + 1 && !dotClass) {
+            dotClasses += ' current';
+        }
+        if (swapActive) {
+            dotClasses += ' swap-active';
+        }
+
+        html += '<div class="' + dotClasses + '">';
+        html += '<span>' + mi + '</span>';
+        if (state.missionHistory[mi - 1]) {
+            html += '<span class="sub">' + state.missionHistory[mi - 1].fail_count + '坏</span>';
+        }
+        // Lancelot swap badge
+        if (state.lancelotEnabled && state.lancelotSwapReveal[mi - 1] !== null && state.lancelotSwapReveal[mi - 1] !== undefined) {
+            var badgeClass = state.lancelotSwapReveal[mi - 1] ? 'swap-badge' : 'swap-badge no-swap';
+            var badgeIcon = state.lancelotSwapReveal[mi - 1] ? '<i class="ph-bold ph-arrows-clockwise"></i>' : '<i class="ph-bold ph-minus"></i>';
+            html += '<span class="' + badgeClass + '">' + badgeIcon + '</span>';
+        }
+        html += '</div>';
+    }
+    html += '</div>';
+
+    html += '<div class="text-sm text-muted">流局: <span class="fw-700 text-red">' + state.voteFailCount + '/5</span>';
+    html += '&nbsp;|&nbsp; 第 ' + (state.missionHistory.length + 1) + ' 轮需 <span class="fw-700">' + state.requiredTeamSize + '</span> 人</div>';
+
+    if (state.captain) {
+        html += '<div class="text-sm mt-xs">👑 当前队长: <span class="fw-700 text-orange">' + h_esc(state.captain) + '</span></div>';
+    }
+    if (state.ladyOfLakeHolder) {
+        html += '<div class="text-sm mt-xs">🧚 湖中仙女: <span class="fw-700" style="color: var(--apple-purple, #af52de);">' + h_esc(state.ladyOfLakeHolder) + '</span></div>';
+    }
+
+    // Lancelot swap alert
+    var swapStatus = getLatestSwapStatus();
+    if (state.lancelotEnabled && swapStatus === true) {
+        html += '<div class="alert mt-md" style="background: var(--apple-orange-light); border: 1px solid rgba(255,149,0,0.3); color: #c27000; border-radius: 12px; padding: 10px;">';
+        html += '<i class="ph-bold ph-arrows-clockwise"></i> 阵营已转换！请留意你的身份变化';
+        html += '</div>';
+    }
+    html += '</div>';
+
+    // Lady of Lake Result (only visible to inspector)
+    if (state.ladyOfLakeResult && state.ladyOfLakeInspector === state.myName) {
+        html += '<div class="card mb-md" style="border: 2px solid var(--apple-purple, #af52de);">';
+        html += '<h6 class="text-center mb-sm" style="color: var(--apple-purple, #af52de);">🧚 查验结果</h6>';
+        html += '<div class="text-center"><strong>' + h_esc(state.ladyOfLakeResult.target) + '</strong> 的阵营是: ';
+        if (state.ladyOfLakeResult.alignment === 'good') {
+            html += '<span class="text-blue fw-700">🛡️ 好人</span>';
+        } else {
+            html += '<span class="text-red fw-700">🗡️ 坏人</span>';
+        }
+        html += '</div><div class="text-sm text-muted text-center mt-sm">你可以选择公布真相或进行伪装</div></div>';
+    }
+
+    // Last Vote Snapshot
+    if (Object.keys(state.lastVoteSnapshot).length > 0) {
+        html += '<div class="card mb-md"><h6 class="mb-sm text-sm text-muted fw-600">上轮投票票型</h6>';
+        html += '<div class="chips-wrap">';
+        var snapshotKeys = Object.keys(state.lastVoteSnapshot);
+        for (var sk = 0; sk < snapshotKeys.length; sk++) {
+            var sname = snapshotKeys[sk];
+            var svote = state.lastVoteSnapshot[sname];
+            var sclass = svote === 'approve' ? 'approve' : 'reject';
+            var sicon = svote === 'approve' ? 'fa-check text-green' : 'fa-times text-red';
+            html += '<span class="chip ' + sclass + '">' + h_esc(sname) + ' <i class="fas ' + sicon + '" style="margin-left:4px;"></i></span>';
+        }
+        html += '</div></div>';
+    }
+
+    // Vote Team Phase
+    if (state.voteTeamActive) {
+        html += '<div class="card mb-md" style="border: 2px solid var(--apple-blue);">';
+        html += '<h5 class="text-center text-blue mb-md">🗳️ 组队投票中</h5>';
+        html += '<div class="team-display"><div class="text-sm text-muted">提议队伍</div>';
+        html += '<div class="names">' + h_esc((state.missionTeam || []).join('、')) + '</div></div>';
+        html += '<div class="chips-wrap mt-md">';
+        for (var vi = 0; vi < state.allPlayers.length; vi++) {
+            var vp = state.allPlayers[vi];
+            var tv = state.teamVotes[vp];
+            var vclass = tv === 'approve' ? 'approve' : (tv === 'reject' ? 'reject' : '');
+            var vstyle = !tv ? 'opacity:0.4' : '';
+            var vicon = tv ? (tv === 'approve' ? '<i class="fas fa-check" style="margin-left:4px;"></i>' : '<i class="fas fa-times" style="margin-left:4px;"></i>') : '';
+            html += '<span class="chip ' + vclass + '" style="' + vstyle + '">' + h_esc(vp) + vicon + '</span>';
+        }
+        html += '</div>';
+        if (state.lastVoteResult) {
+            var vrClass = state.lastVoteResult === 'approved' ? 'alert-success' : 'alert-danger';
+            var vrText = state.lastVoteResult === 'approved' ? '✅ 通过' : '❌ 拒绝';
+            html += '<div class="mt-md alert ' + vrClass + '">投票结果: ' + vrText + '</div>';
+        }
+        html += '</div>';
+    }
+
+    // Propose Team
+    if (!state.voteTeamActive && !state.missionActive && !state.ladyOfLakeActive && state.status === 'active' && state.excaliburPhase === 'none') {
+        html += '<div class="card mb-md">';
+        html += '<div class="d-flex justify-between items-center mb-md">';
+        html += '<h5 style="margin:0;">发起组队</h5>';
+        html += '<span class="badge badge-orange">需 ' + state.requiredTeamSize + ' 人</span>';
+        html += '</div>';
+        html += '<div class="apple-toggle-grid mb-md">';
+        for (var pi = 0; pi < state.allPlayers.length; pi++) {
+            var pp = state.allPlayers[pi];
+            var isSelected = state.selectedTeam.indexOf(pp) !== -1;
+            var prefix = pp === state.captain ? '👑' : '';
+            html += '<button id="team-toggle-' + h_esc(pp.replace(/[^a-zA-Z0-9一-鿿]/g, '_')) + '" class="apple-toggle-btn" style="' + (isSelected ? 'background:var(--apple-blue);border-color:var(--apple-blue);color:white;font-weight:600;' : '') + '" onclick="avalon_toggleTeamMember(\'' + h_esc(pp) + '\')">' + prefix + h_esc(pp) + '</button>';
+        }
+        html += '</div>';
+        html += '<button id="propose-team-btn" class="btn btn-primary btn-block btn-lg" onclick="avalon_proposeTeam()" ';
+        html += (state.selectedTeam.length !== state.requiredTeamSize ? 'disabled ' : '');
+        html += '>🚀 发车 (' + state.selectedTeam.length + '/' + state.requiredTeamSize + ')</button>';
+        html += '</div>';
+    }
+
+    // Mission Execution
+    if (state.missionActive) {
+        html += '<div class="card mb-md" style="border: 2px solid var(--apple-green);">';
+        html += '<h5 class="text-center text-green mb-md">⚔️ 任务执行中</h5>';
+        html += '<p class="text-center">队员: <strong>' + h_esc((state.missionTeam || []).join('、')) + '</strong></p>';
+        if (state.missionTeam.indexOf(state.myName) === -1) {
+            html += '<div class="text-center text-muted text-sm mt-md">等待队员出票...</div>';
+        }
+        html += '</div>';
+    }
+
+    // Lady of Lake Active (waiting)
+    if (state.ladyOfLakeActive && state.ladyOfLakeHolder !== state.myName) {
+        html += '<div class="card mb-md" style="border: 2px solid var(--apple-purple, #af52de);">';
+        html += '<h5 class="text-center mb-md" style="color: var(--apple-purple, #af52de);">🧚 湖中仙女查验中</h5>';
+        html += '<p class="text-center text-muted">等待 <strong>' + h_esc(state.ladyOfLakeHolder) + '</strong> 选择查验目标...</p>';
+        html += '</div>';
+    }
+
+    // Excalibur assign waiting (non-captain)
+    if (state.excaliburPhase === 'assign' && state.myName !== state.teamProposer) {
+        html += '<div class="card mb-md" style="border: 2px solid var(--apple-orange);">';
+        html += '<h5 class="text-center mb-md" style="color: var(--apple-orange);">🗡️ 王者之剑分配中</h5>';
+        html += '<p class="text-center text-muted">等待发起人 <strong>' + h_esc(state.teamProposer) + '</strong> 分配王者之剑...</p>';
+        html += '</div>';
+    }
+
+    // Excalibur holder badge during mission
+    if (state.excaliburHolder && state.excaliburPhase === 'mission' && !state.missionActive) {
+        html += '<div class="card mb-md text-center" style="border: 2px solid var(--apple-orange);">';
+        html += '<p>🗡️ <strong>' + h_esc(state.excaliburHolder) + '</strong> 持有王者之剑</p>';
+        html += '</div>';
+    }
+
+    // Excalibur decide waiting (non-holder)
+    if (state.excaliburPhase === 'decide' && state.myName !== state.excaliburHolder) {
+        html += '<div class="card mb-md" style="border: 2px solid var(--apple-orange);">';
+        html += '<h5 class="text-center mb-md" style="color: var(--apple-orange);">🗡️ 王者之剑决策中</h5>';
+        html += '<p class="text-center text-muted">等待 <strong>' + h_esc(state.excaliburHolder) + '</strong> 决定是否使用王者之剑...</p>';
+        html += '</div>';
+    }
+
+    // Game Controls
+    html += '<div class="card text-center" style="background: var(--apple-bg); box-shadow: none; margin-top: var(--space-lg);">';
+    html += '<div class="game-controls">';
+    html += '<button class="btn btn-sm" style="background: var(--apple-orange); color: white;" onclick="avalon_quickRestart()">🔄 重开</button> ';
+    html += '<button class="btn btn-sm btn-secondary" style="color: var(--apple-red); border-color: rgba(255,59,48,0.3);" onclick="avalon_endGame()">🚪 结束</button>';
+    html += '</div>';
+    html += '<footer class="apple-footer"><p>Avalon &copy; 2026</p></footer>';
+    html += '</div>';
+
+    html += '</div>';
+    return html;
+}
+
+function renderEnded() {
+    if (!state.revealedPlayers || state.revealedPlayers.length === 0) return '';
+
+    var html = '<div class="section"><div class="card" style="padding: var(--space-2xl) var(--space-lg); text-align: center; overflow: hidden; position: relative;">';
+    html += '<div class="victory-hero">' + (state.gameWinner === 'good' ? '🛡️' : '🗡️') + '</div>';
+    html += '<h2 class="victory-title ' + (state.gameWinner === 'good' ? 'victory-blue' : 'victory-red') + '">';
+    html += state.gameWinner === 'good' ? '正义长存' : '暗影降临';
+    html += '</h2>';
+    html += '<div class="text-muted" style="font-size: 1.25rem; font-weight: 600; letter-spacing: -0.02em; margin-bottom: var(--space-lg);">';
+    html += state.gameWinner === 'good' ? '好人阵营取得最终胜利' : '邪恶阵营夺取最终胜利';
+    html += '</div>';
+
+    if (state.assassinTarget) {
+        html += '<div class="assassin-result"><span>刺客最终刺杀了 <strong style="margin-left: 4px; font-size: 1.15rem;">' + h_esc(state.assassinTarget) + '</strong></span></div>';
+    }
+
+    html += '<div style="text-align: left; max-width: 800px; margin: 0 auto;">';
+    html += '<h3 style="font-size: 1.3rem; font-weight: 700; margin-bottom: var(--space-md); color: var(--apple-black); padding-left: 4px; letter-spacing: -0.02em;">全员身份揭晓</h3>';
+    html += '<div class="reveal-grid">';
+    for (var i = 0; i < state.revealedPlayers.length; i++) {
+        var p = state.revealedPlayers[i];
+        var roleClass = isEvil(p.role) ? 'text-red' : 'text-blue';
+        html += '<div class="reveal-card">';
+        html += '<div class="name">' + h_esc(p.name) + '</div>';
+        html += '<div class="role ' + roleClass + '">' + h_esc(ROLE_MAP[p.role] || p.role) + '</div>';
+        html += '</div>';
+    }
+    html += '</div>';
+
+    html += '<div class="action-buttons-group">';
+    html += '<button class="btn btn-primary btn-pill" style="flex: 1;" onclick="avalon_quickRestart()">🔄 一键重开</button>';
+    html += '<button class="btn btn-secondary btn-pill" style="flex: 1;" onclick="avalon_resetGame()">⚙️ 更换人数</button>';
+    html += '</div>';
+    html += '</div>';
+
+    html += '<div id="dashboard-chart" style="width: 100%; height: 400px; margin-top: var(--space-2xl);"></div>';
+    html += '</div></div>';
+
+    return html;
+}
+
+// ---- Overlays ----
+function renderOverlays() {
+    // Team vote overlay
+    var tvOverlay = document.getElementById('overlay-team-vote');
+    if (tvOverlay) {
+        if (state.voteTeamActive && !state.teamVotes[state.myName]) {
+            tvOverlay.style.display = 'flex';
+            var box = document.getElementById('overlay-team-vote-box');
+            if (box) box.innerHTML = '<strong>' + h_esc((state.missionTeam || []).join('、')) + '</strong>';
+        } else {
+            tvOverlay.style.display = 'none';
+        }
+    }
+
+    // Mission vote overlay
+    var mvOverlay = document.getElementById('overlay-mission-vote');
+    if (mvOverlay) {
+        if (state.missionActive && state.missionTeam.indexOf(state.myName) !== -1 && !state.hasActed) {
+            mvOverlay.style.display = 'flex';
+            // Update button states
+            var btnSuccess = document.getElementById('overlay-mission-success');
+            var btnFail = document.getElementById('overlay-mission-fail');
+            var hintGood = document.getElementById('overlay-mission-hint-good');
+            var hintMustFail = document.getElementById('overlay-mission-hint-mustfail');
+
+            var mustFail = isLancelotMustFail();
+            var isEvil = isCurrentlyEvil();
+
+            if (btnSuccess) btnSuccess.disabled = mustFail;
+            if (btnFail) btnFail.disabled = !isEvil;
+            if (hintGood) hintGood.style.display = !isEvil ? '' : 'none';
+            if (hintMustFail) hintMustFail.style.display = mustFail ? '' : 'none';
+
+            if (mustFail && btnSuccess) btnSuccess.style.opacity = '0.35';
+            else if (btnSuccess) btnSuccess.style.opacity = '';
+            if (!isEvil && btnFail) btnFail.style.opacity = '0.35';
+            else if (btnFail) btnFail.style.opacity = '';
+        } else {
+            mvOverlay.style.display = 'none';
+        }
+    }
+
+    // Lady of Lake overlay
+    var llOverlay = document.getElementById('overlay-lady-lake');
+    if (llOverlay) {
+        if (state.ladyOfLakeActive && state.ladyOfLakeHolder === state.myName) {
+            llOverlay.style.display = 'flex';
+            var llList = document.getElementById('overlay-lady-lake-list');
+            if (llList) {
+                var llHtml = '';
+                for (var i = 0; i < state.allPlayers.length; i++) {
+                    var p = state.allPlayers[i];
+                    var disabled = state.ladyOfLakeHistory.indexOf(p) !== -1 || p === state.myName;
+                    var hint = state.ladyOfLakeHistory.indexOf(p) !== -1 ? '<span style="font-size:0.75rem; opacity:0.5;">(已查验)</span>' : '';
+                    llHtml += '<button class="lady-target-btn" ' + (disabled ? 'disabled' : '') + ' onclick="avalon_inspectPlayer(\'' + h_esc(p) + '\')">' + h_esc(p) + ' ' + hint + '</button>';
+                }
+                llList.innerHTML = llHtml;
+            }
+        } else {
+            llOverlay.style.display = 'none';
+        }
+    }
+
+    // Lady of Lake result overlay
+    var lrOverlay = document.getElementById('overlay-lady-result');
+    if (lrOverlay) {
+        if (state.showLadyResult) {
+            lrOverlay.style.display = 'flex';
+            var lrTarget = document.getElementById('lady-result-target');
+            var lrAlign = document.getElementById('lady-result-alignment');
+            if (lrTarget) lrTarget.textContent = state.ladyResultData.target || '';
+            if (lrAlign) {
+                if (state.ladyResultData.alignment === 'good') {
+                    lrAlign.className = 'alignment-good';
+                    lrAlign.textContent = '🛡️ 好人';
+                } else {
+                    lrAlign.className = 'alignment-evil';
+                    lrAlign.textContent = '🗡️ 坏人';
+                }
+            }
+        } else {
+            lrOverlay.style.display = 'none';
+        }
+    }
+
+    // Excalibur assign overlay
+    var eaOverlay = document.getElementById('overlay-excalibur-assign');
+    if (eaOverlay) {
+        if (state.excaliburPhase === 'assign' && state.myName === state.teamProposer) {
+            eaOverlay.style.display = 'flex';
+            var eaList = document.getElementById('overlay-excalibur-assign-list');
+            if (eaList) {
+                var eaHtml = '';
+                var mt = state.missionTeam || [];
+                for (var j = 0; j < mt.length; j++) {
+                    var mp = mt[j];
+                    eaHtml += '<button class="lady-target-btn" ' + (mp === state.myName ? 'disabled' : '') + ' onclick="avalon_assignExcalibur(\'' + h_esc(mp) + '\')">' + h_esc(mp);
+                    if (mp === state.myName) eaHtml += '<span style="font-size:0.75rem; opacity:0.5;">(自己)</span>';
+                    eaHtml += '</button>';
+                }
+                eaList.innerHTML = eaHtml;
+            }
+        } else {
+            eaOverlay.style.display = 'none';
+        }
+    }
+
+    // Excalibur decide overlay
+    var edOverlay = document.getElementById('overlay-excalibur-decide');
+    if (edOverlay) {
+        if (state.excaliburPhase === 'decide' && state.myName === state.excaliburHolder) {
+            edOverlay.style.display = 'flex';
+            var edList = document.getElementById('overlay-excalibur-decide-list');
+            if (edList) {
+                var edHtml = '';
+                var mtd = state.missionTeam || [];
+                for (var k = 0; k < mtd.length; k++) {
+                    var mdp = mtd[k];
+                    edHtml += '<button class="lady-target-btn" onclick="avalon_useExcalibur(\'' + h_esc(mdp) + '\')">🗡️ ' + h_esc(mdp) + '</button>';
+                }
+                edList.innerHTML = edHtml;
+            }
+        } else {
+            edOverlay.style.display = 'none';
+        }
+    }
+
+    // Excalibur result overlay
+    var erOverlay = document.getElementById('overlay-excalibur-result');
+    if (erOverlay) {
+        if (state.showExcaliburResult) {
+            erOverlay.style.display = 'flex';
+            var erTarget = document.getElementById('excalibur-result-target');
+            var erVote = document.getElementById('excalibur-result-vote');
+            var erReplace = document.getElementById('excalibur-result-replace');
+            if (erTarget && state.excaliburResultData) {
+                erTarget.textContent = state.excaliburResultData.target || '';
+            }
+            if (erVote && state.excaliburResultData) {
+                if (state.excaliburResultData.original_vote === 'fail') {
+                    erVote.className = 'alignment-evil';
+                    erVote.textContent = '🗡️ 原始投票：失败';
+                    if (erReplace) erReplace.textContent = '已替换为成功票，点击任意处关闭';
+                } else {
+                    erVote.className = 'alignment-good';
+                    erVote.textContent = '🛡️ 原始投票：成功';
+                    if (erReplace) erReplace.textContent = '已替换为失败票，点击任意处关闭';
+                }
+            }
+        } else {
+            erOverlay.style.display = 'none';
+        }
+    }
+}
+
+// ---- ECharts Dashboard ----
+function renderDashboard() {
+    var dom = document.getElementById('dashboard-chart');
+    if (!dom) return;
+    if (typeof echarts === 'undefined') {
+        setTimeout(function() { renderDashboard(); }, 500);
+        return;
+    }
+    try {
+        var myChart = echarts.init(dom, isDarkMode() ? 'dark' : 'light');
+        var players = state.revealedPlayers.map(function(p) { return p.name; });
+        var xAxisData = [];
+        var seriesDataVotes = [];
+        var seriesDataMissions = [];
+        var seriesDataMissionFails = [];
+
+        for (var idx = 0; idx < state.history.length; idx++) {
+            var h = state.history[idx];
+            var label = 'R' + h.round_num + '.' + h.proposal_index;
+            xAxisData.push(label);
+            for (var y = 0; y < players.length; y++) {
+                var pname = players[y];
+                var vote = h.votes && h.votes[pname];
+                if (vote) seriesDataVotes.push([idx, y, vote === 'approve' ? 1 : -1, (h.team || []).indexOf(pname) !== -1]);
+                var mVote = h.mission_votes && h.mission_votes[pname];
+                if (mVote) {
+                    if (mVote === 'fail') {
+                        seriesDataMissionFails.push([idx, y, -1]);
+                    } else {
+                        seriesDataMissions.push([idx, y, 1]);
+                    }
+                }
+            }
+        }
+
+        var dark = isDarkMode();
+        myChart.setOption({
+            backgroundColor: 'transparent',
+            textStyle: { fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, Helvetica, Arial, sans-serif' },
+            title: {
+                text: '对局记录', left: 'center', top: 15,
+                textStyle: { fontSize: 20, fontWeight: 800, letterSpacing: 1.5, color: dark ? '#ffffff' : '#1d1d1f', textShadowBlur: 10, textShadowColor: dark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.05)' }
+            },
+            tooltip: {
+                trigger: 'item',
+                backgroundColor: dark ? 'rgba(28, 28, 30, 0.75)' : 'rgba(255, 255, 255, 0.85)',
+                borderColor: dark ? 'rgba(255,255,255,0.15)' : 'rgba(0,0,0,0.08)',
+                borderWidth: 1,
+                padding: 0,
+                extraCssText: 'border-radius: 12px; box-shadow: 0 12px 48px rgba(0, 0, 0, 0.15); backdrop-filter: saturate(150%) blur(20px); -webkit-backdrop-filter: saturate(150%) blur(20px); overflow: hidden;',
+                formatter: function(params) {
+                    var isDark = dark;
+                    var textColor = isDark ? '#e5e5ea' : '#333333';
+                    var subTextColor = '#86868b';
+
+                    if (params.seriesName === '组队投票') {
+                        var isApprove = params.value[2] === 1;
+                        var headerColor = isApprove ? 'rgba(52, 199, 89, 0.15)' : 'rgba(255, 59, 48, 0.15)';
+                        var iconColor = isApprove ? '#34c759' : '#ff3b30';
+
+                        return '<div style="background: ' + headerColor + '; padding: 10px 16px; border-bottom: 1px solid ' + (isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)') + ';">' +
+                            '<span style="font-weight:700; font-size: 14px; color: ' + textColor + '">' + params.name + '</span></div>' +
+                            '<div style="padding: 12px 16px; display:flex; flex-direction: column; gap: 8px;">' +
+                            '<div style="display:flex; align-items:center; justify-content: space-between; gap: 16px;">' +
+                            '<span style="color: ' + subTextColor + '; font-size: 12px;">投票立场</span>' +
+                            '<span style="font-weight: 600; color: ' + iconColor + ';">' + (isApprove ? '● 赞成' : '■ 反对') + '</span></div>' +
+                            (params.value[3] ? '<div style="display:flex; align-items:center; justify-content: space-between; gap: 16px;"><span style="color: ' + subTextColor + '; font-size: 12px;">身份状态</span><span style="font-weight: 500; color: ' + textColor + ';">🛸 在车上</span></div>' : '') +
+                            '</div>';
+                    } else if (params.seriesName === '任务' || params.seriesName === '关键失败') {
+                        var isSuccess = params.value[2] === 1;
+                        var hColor = isSuccess ? 'rgba(0, 113, 227, 0.15)' : 'rgba(191, 90, 242, 0.15)';
+                        var iColor = isSuccess ? '#0071e3' : '#bf5af2';
+
+                        return '<div style="background: ' + hColor + '; padding: 10px 16px; border-bottom: 1px solid ' + (isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)') + ';">' +
+                            '<span style="font-weight:700; font-size: 14px; color: ' + textColor + '">' + params.name + '</span></div>' +
+                            '<div style="padding: 12px 16px;"><span style="font-weight: 600; font-size: 15px; color: ' + iColor + ';">' +
+                            (isSuccess ? '🛡️ 任务成功' : '🗡️ 任务失败') + '</span></div>';
+                    }
+                }
+            },
+            grid: { top: 80, bottom: 40, left: 90, right: 40 },
+            xAxis: {
+                type: 'category', data: xAxisData,
+                axisLine: { show: false }, axisTick: { show: false },
+                axisLabel: { color: '#86868b', fontWeight: 600, fontSize: 12, margin: 16 },
+                splitLine: { show: true, lineStyle: { type: 'dashed', color: dark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.06)' } }
+            },
+            yAxis: {
+                type: 'category', data: players,
+                axisLine: { show: false }, axisTick: { show: false },
+                axisLabel: { color: dark ? '#d2d2d7' : '#1d1d1f', fontWeight: 600, fontSize: 14, margin: 20 },
+                splitLine: { show: false },
+                splitArea: { show: true, areaStyle: { color: [dark ? 'rgba(255,255,255,0.02)' : 'rgba(0,0,0,0.02)', 'transparent'] } }
+            },
+            series: [
+                {
+                    name: '组队投票', type: 'scatter',
+                    symbolSize: function(val) { return val[3] ? 24 : 14; },
+                    itemStyle: {
+                        color: function(params) { return params.value[2] === 1 ? '#34c759' : '#ff3b30'; },
+                        opacity: function(params) { return params.value[3] ? 1 : 0.65; },
+                        borderColor: function(params) { return params.value[3] ? (dark ? '#ffffff' : '#ffffff') : 'transparent'; },
+                        borderWidth: function(params) { return params.value[3] ? 2.5 : 0; },
+                        shadowBlur: function(params) { return params.value[3] ? 12 : 4; },
+                        shadowColor: function(params) { return params.value[2] === 1 ? 'rgba(52, 199, 89, 0.4)' : 'rgba(255, 59, 48, 0.4)'; },
+                        shadowOffsetY: 2
+                    },
+                    data: seriesDataVotes
+                },
+                {
+                    name: '任务', type: 'scatter',
+                    symbol: 'path://M512 0c0 0-33.536 339.968-150.528 456.96C244.48 573.952 0 512 0 512s339.968 33.536 456.96 150.528C573.952 779.52 512 1024 512 1024s33.536-339.968 150.528-456.96C779.52 450.048 1024 512 1024 512s-339.968-33.536-456.96-150.528C450.048 244.48 512 0 512 0z',
+                    symbolSize: 28, zlevel: 2,
+                    itemStyle: { color: '#0071e3', shadowBlur: 16, shadowColor: 'rgba(0, 113, 227, 0.6)', shadowOffsetY: 4 },
+                    data: seriesDataMissions
+                },
+                {
+                    name: '关键失败', type: 'effectScatter',
+                    symbol: 'path://M512 0c0 0-33.536 339.968-150.528 456.96C244.48 573.952 0 512 0 512s339.968 33.536 456.96 150.528C573.952 779.52 512 1024 512 1024s33.536-339.968 150.528-456.96C779.52 450.048 1024 512 1024 512s-339.968-33.536-456.96-150.528C450.048 244.48 512 0 512 0z',
+                    symbolSize: 32, zlevel: 3,
+                    rippleEffect: { brushType: 'stroke', scale: 2.5, period: 3 },
+                    itemStyle: { color: '#bf5af2', shadowBlur: 20, shadowColor: 'rgba(191, 90, 242, 0.8)', shadowOffsetY: 4 },
+                    data: seriesDataMissionFails
+                }
+            ]
+        });
+    } catch (e) {
+        console.error('Dashboard render error:', e);
+    }
+}
+
+// ---- Init ----
+(function init() {
+    // Start polling
+    setInterval(function() { fetchAndUpdate(); }, 1000);
+
+    // Fetch leaderboard and do initial render
+    fetchLeaderboard().then(function() { renderUI(); });
+
+    // Initial fetch and render
+    fetchAndUpdate();
+})();
 </script>
-</div>
-{% endraw %}
 {% endblock %}
