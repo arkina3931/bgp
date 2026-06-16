@@ -2,12 +2,21 @@
 
 {% block title %}拉斯维加斯 - 欢乐掷骰 · 区域争夺{% endblock %}
 
-{% block extra_head %}
-<style>
-    [x-cloak] { display: none !important; }
+{% block body_class %}no-tab-bar{% endblock %}
 
+{% block nav_left %}
+<a href="/" class="top-nav-back"><i class="ph-bold ph-arrow-left"></i> 返回</a>
+{% endblock %}
+
+{% block nav_title %}
+<i class="ph-fill ph-dice-six text-green" style="margin-right:4px;"></i> 拉斯维加斯
+{% endblock %}
+
+{% block extra_head %}
+<script src="/static/components.js"></script>
+<style>
     /* ---- Page Hero (Customized gradient) ---- */
-    .apple-hero h1 {
+    .hero h1 {
         background: linear-gradient(135deg, #00b894, #00cec9, #0984e3);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
@@ -32,19 +41,19 @@
         margin-bottom: var(--space-lg);
     }
 
-    .add-player-row .apple-input {
+    .add-player-row .input-field {
         flex: 1;
         font-size: 1.05rem;
         font-weight: 600;
     }
 
-    .add-player-row .apple-input:focus {
+    .add-player-row .input-field:focus {
         background: #fff;
         border-color: var(--apple-blue);
         box-shadow: 0 0 0 3px rgba(0, 113, 227, 0.2);
     }
 
-    .add-player-row .apple-btn {
+    .add-player-row .btn {
         box-shadow: 0 6px 16px rgba(0, 113, 227, 0.25);
         font-weight: 600;
         padding: 0 24px;
@@ -285,7 +294,7 @@
         margin-bottom: var(--space-xl);
     }
 
-    .action-area .apple-btn-success {
+    .action-area .btn-primary {
         box-shadow: 0 6px 20px rgba(52, 199, 89, 0.3);
         font-weight: 700;
         padding: 0 32px;
@@ -370,7 +379,7 @@
         padding: 0 var(--space-lg) var(--space-xl);
     }
 
-    .end-modal-actions .apple-btn {
+    .end-modal-actions .btn {
         flex: 1;
         font-weight: 600;
         padding: 14px 0;
@@ -710,12 +719,8 @@
 </style>
 {% endblock %}
 
-{% block nav_title %}
-<i class="ph-fill ph-dice-six text-green" style="margin-right: 4px;"></i> 拉斯维加斯
-{% endblock %}
-
 {% block content %}
-<div id="app" x-data="lvApp()" x-init="init()" x-cloak>
+<div id="app">
 
     <!-- Hero -->
     <div class="game-header-wrapper">
@@ -725,185 +730,56 @@
     <!-- Add Player -->
     <div class="section-title">添加玩家</div>
     <div class="add-player-row">
-        <input class="apple-input" type="text" placeholder="输入玩家名称" maxlength="12" autocomplete="off"
-            x-model="newPlayerName" @keydown.enter="addPlayer()">
-        <button class="apple-btn apple-btn-primary" @click="addPlayer()">
+        <input id="newPlayerInput" class="input-field" type="text" placeholder="输入玩家名称" maxlength="12" autocomplete="off">
+        <button id="addPlayerBtn" class="btn btn-primary">
             <i class="ph-bold ph-plus"></i> 添加
         </button>
     </div>
 
     <!-- Current Game Leaderboard -->
     <div class="section-title">💰 本局排行</div>
-    <div class="apple-list mb-md" x-show="ranked.length === 0">
-        <div class="empty-state">
-            <span class="empty-icon">🃏</span>
-            添加玩家开始计算
-        </div>
-    </div>
-    <div class="apple-list mb-md" x-show="ranked.length > 0">
-        <template x-for="(p, idx) in ranked" :key="p.name">
-            <div class="apple-list-item">
-                <div class="rank-num" :class="getRankClass(idx, p)">
-                    <span x-text="getRankIcon(idx, p)"></span>
-                </div>
-                <div class="apple-list-item-content">
-                    <div class="apple-list-item-title">
-                        <span x-text="p.name"></span>
-                        <span class="lb-tie-badge" x-show="isTied(p)">平局</span>
-                    </div>
-                </div>
-                <div style="text-align: right; display: flex; align-items: center; gap: 16px;">
-                    <div style="text-align: right;">
-                        <div class="history-trail" style="font-size: 0.7rem; margin-bottom: 2px;">金额</div>
-                        <div class="score-badge" style="font-size: 1.2rem; color: var(--apple-blue);" x-text="p.total_amount + '万'"></div>
-                    </div>
-                    <div style="text-align: right; width: 40px;">
-                        <div class="history-trail" style="font-size: 0.7rem; margin-bottom: 2px;">张数</div>
-                        <div class="score-badge" style="font-size: 1.1rem; color: var(--apple-gray);" x-text="p.bill_count + '张'"></div>
-                    </div>
-                </div>
-            </div>
-        </template>
-    </div>
+    <div id="rankingContainer"></div>
 
     <!-- Action Buttons -->
-    <div class="action-area" x-show="ranked.length > 0">
-        <button class="apple-btn apple-btn-success apple-btn-lg" @click="showEndOverlay = true">
+    <div id="actionArea" class="action-area" style="display:none;">
+        <button id="endGameBtn" class="btn btn-primary btn-lg">
             <i class="ph-fill ph-flag-checkered" style="margin-right:6px;"></i> 结束本局
         </button>
-        <button class="apple-btn apple-btn-secondary" @click="resetGame()"
-            style="padding:0 24px; border-radius:30px; font-weight:600;">
+        <button id="resetGameBtn" class="btn btn-secondary" style="padding:0 24px; border-radius:30px; font-weight:600;">
             <i class="ph-bold ph-arrow-clockwise"></i> 重置
         </button>
     </div>
 
     <!-- Player Cards -->
     <div class="section-title">🃏 玩家钞票</div>
-    <div class="player-section">
-        <template x-for="(p, idx) in players" :key="p.name">
-            <div class="player-card">
-                <div class="player-card-header" @click="togglePlayer(p.name)">
-                    <div class="player-card-left">
-                        <div class="player-card-avatar" :style="'background:' + getAvatarColor(idx)"
-                            x-text="p.name.charAt(0).toUpperCase()"></div>
-                        <div>
-                            <div class="player-card-name" x-text="p.name"></div>
-                            <div class="player-card-summary"
-                                x-text="p.total_amount + '万 · ' + p.bill_count + '张钞票'"></div>
-                        </div>
-                    </div>
-                    <i class="ph-bold ph-caret-right player-card-chevron"
-                        :class="{ open: isExpanded(p.name) }"></i>
-                </div>
-                <div class="player-card-body" :class="{ open: isExpanded(p.name) }">
-                    <div class="section-title" style="margin-top:var(--space-xs)">添加钞票</div>
-                    <div class="bill-grid">
-                        <template x-for="v in DENOMINATIONS" :key="v">
-                            <button class="bill-btn" @click="addBill(p.name, v)">
-                                <span class="bill-icon">💵</span>
-                                <span x-text="v + '万'"></span>
-                            </button>
-                        </template>
-                    </div>
-                    <div class="section-title">钞票明细</div>
-                    <div class="bill-list">
-                        <div x-show="!p.bills || !p.bills.length"
-                            style="text-align:center;color:var(--apple-gray);font-size:0.9rem;font-weight:500;padding:var(--space-md) 0;">
-                            暂无钞票</div>
-                        <template x-for="b in (p.bills || [])" :key="b.id">
-                            <div class="bill-item">
-                                <span class="bill-value-tag" :class="'bill-' + b.value"
-                                    x-text="b.value + '万'"></span>
-                                <button class="bill-remove-btn" @click="removeBill(p.name, b.id)">
-                                    <i class="ph-bold ph-x"></i> 移除
-                                </button>
-                            </div>
-                        </template>
-                    </div>
-                    <button class="remove-player-btn" @click="removePlayer(p.name)">
-                        <i class="ph-bold ph-trash" style="margin-right: 4px;"></i>移除此玩家
-                    </button>
-                </div>
-            </div>
-        </template>
-    </div>
+    <div id="playerCardsContainer" class="player-section"></div>
 
     <!-- Historical Leaderboard -->
-    <div id="inline-leaderboard-section">
-        <div class="section-title" style="margin-top: var(--space-xl); margin-bottom: var(--space-md);">🏆 历史排行榜
-        </div>
-        <div class="apple-list mb-xl" x-show="histLeaderboard.length === 0">
-            <div class="text-center text-muted" style="padding: var(--space-xl);">
-                <div class="empty-state">
-                    <span class="empty-icon">👻</span>
-                    还没人玩过呢，快去开一局！
-                </div>
-            </div>
-        </div>
-        <div class="apple-list mb-xl" x-show="histLeaderboard.length > 0">
-            <template x-for="(p, idx) in histLeaderboard" :key="p.name">
-                <div class="apple-list-item" :style="p.mastery === 'provisional' ? 'opacity:0.65;' : ''">
-                    <div class="rank-num" :class="idx === 0 ? 'rank-1' : (idx === 1 ? 'rank-2' : (idx === 2 ? 'rank-3' : 'rank-other'))">
-                        <span x-text="idx === 0 ? '👑' : idx + 1"></span>
-                    </div>
-                    
-                    <div class="apple-list-item-content">
-                        <div class="apple-list-item-title">
-                            <span x-text="p.name"></span>
-                            <span x-show="p.mastery === 'expert'" style="font-size:0.7rem;color:var(--apple-orange);font-weight:700;">👑专精</span>
-                            <span x-show="p.mastery === 'rookie'" style="font-size:0.7rem;color:var(--apple-blue);font-weight:600;">🔰新手</span>
-                            <span x-show="p.mastery === 'provisional'" style="font-size:0.7rem;color:var(--apple-gray);font-weight:600;">⏳定级中</span>
-                        </div>
-                        <div class="history-trail" x-text="p.total_games + '局 · 胜' + p.wins + '场 · 战力' + p.win_rate + '% · 胜率' + p.smoothed_rate + '%'"></div>
-                    </div>
-                    
-                    <div style="text-align: right; display: flex; align-items: center; gap: 16px;">
-                        <div style="text-align: right; width: 60px;">
-                            <div class="history-trail" style="font-size: 0.7rem; margin-bottom: 2px;">场均</div>
-                            <div class="score-badge" style="font-size: 1.2rem; color: var(--apple-blue);"
-                                x-text="p.avg_amount > 0 ? '$' + p.avg_amount + '万' : '--'"></div>
-                        </div>
-                    </div>
-                </div>
-            </template>
-        </div>
-    </div>
+    <leaderboard-section api-url="/lasvegas/api/leaderboard" empty-icon="👻" empty-text="还没人玩过呢，快去开一局！" show-avg-score avg-score-label="场均"></leaderboard-section>
 
     <!-- Tile Action Buttons -->
     <div class="tile-btn-row">
-        <button class="tile-action-btn tile-btn-setup" @click="setupField()">
+        <button id="setupFieldBtn" class="tile-action-btn tile-btn-setup">
             <i class="ph-fill ph-dice-five"></i> 布置场地
         </button>
-        <button class="tile-action-btn tile-btn-info" @click="openFieldInfo()">
+        <button id="openFieldInfoBtn" class="tile-action-btn tile-btn-info">
             <i class="ph-bold ph-book-open"></i> 场地说明
         </button>
     </div>
 
-    <!-- ===== MODALS (position:fixed, inside Alpine scope) ===== -->
+    <!-- ===== MODALS ===== -->
 
     <!-- End Game Overlay -->
-    <div class="end-overlay" :class="{ show: showEndOverlay }" @click.self="showEndOverlay = false">
-        <div class="end-modal" @click.stop>
+    <div id="endOverlay" class="end-overlay">
+        <div class="end-modal">
             <div class="end-modal-header">
                 <h3>🏁 结束本局</h3>
                 <p>以下结果将记录到排行榜</p>
             </div>
-            <div class="end-modal-body">
-                <template x-for="(p, idx) in ranked" :key="'end-' + p.name">
-                    <div class="end-modal-result">
-                        <span style="font-weight:600" x-text="(idx + 1) + '. ' + p.name"></span>
-                        <span>
-                            <span style="font-weight:800;color:var(--apple-green)" x-text="p.total_amount + '万'"></span>
-                            <span
-                                style="font-weight:600; font-size: 0.85rem; color: var(--apple-gray)"
-                                x-text="' · ' + p.bill_count + '张'"></span>
-                        </span>
-                    </div>
-                </template>
-            </div>
+            <div id="endModalBody" class="end-modal-body"></div>
             <div class="end-modal-actions">
-                <button class="apple-btn apple-btn-secondary" @click="showEndOverlay = false">取消</button>
-                <button class="apple-btn apple-btn-success" @click="confirmEndGame()">
+                <button id="cancelEndBtn" class="btn btn-secondary">取消</button>
+                <button id="confirmEndBtn" class="btn btn-primary">
                     <i class="ph-bold ph-check"></i> 确认结束
                 </button>
             </div>
@@ -911,45 +787,15 @@
     </div>
 
     <!-- Setup Field Modal -->
-    <div class="tile-overlay" :class="{ show: showSetupOverlay }" @click.self="showSetupOverlay = false">
-        <div class="tile-modal" @click.stop>
+    <div id="setupOverlay" class="tile-overlay">
+        <div class="tile-modal">
             <div class="tile-modal-header">
                 <h3>🎲 场地布置结果</h3>
                 <p>每个赌场已随机分配一块拓展板块</p>
             </div>
-            <div class="tile-modal-body">
-                <template x-if="field">
-                    <div>
-                        <template x-for="item in field" :key="item.casino">
-                            <div class="tile-card">
-                                <div class="tile-card-top">
-                                    <div class="tile-casino-badge" :class="'tile-casino-' + item.casino"
-                                        x-text="item.casino"></div>
-                                    <div class="tile-name-block">
-                                        <div class="tile-name" x-text="item.tile.name"></div>
-                                        <div class="tile-id-tag"
-                                            x-text="item.tile.id + ' · ' + item.tile.group + '组'"></div>
-                                    </div>
-                                </div>
-                                <div class="tile-trigger" x-text="item.tile.trigger"></div>
-                                <template x-if="item.bills && item.bills.length > 0">
-                                    <div class="tile-bills-row">
-                                        <span class="tile-bills-label">奖金</span>
-                                        <template x-for="v in item.bills" :key="$id('bill')">
-                                            <span class="tile-bill-tag" :class="'bill-' + v"
-                                                x-text="'$' + v + 'k'"></span>
-                                        </template>
-                                        <span class="tile-bills-total"
-                                            x-text="'合计 ' + billsTotal(item.bills) + '万'"></span>
-                                    </div>
-                                </template>
-                            </div>
-                        </template>
-                    </div>
-                </template>
-            </div>
+            <div id="setupModalBody" class="tile-modal-body"></div>
             <div class="tile-modal-footer">
-                <button class="tile-modal-close-btn" @click="showSetupOverlay = false">
+                <button id="closeSetupBtn" class="tile-modal-close-btn">
                     <i class="ph-bold ph-x"></i> 关闭
                 </button>
             </div>
@@ -957,46 +803,15 @@
     </div>
 
     <!-- Field Info Modal -->
-    <div class="tile-overlay" :class="{ show: showInfoOverlay }" @click.self="showInfoOverlay = false">
-        <div class="tile-modal" @click.stop>
+    <div id="infoOverlay" class="tile-overlay">
+        <div class="tile-modal">
             <div class="tile-modal-header">
                 <h3>📖 场地说明</h3>
                 <p>当前各赌场拓展板块的详细规则</p>
             </div>
-            <div class="tile-modal-body">
-                <template x-if="field">
-                    <div>
-                        <template x-for="item in field" :key="item.casino">
-                            <div class="tile-card">
-                                <div class="tile-card-top">
-                                    <div class="tile-casino-badge" :class="'tile-casino-' + item.casino"
-                                        x-text="item.casino"></div>
-                                    <div class="tile-name-block">
-                                        <div class="tile-name" x-text="item.tile.name"></div>
-                                        <div class="tile-id-tag"
-                                            x-text="item.tile.id + ' · ' + item.tile.group + '组'"></div>
-                                    </div>
-                                </div>
-                                <div class="tile-trigger" x-text="item.tile.trigger"></div>
-                                <div class="tile-desc" x-text="item.tile.desc"></div>
-                                <template x-if="item.bills && item.bills.length > 0">
-                                    <div class="tile-bills-row">
-                                        <span class="tile-bills-label">奖金</span>
-                                        <template x-for="v in item.bills" :key="$id('bill')">
-                                            <span class="tile-bill-tag" :class="'bill-' + v"
-                                                x-text="'$' + v + 'k'"></span>
-                                        </template>
-                                        <span class="tile-bills-total"
-                                            x-text="'合计 ' + billsTotal(item.bills) + '万'"></span>
-                                    </div>
-                                </template>
-                            </div>
-                        </template>
-                    </div>
-                </template>
-            </div>
+            <div id="infoModalBody" class="tile-modal-body"></div>
             <div class="tile-modal-footer">
-                <button class="tile-modal-close-btn" @click="showInfoOverlay = false">
+                <button id="closeInfoBtn" class="tile-modal-close-btn">
                     <i class="ph-bold ph-x"></i> 关闭
                 </button>
             </div>
@@ -1009,8 +824,11 @@
 {% block extra_body %}
 <script src="https://cdn.socket.io/4.7.4/socket.io.min.js"></script>
 <script>
+(function () {
+    'use strict';
+
     // ---- Tile Data (static) ----
-    const TILES = [
+    var TILES = [
         { id: 'A1', name: 'Lucky Punch', group: 'A', trigger: '启动板块时', desc: '玩家在桌下手里暗藏 1~3 个指示物，由左手边玩家猜数量。猜错，启动玩家获得面板对应奖励（圆片或现金）；猜对，无事发生。' },
         { id: 'A2', name: 'Jackpot', group: 'A', trigger: '启动板块时', desc: '掷 2 颗黑骰子。若总和为 7 或掷出豹子（同点数），直接拿走大奖指示物当前盖住的奖金，并将指示物重置回 $30,000；若未达成，将大奖指示物向右推移 1 格（奖金变厚）。' },
         { id: 'B1', name: 'Prime-Time', group: 'B', trigger: '颁发奖金前', desc: '该赌场最大赢家可掷 2 颗黑骰子，并将 0~2 颗黑骰分配到对应赌场。在随后的结算中，这些黑骰视为该赢家的有效战力。' },
@@ -1028,246 +846,510 @@
         { id: 'H1', name: 'Nice-Dice', group: 'H', trigger: '启动板块时 / 颁发奖金时', desc: '将刚掷出或放入的骰子按点数放进本板块格子。如果格子里有别人的骰子，直接把他"挤"回对应点数的普通赌场去。结算时，留在格子里的骰子主人拿对应奖励。' },
         { id: 'H2', name: 'My-Choice', group: 'H', trigger: '启动板块时', desc: '掷 2 颗黑骰，选 1 个结果执行动作：拿筹码、拿钱、白嫖一次其他板块能力、改 1 颗骰子点数放回场上/收回手里，或者把骰子放进"金框"（会把别人的挤出去），结算时独赢 6 万。' },
     ];
-    const TILE_BY_ID = Object.fromEntries(TILES.map(t => [t.id, t]));
+    var TILE_BY_ID = {};
+    for (var ti = 0; ti < TILES.length; ti++) {
+        TILE_BY_ID[TILES[ti].id] = TILES[ti];
+    }
 
-    function lvApp() {
-        const BASE = '/lasvegas';
-        const BILL_POOL = { 30: 11, 40: 11, 50: 13, 60: 15, 70: 13, 80: 11, 90: 9, 100: 7 };
-        const AVATAR_COLORS = [
-            '#0984e3', '#00b894', '#e17055', '#6c5ce7',
-            '#fdcb6e', '#e84393', '#00cec9', '#d63031',
-            '#a29bfe', '#55a3e8'
-        ];
+    var BILL_POOL = { 30: 11, 40: 11, 50: 13, 60: 15, 70: 13, 80: 11, 90: 9, 100: 7 };
+    var DENOMINATIONS = [30, 40, 50, 60, 70, 80, 90, 100];
+    var AVATAR_COLORS = [
+        '#0984e3', '#00b894', '#e17055', '#6c5ce7',
+        '#fdcb6e', '#e84393', '#00cec9', '#d63031',
+        '#a29bfe', '#55a3e8'
+    ];
 
-        return {
-            // ---- Reactive State ----
-            players: [],
-            ranked: [],
-            histLeaderboard: [],
-            field: null,
-            expandedPlayers: [],
-            newPlayerName: '',
-            showEndOverlay: false,
-            showSetupOverlay: false,
-            showInfoOverlay: false,
-            lvSocket: null,
-            DENOMINATIONS: [30, 40, 50, 60, 70, 80, 90, 100],
+    var BASE = '/lasvegas';
 
-            // ---- Computed Helpers ----
-            getRankClass(idx, p) {
-                const rank = idx + 1;
-                if (rank === 1 && p.total_amount > 0) return 'rank-1';
-                if (rank === 2) return 'rank-2';
-                if (rank === 3) return 'rank-3';
-                return 'rank-other';
-            },
-            getRankIcon(idx, p) {
-                return (idx === 0 && p.total_amount > 0) ? '👑' : idx + 1;
-            },
-            isTied(p) {
-                return this.ranked.filter(r => r.total_amount === p.total_amount).length > 1 && p.total_amount > 0;
-            },
-            getAvatarColor(idx) {
-                return AVATAR_COLORS[idx % AVATAR_COLORS.length];
-            },
-            isExpanded(name) {
-                return this.expandedPlayers.includes(name);
-            },
-            billsTotal(bills) {
-                return bills ? bills.reduce((s, v) => s + v, 0) : 0;
-            },
+    // ---- State ----
+    var players = [];
+    var ranked = [];
+    var field = null;
+    var expandedPlayers = [];
+    var lvSocket = null;
 
-            // ---- UI Actions ----
-            togglePlayer(name) {
-                const i = this.expandedPlayers.indexOf(name);
-                if (i >= 0) this.expandedPlayers.splice(i, 1);
-                else this.expandedPlayers.push(name);
-            },
+    // ---- Helper: API ----
+    function lvApi(url, opts) {
+        return api(BASE + url, opts);
+    }
 
-            // ---- API Helpers ----
-            async apiPost(path, body = {}) {
-                const res = await fetch(BASE + path, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(body)
-                });
-                return res.json();
-            },
-            async apiGet(path) {
-                const res = await fetch(BASE + path);
-                return res.json();
-            },
+    // ---- Helper: billsTotal ----
+    function billsTotal(bills) {
+        if (!bills || !bills.length) return 0;
+        var sum = 0;
+        for (var i = 0; i < bills.length; i++) sum += bills[i];
+        return sum;
+    }
 
-            // ---- Bill Pool Logic ----
-            getRemainingPool() {
-                const remaining = { ...BILL_POOL };
-                this.players.forEach(p => {
-                    if (p.bills) {
-                        p.bills.forEach(b => {
-                            if (remaining[b.value] !== undefined) {
-                                remaining[b.value] = Math.max(0, remaining[b.value] - 1);
-                            }
-                        });
+    // ---- Helper: getRemainingPool ----
+    function getRemainingPool() {
+        var remaining = {};
+        var keys = Object.keys(BILL_POOL);
+        for (var i = 0; i < keys.length; i++) {
+            remaining[Number(keys[i])] = BILL_POOL[keys[i]];
+        }
+        for (var i = 0; i < players.length; i++) {
+            var p = players[i];
+            if (p.bills) {
+                for (var j = 0; j < p.bills.length; j++) {
+                    var bv = p.bills[j].value;
+                    if (remaining[bv] !== undefined) {
+                        remaining[bv] = Math.max(0, remaining[bv] - 1);
                     }
-                });
-                return remaining;
-            },
-
-            // ---- Player Management ----
-            async addPlayer() {
-                const name = this.newPlayerName.trim();
-                if (!name) return;
-                const res = await this.apiPost('/api/add_player', { name });
-                if (res.status === 'exists') {
-                    showToast('玩家已存在', 'error');
-                    return;
-                }
-                this.newPlayerName = '';
-                this.expandedPlayers.push(name);
-                showToast(`${name} 已加入`, 'success');
-                await this.refresh();
-            },
-
-            async removePlayer(name) {
-                if (!await window.showConfirm(`确定移除 ${name}？`, '移除', '取消')) return;
-                await this.apiPost('/api/remove_player', { name });
-                const i = this.expandedPlayers.indexOf(name);
-                if (i >= 0) this.expandedPlayers.splice(i, 1);
-                showToast(`${name} 已移除`);
-                await this.refresh();
-            },
-
-            // ---- Bill Management ----
-            async addBill(playerName, value) {
-                const pool = this.getRemainingPool();
-                if (pool[value] > 0) {
-                    await this.apiPost('/api/add_bill', { player_name: playerName, value });
-                    await this.refresh();
-                    return;
-                }
-
-                const player = this.players.find(p => p.name === playerName);
-                if (!player) return;
-
-                const playerBills = player.bills || [];
-                const uniquePlayerValues = [...new Set(playerBills.map(b => b.value))].sort((a, b) => a - b);
-
-                // Strategy A: larger bill from pool, return smaller to player
-                for (const v_have of uniquePlayerValues) {
-                    const v_new = value + v_have;
-                    if (pool[v_new] > 0) {
-                        const billToRemove = playerBills.find(b => b.value === v_have);
-                        await this.apiPost('/api/remove_bill', { player_name: playerName, bill_id: billToRemove.id });
-                        await this.apiPost('/api/add_bill', { player_name: playerName, value: v_new });
-                        showToast(`${value}万已用完，给 ${v_new}万找零 ${v_have}万`);
-                        await this.refresh();
-                        return;
-                    }
-                }
-
-                // Strategy B: two smaller bills from pool
-                const availablePoolValues = Object.keys(pool).map(Number).filter(v => pool[v] > 0).sort((a, b) => a - b);
-                for (const v1 of availablePoolValues) {
-                    const v2 = value - v1;
-                    if (pool[v2] > 0) {
-                        if (v1 === v2 && pool[v1] < 2) continue;
-                        await this.apiPost('/api/add_bill', { player_name: playerName, value: v1 });
-                        await this.apiPost('/api/add_bill', { player_name: playerName, value: v2 });
-                        showToast(`${value}万已用完，拆分为 ${v1}万和 ${v2}万`);
-                        await this.refresh();
-                        return;
-                    }
-                }
-
-                showToast(`⚠️ ${value}万已被用完，且无法找零！`, 'error');
-            },
-
-            async removeBill(playerName, billId) {
-                await this.apiPost('/api/remove_bill', { player_name: playerName, bill_id: billId });
-                await this.refresh();
-            },
-
-            // ---- End Game ----
-            async confirmEndGame() {
-                this.showEndOverlay = false;
-                const res = await this.apiPost('/api/end_game');
-                if (res.status === 'error') {
-                    showToast(res.msg || '无法结束', 'error');
-                    return;
-                }
-                this.expandedPlayers = [];
-                showToast('🏁 本局已结束，结果已记录！', 'success');
-                await this.refresh();
-            },
-
-            async resetGame() {
-                if (!await window.showConfirm('确定重置？当前数据将清除（不影响历史记录）。', '重置', '取消')) return;
-                await this.apiPost('/api/reset');
-                this.expandedPlayers = [];
-                showToast('游戏已重置');
-                await this.refresh();
-            },
-
-            // ---- Field / Tile ----
-            hydrateFieldItem(item) {
-                const tile = TILE_BY_ID[item.tile_id] || {
-                    id: item.tile_id, name: item.tile_id,
-                    group: '-', trigger: '', desc: ''
-                };
-                return { casino: item.casino, tile, bills: item.bills || [] };
-            },
-
-            async setupField() {
-                const res = await this.apiPost('/api/setup_field');
-                if (res.status !== 'ok') {
-                    showToast(res.msg || '布置失败', 'error');
-                    return;
-                }
-                this.field = (res.field || []).map(i => this.hydrateFieldItem(i));
-                this.showSetupOverlay = true;
-            },
-
-            async openFieldInfo() {
-                if (!this.field) {
-                    const data = await this.apiGet('/api/field');
-                    this.field = data.field ? data.field.map(i => this.hydrateFieldItem(i)) : null;
-                    if (!this.field) {
-                        showToast('请先布置场地');
-                        return;
-                    }
-                }
-                this.showInfoOverlay = true;
-            },
-
-            // ---- Refresh ----
-            async refresh() {
-                const [statusData, lbData] = await Promise.all([
-                    this.apiGet('/api/status'),
-                    this.apiGet('/api/leaderboard')
-                ]);
-                this.ranked = statusData.ranked;
-                this.players = statusData.players;
-                this.histLeaderboard = lbData.leaderboard;
-                if (statusData.field) {
-                    this.field = statusData.field.map(i => this.hydrateFieldItem(i));
-                }
-            },
-
-            // ---- Init ----
-            async init() {
-                await this.refresh();
-                if (typeof io !== 'undefined') {
-                    this.lvSocket = io('/', {
-                        path: '/socket.io',
-                        transports: ['websocket', 'polling']
-                    });
-                    this.lvSocket.on('state_update', payload => {
-                        if (!payload || payload.game === 'lasvegas') this.refresh();
-                    });
                 }
             }
-        };
+        }
+        return remaining;
     }
+
+    // ---- Helper: hydrateFieldItem ----
+    function hydrateFieldItem(item) {
+        var tile = TILE_BY_ID[item.tile_id] || {
+            id: item.tile_id, name: item.tile_id,
+            group: '-', trigger: '', desc: ''
+        };
+        return { casino: item.casino, tile: tile, bills: item.bills || [] };
+    }
+
+    // ---- Helper: isTied ----
+    function isTied(p) {
+        var count = 0;
+        for (var i = 0; i < ranked.length; i++) {
+            if (ranked[i].total_amount === p.total_amount) count++;
+        }
+        return count > 1 && p.total_amount > 0;
+    }
+
+    // ---- Render: Rankings ----
+    function renderRankings() {
+        var container = document.getElementById('rankingContainer');
+        if (ranked.length === 0) {
+            container.innerHTML =
+                '<div class="list mb-md"><div class="empty-state">' +
+                '<span class="empty-icon">🃏</span>添加玩家开始计算</div></div>';
+        } else {
+            var html = '<div class="list mb-md">';
+            for (var idx = 0; idx < ranked.length; idx++) {
+                var p = ranked[idx];
+                var rank = idx + 1;
+                var rankClass = '';
+                if (rank === 1 && p.total_amount > 0) rankClass = 'rank-1';
+                else if (rank === 2) rankClass = 'rank-2';
+                else if (rank === 3) rankClass = 'rank-3';
+                else rankClass = 'rank-other';
+                var rankIcon = (idx === 0 && p.total_amount > 0) ? '👑' : rank;
+                var tieBadge = isTied(p) ? '<span class="lb-tie-badge">平局</span>' : '';
+
+                html += '<div class="list-item">' +
+                    '<div class="rank-num ' + rankClass + '"><span>' + rankIcon + '</span></div>' +
+                    '<div class="list-item-content">' +
+                    '<div class="list-item-title"><span>' + escHtml(p.name) + '</span>' + tieBadge + '</div>' +
+                    '</div>' +
+                    '<div style="text-align: right; display: flex; align-items: center; gap: 16px;">' +
+                    '<div style="text-align: right;">' +
+                    '<div class="history-trail" style="font-size:0.7rem;margin-bottom:2px;">金额</div>' +
+                    '<div class="score-badge" style="font-size:1.2rem;color:var(--apple-blue);">' + p.total_amount + '万</div>' +
+                    '</div>' +
+                    '<div style="text-align: right; width: 40px;">' +
+                    '<div class="history-trail" style="font-size:0.7rem;margin-bottom:2px;">张数</div>' +
+                    '<div class="score-badge" style="font-size:1.1rem;color:var(--apple-gray);">' + p.bill_count + '张</div>' +
+                    '</div>' +
+                    '</div></div>';
+            }
+            html += '</div>';
+            container.innerHTML = html;
+        }
+
+        // Show/hide action area
+        document.getElementById('actionArea').style.display = ranked.length > 0 ? '' : 'none';
+    }
+
+    // ---- Render: Player Cards ----
+    function renderPlayerCards() {
+        var container = document.getElementById('playerCardsContainer');
+        var html = '';
+
+        for (var idx = 0; idx < players.length; idx++) {
+            var p = players[idx];
+            var isExpanded = expandedPlayers.indexOf(p.name) >= 0;
+            var avatarColor = AVATAR_COLORS[idx % AVATAR_COLORS.length];
+            var initial = p.name.charAt(0).toUpperCase();
+            var chevronClass = isExpanded ? ' open' : '';
+
+            html += '<div class="player-card" data-player="' + escHtml(p.name) + '">' +
+                '<div class="player-card-header" onclick="LV.togglePlayer(\'' + escHtml(p.name) + '\')">' +
+                '<div class="player-card-left">' +
+                '<div class="player-card-avatar" style="background:' + avatarColor + ';">' + initial + '</div>' +
+                '<div>' +
+                '<div class="player-card-name">' + escHtml(p.name) + '</div>' +
+                '<div class="player-card-summary">' + p.total_amount + '万 · ' + p.bill_count + '张钞票</div>' +
+                '</div>' +
+                '</div>' +
+                '<i class="ph-bold ph-caret-right player-card-chevron' + chevronClass + '"></i>' +
+                '</div>' +
+                '<div class="player-card-body' + (isExpanded ? ' open' : '') + '">' +
+                '<div class="section-title" style="margin-top:var(--space-xs)">添加钞票</div>' +
+                '<div class="bill-grid">';
+
+            for (var vi = 0; vi < DENOMINATIONS.length; vi++) {
+                var v = DENOMINATIONS[vi];
+                html += '<button class="bill-btn" onclick="LV.addBill(\'' + escHtml(p.name) + '\',' + v + ')">' +
+                    '<span class="bill-icon">💵</span><span>' + v + '万</span></button>';
+            }
+
+            html += '</div>' +
+                '<div class="section-title">钞票明细</div>' +
+                '<div class="bill-list">';
+
+            if (!p.bills || !p.bills.length) {
+                html += '<div style="text-align:center;color:var(--apple-gray);font-size:0.9rem;font-weight:500;padding:var(--space-md) 0;">暂无钞票</div>';
+            } else {
+                for (var bi = 0; bi < p.bills.length; bi++) {
+                    var b = p.bills[bi];
+                    html += '<div class="bill-item">' +
+                        '<span class="bill-value-tag bill-' + b.value + '">' + b.value + '万</span>' +
+                        '<button class="bill-remove-btn" onclick="LV.removeBill(\'' + escHtml(p.name) + '\',' + b.id + ')">' +
+                        '<i class="ph-bold ph-x"></i> 移除</button></div>';
+                }
+            }
+
+            html += '</div>' +
+                '<button class="remove-player-btn" onclick="LV.removePlayer(\'' + escHtml(p.name) + '\')">' +
+                '<i class="ph-bold ph-trash" style="margin-right:4px;"></i>移除此玩家</button>' +
+                '</div></div>';
+        }
+
+        container.innerHTML = html;
+    }
+
+    // ---- Toggle Player Card ----
+    function togglePlayer(name) {
+        var idx = expandedPlayers.indexOf(name);
+        if (idx >= 0) {
+            expandedPlayers.splice(idx, 1);
+        } else {
+            expandedPlayers.push(name);
+        }
+        renderPlayerCards();
+    }
+
+    // ---- Render: End Overlay Modal ----
+    function renderEndOverlay() {
+        var body = document.getElementById('endModalBody');
+        var html = '';
+        for (var idx = 0; idx < ranked.length; idx++) {
+            var p = ranked[idx];
+            html += '<div class="end-modal-result">' +
+                '<span style="font-weight:600">' + (idx + 1) + '. ' + escHtml(p.name) + '</span>' +
+                '<span><span style="font-weight:800;color:var(--apple-green)">' + p.total_amount + '万</span>' +
+                '<span style="font-weight:600;font-size:0.85rem;color:var(--apple-gray)"> · ' + p.bill_count + '张</span></span>' +
+                '</div>';
+        }
+        body.innerHTML = html;
+    }
+
+    // ---- Render: Tile Modal ----
+    function renderTileCards(fieldData, containerId) {
+        var container = document.getElementById(containerId);
+        if (!fieldData) {
+            container.innerHTML = '';
+            return;
+        }
+        var html = '';
+        for (var i = 0; i < fieldData.length; i++) {
+            var item = fieldData[i];
+            html += '<div class="tile-card">' +
+                '<div class="tile-card-top">' +
+                '<div class="tile-casino-badge tile-casino-' + item.casino + '">' + item.casino + '</div>' +
+                '<div class="tile-name-block">' +
+                '<div class="tile-name">' + escHtml(item.tile.name) + '</div>' +
+                '<div class="tile-id-tag">' + escHtml(item.tile.id) + ' · ' + escHtml(item.tile.group) + '组</div>' +
+                '</div></div>' +
+                '<div class="tile-trigger">' + escHtml(item.tile.trigger) + '</div>';
+
+            if (item.bills && item.bills.length > 0) {
+                html += '<div class="tile-bills-row">' +
+                    '<span class="tile-bills-label">奖金</span>';
+                for (var j = 0; j < item.bills.length; j++) {
+                    html += '<span class="tile-bill-tag bill-' + item.bills[j] + '">$' + item.bills[j] + 'k</span>';
+                }
+                html += '<span class="tile-bills-total">合计 ' + billsTotal(item.bills) + '万</span>' +
+                    '</div>';
+            }
+
+            html += '</div>';
+        }
+        container.innerHTML = html;
+    }
+
+    // ---- Modal Helpers ----
+    function showOverlay(id) {
+        document.getElementById(id).classList.add('show');
+    }
+    function hideOverlay(id) {
+        document.getElementById(id).classList.remove('show');
+    }
+
+    // ---- Actions ----
+    async function addPlayer() {
+        var input = document.getElementById('newPlayerInput');
+        var name = input.value.trim();
+        if (!name) return;
+        var json = await lvApi('/api/add_player', { method: 'POST', body: { name: name } });
+        if (json.status === 'exists') {
+            showToast('玩家已存在', 'error');
+            return;
+        }
+        input.value = '';
+        expandedPlayers.push(name);
+        showToast(name + ' 已加入', 'success');
+        await refresh();
+    }
+
+    async function removePlayer(name) {
+        if (!await showConfirm('确定移除 ' + name + '？', '移除', '取消')) return;
+        await lvApi('/api/remove_player', { method: 'POST', body: { name: name } });
+        var idx = expandedPlayers.indexOf(name);
+        if (idx >= 0) expandedPlayers.splice(idx, 1);
+        showToast(name + ' 已移除');
+        await refresh();
+    }
+
+    async function addBill(playerName, value) {
+        var pool = getRemainingPool();
+        if (pool[value] > 0) {
+            await lvApi('/api/add_bill', { method: 'POST', body: { player_name: playerName, value: value } });
+            await refresh();
+            return;
+        }
+
+        var player = null;
+        for (var i = 0; i < players.length; i++) {
+            if (players[i].name === playerName) { player = players[i]; break; }
+        }
+        if (!player) return;
+
+        var playerBills = player.bills || [];
+        var uniqueValues = [];
+        for (var bi = 0; bi < playerBills.length; bi++) {
+            var bv = playerBills[bi].value;
+            if (uniqueValues.indexOf(bv) < 0) uniqueValues.push(bv);
+        }
+        uniqueValues.sort(function (a, b) { return a - b; });
+
+        // Strategy A: larger bill from pool, return smaller to player
+        for (var vi = 0; vi < uniqueValues.length; vi++) {
+            var v_have = uniqueValues[vi];
+            var v_new = value + v_have;
+            if (pool[v_new] > 0) {
+                var billToRemove = null;
+                for (var bi2 = 0; bi2 < playerBills.length; bi2++) {
+                    if (playerBills[bi2].value === v_have) { billToRemove = playerBills[bi2]; break; }
+                }
+                if (billToRemove) {
+                    await lvApi('/api/remove_bill', { method: 'POST', body: { player_name: playerName, bill_id: billToRemove.id } });
+                    await lvApi('/api/add_bill', { method: 'POST', body: { player_name: playerName, value: v_new } });
+                    showToast(value + '万已用完，给 ' + v_new + '万找零 ' + v_have + '万');
+                    await refresh();
+                    return;
+                }
+            }
+        }
+
+        // Strategy B: two smaller bills from pool
+        var poolVals = Object.keys(pool).map(Number).filter(function (pv) { return pool[pv] > 0; }).sort(function (a, b) { return a - b; });
+        for (var pi = 0; pi < poolVals.length; pi++) {
+            var v1 = poolVals[pi];
+            var v2 = value - v1;
+            if (pool[v2] > 0) {
+                if (v1 === v2 && pool[v1] < 2) continue;
+                await lvApi('/api/add_bill', { method: 'POST', body: { player_name: playerName, value: v1 } });
+                await lvApi('/api/add_bill', { method: 'POST', body: { player_name: playerName, value: v2 } });
+                showToast(value + '万已用完，拆分为 ' + v1 + '万和 ' + v2 + '万');
+                await refresh();
+                return;
+            }
+        }
+
+        showToast('⚠ ' + value + '万已被用完，且无法找零！', 'error');
+    }
+
+    async function removeBill(playerName, billId) {
+        await lvApi('/api/remove_bill', { method: 'POST', body: { player_name: playerName, bill_id: billId } });
+        await refresh();
+    }
+
+    async function confirmEndGame() {
+        hideOverlay('endOverlay');
+        var json = await lvApi('/api/end_game', { method: 'POST' });
+        if (json.status === 'error') {
+            showToast(json.msg || '无法结束', 'error');
+            return;
+        }
+        expandedPlayers = [];
+        showToast('🏁 本局已结束，结果已记录！', 'success');
+        await refresh();
+        var lb = document.querySelector('leaderboard-section');
+        if (lb && lb.refresh) lb.refresh();
+    }
+
+    async function resetGame() {
+        if (!await showConfirm('确定重置？当前数据将清除（不影响历史记录）。', '重置', '取消')) return;
+        await lvApi('/api/reset', { method: 'POST' });
+        expandedPlayers = [];
+        showToast('游戏已重置');
+        await refresh();
+    }
+
+    async function setupField() {
+        var json = await lvApi('/api/setup_field', { method: 'POST' });
+        if (json.status !== 'ok') {
+            showToast(json.msg || '布置失败', 'error');
+            return;
+        }
+        field = [];
+        if (json.field) {
+            for (var i = 0; i < json.field.length; i++) {
+                field.push(hydrateFieldItem(json.field[i]));
+            }
+        }
+        renderTileCards(field, 'setupModalBody');
+        showOverlay('setupOverlay');
+    }
+
+    async function openFieldInfo() {
+        if (!field) {
+            var data = await lvApi('/api/field');
+            if (data.field && data.field.length) {
+                field = [];
+                for (var i = 0; i < data.field.length; i++) {
+                    field.push(hydrateFieldItem(data.field[i]));
+                }
+            }
+            if (!field || !field.length) {
+                showToast('请先布置场地');
+                return;
+            }
+        }
+        renderTileCards(field, 'infoModalBody');
+        showOverlay('infoOverlay');
+    }
+
+    // ---- Refresh ----
+    async function refresh() {
+        var results = await Promise.all([
+            lvApi('/api/status'),
+            lvApi('/api/leaderboard')
+        ]);
+        var statusData = results[0];
+        var lbData = results[1];
+
+        ranked = statusData.ranked || [];
+        players = statusData.players || [];
+
+        // Re-render historical leaderboard via leaderboard-section component
+        var lb = document.querySelector('leaderboard-section');
+        if (lb && statusData.leaderboard === undefined) {
+            if (lb._fetchAndRender) {
+                try {
+                    var container = lb.querySelector('.js-lb-container');
+                    if (container) {
+                        renderLeaderboard(container, lbData.leaderboard || [], {
+                            emptyIcon: '👻',
+                            emptyText: '还没人玩过呢，快去开一局！',
+                            showAvgScore: true,
+                            avgScoreLabel: '场均',
+                            showTotal: true
+                        });
+                    }
+                } catch (e) { /* silent */ }
+            }
+        }
+
+        if (statusData.field && statusData.field.length > 0) {
+            field = [];
+            for (var i = 0; i < statusData.field.length; i++) {
+                field.push(hydrateFieldItem(statusData.field[i]));
+            }
+        }
+
+        renderRankings();
+        renderPlayerCards();
+    }
+
+    // ---- Init ----
+    async function init() {
+        await refresh();
+
+        // Socket.IO
+        if (typeof io !== 'undefined') {
+            lvSocket = io('/', {
+                path: '/socket.io',
+                transports: ['websocket', 'polling']
+            });
+            lvSocket.on('state_update', function (payload) {
+                if (!payload || payload.game === 'lasvegas') refresh();
+            });
+        }
+
+        // Show app
+        document.getElementById('app').style.display = '';
+    }
+
+    // ---- Event Binding ----
+    function bindEvents() {
+        document.getElementById('addPlayerBtn').addEventListener('click', addPlayer);
+        document.getElementById('newPlayerInput').addEventListener('keydown', function (e) {
+            if (e.key === 'Enter') addPlayer();
+        });
+
+        document.getElementById('endGameBtn').addEventListener('click', function () {
+            renderEndOverlay();
+            showOverlay('endOverlay');
+        });
+        document.getElementById('cancelEndBtn').addEventListener('click', function () {
+            hideOverlay('endOverlay');
+        });
+        document.getElementById('confirmEndBtn').addEventListener('click', confirmEndGame);
+
+        document.getElementById('resetGameBtn').addEventListener('click', resetGame);
+
+        document.getElementById('setupFieldBtn').addEventListener('click', setupField);
+        document.getElementById('openFieldInfoBtn').addEventListener('click', openFieldInfo);
+
+        document.getElementById('closeSetupBtn').addEventListener('click', function () { hideOverlay('setupOverlay'); });
+        document.getElementById('closeInfoBtn').addEventListener('click', function () { hideOverlay('infoOverlay'); });
+
+        // Click-outside to close overlays
+        document.getElementById('endOverlay').addEventListener('click', function (e) {
+            if (e.target === this) hideOverlay('endOverlay');
+        });
+        document.getElementById('setupOverlay').addEventListener('click', function (e) {
+            if (e.target === this) hideOverlay('setupOverlay');
+        });
+        document.getElementById('infoOverlay').addEventListener('click', function (e) {
+            if (e.target === this) hideOverlay('infoOverlay');
+        });
+    }
+
+    // ---- Public API (exposed for onclick handlers) ----
+    window.LV = {
+        togglePlayer: togglePlayer,
+        addBill: addBill,
+        removeBill: removeBill,
+        removePlayer: removePlayer
+    };
+
+    // ---- Boot ----
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', function () {
+            bindEvents();
+            init();
+        });
+    } else {
+        bindEvents();
+        init();
+    }
+})();
 </script>
-<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3/dist/cdn.min.js"></script>
 {% endblock %}
