@@ -2,6 +2,18 @@
 
 {% block title %}情书 - 极简卡牌 · 逻辑盲猜{% endblock %}
 
+{% block body_class %}no-tab-bar{% endblock %}
+
+{% block nav_left %}
+<a href="/" class="top-nav-back"><i class="ph-bold ph-arrow-left"></i> 返回</a>
+{% endblock %}
+
+{% block nav_title %}
+<i class="ph-fill ph-heart text-red" style="margin-right: 4px;"></i> 情书
+{% endblock %}
+
+{% block nav_right %}{% endblock %}
+
 {% block extra_head %}
 <script src="https://cdn.socket.io/4.7.4/socket.io.min.js"></script>
 <style>
@@ -10,7 +22,7 @@
     }
 
     /* ---- Page Hero (Customized gradient) ---- */
-    .apple-hero h1 {
+    .hero h1 {
         background: linear-gradient(135deg, #ff6b6b, #ee5253, #e84393);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
@@ -108,7 +120,7 @@
         margin-top: 2px;
     }
 
-    /* .apple-list styling is purely managed by common.css */
+    /* .list styling is purely managed by common.css */
 
     /* ---- Card Item ---- */
     .card-item {
@@ -357,19 +369,40 @@
         box-shadow: 0 2px 6px rgba(0, 113, 227, 0.2);
     }
 
+    /* ---- Reset Bar ---- */
+    .reset-bar {
+        display: flex;
+        justify-content: center;
+        padding: 12px 16px;
+        margin: 0 16px;
+    }
+
+    .reset-btn {
+        background: none;
+        border: 1px solid var(--color-border, rgba(0,0,0,0.08));
+        color: var(--color-text-secondary, #86868b);
+        font-size: 0.85rem;
+        font-weight: 600;
+        padding: 8px 20px;
+        border-radius: 20px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-family: var(--font-family);
+        transition: all 0.2s;
+    }
+
+    .reset-btn:hover {
+        color: var(--apple-red);
+        border-color: rgba(255, 59, 48, 0.3);
+    }
+
+    .reset-btn:active {
+        background: rgba(255, 59, 48, 0.05);
+    }
+
 </style>
-{% endblock %}
-
-{% block nav_title %}
-<i class="ph-fill ph-heart text-red" style="margin-right: 4px;"></i> 情书
-{% endblock %}
-
-{% block nav_right %}
-<div style="display: flex; align-items: center;">
-    <button onclick="resetGame()" style="background: none; border: none; color: var(--apple-blue); font-size: 0.95rem; font-weight: 600; display: flex; align-items: center; cursor: pointer; padding: 0;">
-        <i class="ph-bold ph-arrow-counter-clockwise" style="font-size: 1.2rem; margin-right: 4px;"></i> 重置
-    </button>
-</div>
 {% endblock %}
 
 {% block content %}
@@ -378,7 +411,7 @@
     <div style="width: 100%; text-align: center;">
         {% include 'header.svg' %}
     </div>
-    
+
     <div class="apple-segment" style="margin: 16px auto 0; display: inline-flex;">
         <button id="btn-basic" class="apple-segment-btn" onclick="switchMode('basic')" style="min-width: 80px;">2-4人</button>
         <button id="btn-ext" class="apple-segment-btn" onclick="switchMode('extension')" style="min-width: 80px;">5-8人</button>
@@ -411,14 +444,30 @@
     </div>
 </div>
 
+<!-- Reset Button Bar -->
+<div class="reset-bar">
+    <button class="reset-btn" onclick="resetGame()">
+        <i class="ph-bold ph-arrow-counter-clockwise" style="font-size: 1.2rem;"></i> 重置牌库
+    </button>
+</div>
+
 <!-- Card List -->
-<div class="apple-list" id="card-container">
+<div class="list" id="card-container">
     {% include 'card_list_fragment.html' %}
 </div>
+
+<!-- Leaderboard Section -->
+<leaderboard-section
+    api-url="/loveletters/api/leaderboard"
+    empty-icon="💌"
+    empty-text="还没人玩过呢，快去开一局！"
+    show-win-loss
+></leaderboard-section>
 
 {% endblock %}
 
 {% block extra_body %}
+<script src="/static/components.js"></script>
 <script>
     // Namespace connection for global socket
     var namespaceSocket = io('/loveletters', {
@@ -435,7 +484,7 @@
         var offset = ringCircumference * (1 - ratio);
         ring.style.strokeDashoffset = offset;
 
-        const rootStyles = getComputedStyle(document.documentElement);
+        var rootStyles = getComputedStyle(document.documentElement);
         // color shifts with smooth modern colors pulling from css vars to support dark mode
         if (ratio > 0.5) {
             ring.style.stroke = rootStyles.getPropertyValue('--apple-blue').trim();
@@ -478,7 +527,7 @@
     }
 
     async function resetGame() {
-        if (await window.showConfirm('确定要重置所有牌库数据吗？', '重置', '取消')) {
+        if (await showConfirm('确定要重置所有牌库数据吗？', '重置', '取消')) {
             namespaceSocket.emit('reset_game');
         }
     }

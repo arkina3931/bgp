@@ -13,6 +13,7 @@ from fastapi.responses import HTMLResponse
 router = APIRouter(prefix="/loveletters", tags=["LoveLetters"])
 
 from sio_server import sio
+import database
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 templates = Jinja2Templates(directory=[BASE_DIR, "templates"])
@@ -130,6 +131,19 @@ async def broadcast_update():
 async def index(request: Request):
     data = engine.calculate_data()
     return templates.TemplateResponse("index.html", {"request": request, "data": data, "stats": data['stats']})
+
+
+# ---------------------------------------------------------------------------
+# API 端点 — Leaderboard
+# ---------------------------------------------------------------------------
+
+@router.get("/api/leaderboard")
+async def get_leaderboard():
+    try:
+        return await database.get_simple_leaderboard("LoveLetters")
+    except Exception as e:
+        print(f"Error getting LoveLetters leaderboard: {e}")
+        return []
 
 
 # ---------------------------------------------------------------------------
