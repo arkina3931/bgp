@@ -65,6 +65,7 @@ for mount_path, module_name in APPS_CONFIG.items():
 
 # Templates for Landing Page
 templates = Jinja2Templates(directory="templates")
+templates.env.cache = None  # Workaround for Jinja2/Python 3.14 cache incompatibility
 
 @app.get("/", response_class=HTMLResponse)
 async def index(request: Request):
