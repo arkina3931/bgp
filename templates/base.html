@@ -1,159 +1,60 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>{% block title %}桌游助手{% endblock %}</title>
     <link href="/static/common.css" rel="stylesheet">
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
-    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
-    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-    <!-- PWA Settings -->
     <meta name="theme-color" content="#1d1d1f" media="(prefers-color-scheme: dark)">
     <meta name="theme-color" content="#f5f5f7" media="(prefers-color-scheme: light)">
-    <!-- iOS Web App Settings -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="桌游助手">
+    <script src="/static/common.js"></script>
     {% block extra_head %}{% endblock %}
 </head>
-
-<body>
-    <!-- Nav -->
-    <nav class="apple-nav">
-        <div class="apple-nav-content"
-            style="min-height: 44px; display: flex; justify-content: space-between; align-items: center;">
-            <div style="display: flex; align-items: center; gap: 8px;">
-                {% block nav_left %}
-                <a href="/" class="apple-nav-back"
-                    style="position: static; min-height: 44px; align-items: center; display: flex;">
-                    <i class="ph ph-house" style="font-size: 1.2rem; margin-right: 4px;"></i> 首页
-                </a>
-                {% endblock %}
+<body class="{% block body_class %}{% endblock %}">
+    <!-- Top Navigation -->
+    <nav class="top-nav">
+        <div class="top-nav-inner">
+            <div class="top-nav-left">
+                {% block nav_left %}{% endblock %}
             </div>
-
-            <span class="apple-nav-title" style="position: absolute; left: 50%; transform: translateX(-50%);">
-                {% block nav_title %}🎲 桌游助手{% endblock %}
-            </span>
-
-            <div class="apple-nav-action"
-                style="position: static; display: flex; align-items: center; min-height: 44px;">
-                {% block nav_right %}
-                <a href="/gamelist"
-                    style="color: var(--apple-gray); text-decoration: none; font-size: 0.9rem; font-weight: 500; display: flex; align-items: center; min-height: 44px;">
-                    <i class="ph ph-list-dashes" style="font-size: 1.2rem; margin-right: 4px;"></i> 游戏列表
-                </a>
-                {% endblock %}
+            <span class="top-nav-title">{% block nav_title %}🎲 桌游助手{% endblock %}</span>
+            <div class="top-nav-right">
+                {% block nav_right %}{% endblock %}
             </div>
         </div>
     </nav>
 
-    <div class="apple-container">
-        {% block content %}{% endblock %}
-    </div>
+    <!-- Content -->
+    {% block content %}{% endblock %}
 
-    {% block extra_body %}{% endblock %}
-    
-    <!-- Global UI Utilities -->
+    <!-- Bottom Tab Bar (main pages only, overridden by game pages) -->
+    {% block show_tab_bar %}
+    <nav class="tab-bar">
+        <a href="/" class="tab-bar-item {% block tab_home_active %}{% endblock %}">
+            <span class="tab-icon">🏠</span>
+            <span class="tab-label">首页</span>
+        </a>
+        <a href="/gamelist" class="tab-bar-item {% block tab_games_active %}{% endblock %}">
+            <span class="tab-icon">🎮</span>
+            <span class="tab-label">游戏</span>
+        </a>
+        <a href="/#leaderboard" class="tab-bar-item">
+            <span class="tab-icon">🏆</span>
+            <span class="tab-label">排行</span>
+        </a>
+    </nav>
+    {% endblock %}
+
+    <!-- PWA Registration -->
     <script>
-        window.showToast = function(message, type = 'info') {
-            // Remove existing toast if any to prevent clutter
-            const existingToast = document.querySelector('.apple-toast');
-            if (existingToast) {
-                existingToast.remove();
-            }
-
-            const toast = document.createElement('div');
-            toast.className = `apple-toast ${type !== 'info' ? 'apple-toast-' + type : ''}`;
-            toast.textContent = message;
-            document.body.appendChild(toast);
-            
-            // Trigger reflow to ensure the transition runs
-            toast.offsetHeight;
-            toast.classList.add('show');
-            
-            setTimeout(() => {
-                toast.classList.remove('show');
-                setTimeout(() => toast.remove(), 300);
-            }, 3000);
-        };
-
-        // Standardized Native-like Async Confirm Dialog
-        window.showConfirm = function(message, confirmText = '确认', cancelText = '取消') {
-            return new Promise((resolve) => {
-                const overlay = document.createElement('div');
-                overlay.className = 'apple-confirm-overlay';
-                
-                // Styles applied inline to ensure no extra CSS payload is strictly required 
-                // but utilizes HIG spacing & tokens
-                overlay.style.cssText = `
-                    position: fixed; inset: 0; background: rgba(0, 0, 0, 0.4); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
-                    z-index: 10000; display: flex; align-items: center; justify-content: center;
-                    opacity: 0; transition: opacity 0.3s cubic-bezier(0.25, 1, 0.5, 1);
-                `;
-
-                const modal = document.createElement('div');
-                modal.className = 'apple-confirm-modal';
-                modal.style.cssText = `
-                    background: var(--apple-bg); border-radius: var(--radius-xl); box-shadow: var(--shadow-lg);
-                    width: 290px; text-align: center; overflow: hidden; transform: scale(0.95);
-                    transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1); padding-top: var(--space-lg);
-                `;
-
-                const msgEl = document.createElement('div');
-                msgEl.style.cssText = `
-                    padding: 0 var(--space-md) var(--space-lg); font-size: 1.05rem; font-weight: 600; 
-                    color: var(--apple-black); line-height: 1.4; letter-spacing: -0.01em;
-                `;
-                msgEl.innerHTML = message; // allows light html
-
-                const btnRow = document.createElement('div');
-                btnRow.style.cssText = `
-                    display: flex; border-top: 1px solid rgba(0,0,0,0.1); border-bottom-left-radius: var(--radius-xl); border-bottom-right-radius: var(--radius-xl);
-                `;
-
-                const btnCancel = document.createElement('button');
-                btnCancel.textContent = cancelText;
-                btnCancel.style.cssText = `
-                    flex: 1; padding: 14px 0; background: transparent; border: none; border-right: 1px solid rgba(0,0,0,0.1);
-                    font-size: 1.05rem; color: var(--apple-gray); font-family: var(--font-family); font-weight: 500; cursor: pointer;
-                    -webkit-tap-highlight-color: transparent;
-                `;
-
-                const btnConfirm = document.createElement('button');
-                btnConfirm.textContent = confirmText;
-                btnConfirm.style.cssText = `
-                    flex: 1; padding: 14px 0; background: transparent; border: none;
-                    font-size: 1.05rem; color: var(--apple-blue); font-family: var(--font-family); font-weight: 700; cursor: pointer;
-                    -webkit-tap-highlight-color: transparent;
-                `;
-
-                const cleanup = (result) => {
-                    overlay.style.opacity = '0';
-                    modal.style.transform = 'scale(0.95)';
-                    setTimeout(() => overlay.remove(), 300);
-                    resolve(result);
-                };
-
-                btnCancel.addEventListener('click', () => cleanup(false));
-                btnConfirm.addEventListener('click', () => cleanup(true));
-
-                btnRow.appendChild(btnCancel);
-                btnRow.appendChild(btnConfirm);
-                modal.appendChild(msgEl);
-                modal.appendChild(btnRow);
-                overlay.appendChild(modal);
-                document.body.appendChild(overlay);
-
-                // Trigger animations
-                requestAnimationFrame(() => {
-                    overlay.style.opacity = '1';
-                    modal.style.transform = 'scale(1)';
-                });
-            });
-        };
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/static/sw.js').catch(function () {});
+        }
     </script>
+    {% block extra_body %}{% endblock %}
 </body>
-
 </html>
