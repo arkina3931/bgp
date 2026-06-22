@@ -7,6 +7,7 @@ from fastapi.responses import HTMLResponse
 from contextlib import asynccontextmanager
 import socketio
 
+from api.v2 import router as api_v2_router
 import database
 from core.config import AVALON_ASSETS_DIR, STATIC_DIR, TEMPLATE_DIR
 from core.templates import render_template
@@ -35,6 +36,7 @@ async def lifespan(app: FastAPI):
     await close_store()
 
 app = FastAPI(title="Board Game Portal", lifespan=lifespan)
+app.include_router(api_v2_router)
 
 from fastapi import Response
 
