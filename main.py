@@ -1,5 +1,4 @@
 import uvicorn
-import os
 import importlib
 from fastapi import FastAPI, Request
 from fastapi.staticfiles import StaticFiles
@@ -9,8 +8,10 @@ from contextlib import asynccontextmanager
 import socketio
 
 import database
+from core.config import AVALON_ASSETS_DIR, STATIC_DIR, TEMPLATE_DIR
+from core.templates import render_template
 from sio_server import sio, gateway
-from state_store import get_store, close_store
+from state_store import close_store
 
 APPS_CONFIG = {
     "avalon": "Avalon.main",
@@ -44,7 +45,7 @@ async def favicon():
     return Response(status_code=204)
 
 # Mount Static Files
-app.mount("/static", StaticFiles(directory="static"), name="static")
+app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
 
 loaded_apps = []
 
@@ -56,7 +57,7 @@ for mount_path, module_name in APPS_CONFIG.items():
         if mount_path == "avalon":
             app.mount(
                 "/avalon/assets",
-                StaticFiles(directory=os.path.join("Avalon", "assets")),
+                StaticFiles(directory=AVALON_ASSETS_DIR),
                 name="avalon-assets",
             )
         loaded_apps.append(mount_path)
@@ -64,7 +65,7 @@ for mount_path, module_name in APPS_CONFIG.items():
         print(f"Error importing {mount_path}: {e}")
 
 # Templates for Landing Page
-templates = Jinja2Templates(directory="templates")
+templates = Jinja2Templates(directory=TEMPLATE_DIR)
 
 @app.get("/", response_class=HTMLResponse)
 async def index(request: Request):
@@ -78,16 +79,20 @@ async def index(request: Request):
             game_weights.append({"name": game.name, "weight": round(game.weight, 2)})
     game_weights.sort(key=lambda x: x["weight"], reverse=True)
     
-    return templates.TemplateResponse(request=request, name="index.html", context={
-        "request": request, 
-        "leaderboard": leaderboard, 
-        "loaded_apps": loaded_apps,
-        "game_weights": game_weights
-    })
+    return render_template(
+        templates,
+        request,
+        "index.html",
+        {
+            "leaderboard": leaderboard,
+            "loaded_apps": loaded_apps,
+            "game_weights": game_weights,
+        },
+    )
 
 @app.get("/gamelist", response_class=HTMLResponse)
 async def gamelist(request: Request):
-    return templates.TemplateResponse(request=request, name="gamelist.html", context={"request": request})
+    return render_template(templates, request, "gamelist.html")
 
 @app.get("/api/leaderboard")
 async def get_leaderboard_api():
