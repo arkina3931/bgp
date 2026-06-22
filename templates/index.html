@@ -4,83 +4,150 @@
 
 {% block extra_head %}
 <script src="/static/components.js"></script>
+<style>
+    .top-nav-title {
+        opacity: 0;
+        transition: opacity var(--transition-fast);
+    }
+    .large-title-area {
+        padding: 16px 0 8px;
+        margin-bottom: 8px;
+    }
+    .large-title {
+        font-size: 2.1rem;
+        font-weight: 800;
+        color: var(--color-text);
+        letter-spacing: -0.03em;
+    }
+    .starter-result {
+        background: rgba(255, 255, 255, 0.15);
+        border-radius: 12px;
+        padding: 12px 16px;
+        margin-top: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        font-weight: 700;
+        font-size: 0.95rem;
+        border: 0.5px solid rgba(255, 255, 255, 0.15);
+        backdrop-filter: blur(10px);
+    }
+    .starter-control {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+    }
+    .starter-control button {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        border: none;
+        background: rgba(255, 255, 255, 0.25);
+        color: #ffffff;
+        font-size: 1.2rem;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: background-color var(--transition-fast), transform var(--transition-fast);
+        outline: none;
+        -webkit-tap-highlight-color: transparent;
+    }
+    .starter-control button:active {
+        transform: scale(0.9);
+        background: rgba(255, 255, 255, 0.35);
+    }
+    .starter-num {
+        font-size: 1.8rem;
+        font-weight: 800;
+        min-width: 32px;
+        text-align: center;
+    }
+</style>
 {% endblock %}
 
 {% block nav_left %}{% endblock %}
 {% block nav_right %}{% endblock %}
 
 {% block content %}
-<div class="container" style="padding-top: 76px;">
+<div class="container" style="padding-top: 60px;">
+
+  <!-- iOS Large Title -->
+  <div class="large-title-area">
+    <h1 class="large-title">桌游助手</h1>
+  </div>
 
   <!-- Quick Action Card -->
-  <div class="quick-action" style="margin-bottom: var(--space-lg);">
-    <div class="quick-action-label">快速开局</div>
-    <div class="quick-action-title">🎲 随机初始玩家</div>
-    <div class="quick-action-desc">选择玩家人数，摇一摇决定谁先手</div>
-    <div style="margin-top: 20px; display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
-      <button id="starterMinusBtn" class="btn btn-secondary" style="background: rgba(255,255,255,0.2); color: #fff; min-width: 44px; width: 44px; height: 44px; padding: 0; border-radius: 50%; font-size: 1.3rem; line-height: 1;">−</button>
-      <span id="starterCountDisplay" style="font-size: 2rem; font-weight: 800; min-width: 40px; text-align: center;">6</span>
-      <button id="starterPlusBtn" class="btn btn-secondary" style="background: rgba(255,255,255,0.2); color: #fff; min-width: 44px; width: 44px; height: 44px; padding: 0; border-radius: 50%; font-size: 1.3rem; line-height: 1;">+</button>
-      <button id="rollStarterBtn" class="btn" style="background: rgba(255,255,255,0.2); color: #fff; font-weight: 700; margin-left: auto; backdrop-filter: blur(10px);">🎲 摇一摇</button>
+  <div class="quick-action" style="margin-bottom: var(--space-lg); box-shadow: 0 8px 24px rgba(0, 113, 227, 0.2);">
+    <div class="quick-action-label">快速工具</div>
+    <div class="quick-action-title">🎲 随机决定先手</div>
+    <div class="quick-action-desc">选择人数，一键摇出先手玩家</div>
+    <div style="margin-top: 16px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px;">
+      <div class="starter-control">
+        <button id="starterMinusBtn">−</button>
+        <span id="starterCountDisplay" class="starter-num">6</span>
+        <button id="starterPlusBtn">+</button>
+      </div>
+      <button id="rollStarterBtn" class="btn" style="background: #ffffff; color: var(--color-blue); font-weight: 700; border-radius: var(--radius-lg); padding: 8px 18px; min-height: 38px; box-shadow: 0 4px 12px rgba(0,0,0,0.08);">决定先手</button>
     </div>
-    <div id="starterResult" class="starter-result" style="display: none; background: rgba(255,255,255,0.15); border-color: rgba(255,255,255,0.2); color: #fff;"></div>
+    <div id="starterResult" class="starter-result" style="display: none;"></div>
   </div>
 
   <!-- Game Grid -->
-  <div class="section-title" style="margin-top: var(--space-xl);">🎮 游戏</div>
+  <div class="section-title">🎮 游戏</div>
   <div class="game-card-grid">
     {% if 'avalon' in loaded_apps %}
-    <game-card name="阿瓦隆" icon-emoji="🛡️" color="blue" href="/avalon/" desc="阵营推理 · 身份隐藏" min-players="5" max-players="10" rec-players="8"></game-card>
+    <game-card name="阿瓦隆" icon-class="shield-checkered" color="blue" href="/avalon/" desc="阵营推理 · 身份隐藏" min-players="5" max-players="10" rec-players="8"></game-card>
     {% else %}
-    <game-card name="阿瓦隆" icon-emoji="🛡️" color="blue" disabled desc="阵营推理 · 身份隐藏" min-players="5" max-players="10" rec-players="8"></game-card>
+    <game-card name="阿瓦隆" icon-class="shield-checkered" color="blue" disabled desc="阵营推理 · 身份隐藏" min-players="5" max-players="10" rec-players="8"></game-card>
     {% endif %}
 
     {% if 'lasvegas' in loaded_apps %}
-    <game-card name="拉斯维加斯" icon-emoji="🎲" color="green" href="/lasvegas/" desc="欢乐掷骰 · 区域争夺" min-players="2" max-players="5" rec-players="4"></game-card>
+    <game-card name="拉斯维加斯" icon-class="dice-six" color="green" href="/lasvegas/" desc="欢乐掷骰 · 区域争夺" min-players="2" max-players="5" rec-players="4"></game-card>
     {% else %}
-    <game-card name="拉斯维加斯" icon-emoji="🎲" color="green" disabled desc="欢乐掷骰 · 区域争夺" min-players="2" max-players="5" rec-players="4"></game-card>
+    <game-card name="拉斯维加斯" icon-class="dice-six" color="green" disabled desc="欢乐掷骰 · 区域争夺" min-players="2" max-players="5" rec-players="4"></game-card>
     {% endif %}
 
     {% if 'loveletters' in loaded_apps %}
-    <game-card name="情书" icon-emoji="💌" color="red" href="/loveletters/" desc="极简卡牌 · 逻辑盲猜" min-players="2" max-players="4" rec-players="3"></game-card>
+    <game-card name="情书" icon-class="envelope-simple" color="red" href="/loveletters/" desc="极简卡牌 · 逻辑盲猜" min-players="2" max-players="4" rec-players="3"></game-card>
     {% else %}
-    <game-card name="情书" icon-emoji="💌" color="red" disabled desc="极简卡牌 · 逻辑盲猜" min-players="2" max-players="4" rec-players="3"></game-card>
+    <game-card name="情书" icon-class="envelope-simple" color="red" disabled desc="极简卡牌 · 逻辑盲猜" min-players="2" max-players="4" rec-players="3"></game-card>
     {% endif %}
 
     {% if 'cabo' in loaded_apps %}
-    <game-card name="卡波" icon-emoji="🪄" color="orange" href="/cabo/" desc="记忆博弈 · 极限换牌" min-players="2" max-players="4" rec-players="3"></game-card>
+    <game-card name="卡波" icon-class="magic-wand" color="orange" href="/cabo/" desc="记忆博弈 · 极限换牌" min-players="2" max-players="4" rec-players="3"></game-card>
     {% else %}
-    <game-card name="卡波" icon-emoji="🪄" color="orange" disabled desc="记忆博弈 · 极限换牌" min-players="2" max-players="4" rec-players="3"></game-card>
+    <game-card name="卡波" icon-class="magic-wand" color="orange" disabled desc="记忆博弈 · 极限换牌" min-players="2" max-players="4" rec-players="3"></game-card>
     {% endif %}
 
     {% if 'flip7' in loaded_apps %}
-    <game-card name="7连翻" icon-emoji="📚" color="purple" href="/flip7/" desc="刺激翻牌 · 见好就收" min-players="2" max-players="6" rec-players="4"></game-card>
+    <game-card name="7连翻" icon-class="cards" color="purple" href="/flip7/" desc="刺激翻牌 · 见好就收" min-players="2" max-players="6" rec-players="4"></game-card>
     {% else %}
-    <game-card name="7连翻" icon-emoji="📚" color="purple" disabled desc="刺激翻牌 · 见好就收" min-players="2" max-players="6" rec-players="4"></game-card>
+    <game-card name="7连翻" icon-class="cards" color="purple" disabled desc="刺激翻牌 · 见好就收" min-players="2" max-players="6" rec-players="4"></game-card>
     {% endif %}
 
     {% if 'modernart' in loaded_apps %}
-    <game-card name="现代艺术" icon-emoji="🎨" color="orange" href="/modernart/" desc="艺术拍卖 · 价值炒作" min-players="3" max-players="5" rec-players="4"></game-card>
+    <game-card name="现代艺术" icon-class="palette" color="orange" href="/modernart/" desc="艺术拍卖 · 价值炒作" min-players="3" max-players="5" rec-players="4"></game-card>
     {% else %}
-    <game-card name="现代艺术" icon-emoji="🎨" color="orange" disabled desc="艺术拍卖 · 价值炒作" min-players="3" max-players="5" rec-players="4"></game-card>
+    <game-card name="现代艺术" icon-class="palette" color="orange" disabled desc="艺术拍卖 · 价值炒作" min-players="3" max-players="5" rec-players="4"></game-card>
     {% endif %}
 
     {% if 'splendor' in loaded_apps %}
-    <game-card name="璀璨宝石" icon-emoji="💎" color="purple" href="/splendor/" desc="资源收集 · 贵族争夺" min-players="2" max-players="4" rec-players="3"></game-card>
+    <game-card name="璀璨宝石" icon-class="gem" color="purple" href="/splendor/" desc="资源收集 · 贵族争夺" min-players="2" max-players="4" rec-players="3"></game-card>
     {% else %}
-    <game-card name="璀璨宝石" icon-emoji="💎" color="purple" disabled desc="资源收集 · 贵族争夺" min-players="2" max-players="4" rec-players="3"></game-card>
+    <game-card name="璀璨宝石" icon-class="gem" color="purple" disabled desc="资源收集 · 贵族争夺" min-players="2" max-players="4" rec-players="3"></game-card>
     {% endif %}
 
     {% if 'explodingkittens' in loaded_apps %}
-    <game-card name="炸弹猫" icon-emoji="🐱" color="red" href="/explodingkittens/" desc="轮抽博弈 · 极限生存" min-players="2" max-players="5" rec-players="4"></game-card>
+    <game-card name="炸弹猫" icon-class="bomb" color="red" href="/explodingkittens/" desc="轮抽博弈 · 极限生存" min-players="2" max-players="5" rec-players="4"></game-card>
     {% else %}
-    <game-card name="炸弹猫" icon-emoji="🐱" color="red" disabled desc="轮抽博弈 · 极限生存" min-players="2" max-players="5" rec-players="4"></game-card>
+    <game-card name="炸弹猫" icon-class="bomb" color="red" disabled desc="轮抽博弈 · 极限生存" min-players="2" max-players="5" rec-players="4"></game-card>
     {% endif %}
 
     {% if 'thegang' in loaded_apps %}
-    <game-card name="纸牌帮" icon-emoji="♠️" color="blue" href="/thegang/" desc="合作预测 · 德州变体" min-players="3" max-players="6" rec-players="4"></game-card>
+    <game-card name="纸牌帮" icon-class="spade" color="blue" href="/thegang/" desc="合作预测 · 德州变体" min-players="3" max-players="6" rec-players="4"></game-card>
     {% else %}
-    <game-card name="纸牌帮" icon-emoji="♠️" color="blue" disabled desc="合作预测 · 德州变体" min-players="3" max-players="6" rec-players="4"></game-card>
+    <game-card name="纸牌帮" icon-class="spade" color="blue" disabled desc="合作预测 · 德州变体" min-players="3" max-players="6" rec-players="4"></game-card>
     {% endif %}
   </div>
 
@@ -134,6 +201,19 @@
 {% block extra_body %}
 <script>
 (function () {
+  // --- iOS Scroll Title Reveal ---
+  window.addEventListener('scroll', function() {
+    var navTitle = document.querySelector('.top-nav-title');
+    var largeTitle = document.querySelector('.large-title');
+    if (!navTitle || !largeTitle) return;
+    var rect = largeTitle.getBoundingClientRect();
+    if (rect.bottom < 52) {
+      navTitle.style.opacity = '1';
+    } else {
+      navTitle.style.opacity = '0';
+    }
+  });
+
   // --- Random Starter Widget ---
   var starterCount = 6;
   var countDisplay = document.getElementById('starterCountDisplay');
@@ -155,8 +235,8 @@
 
   document.getElementById('rollStarterBtn').addEventListener('click', function () {
     var starter = Math.floor(Math.random() * starterCount) + 1;
-    resultEl.style.display = 'block';
-    resultEl.innerHTML = '🎯 本次先手玩家 <strong>' + starter + '号玩家</strong>';
+    resultEl.style.display = 'flex';
+    resultEl.innerHTML = '<span>🎯 本次先手玩家</span><strong>' + starter + '号玩家</strong>';
   });
 
   // --- Expand Leaderboard ---

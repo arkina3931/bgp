@@ -33,17 +33,23 @@
 
     <!-- Bottom Tab Bar (main pages only, overridden by game pages) -->
     {% block show_tab_bar %}
-    <nav class="tab-bar">
-        <a href="/" class="tab-bar-item{% if request.url.path == '/' %} active{% endif %}">
-            <span class="tab-icon">🏠</span>
+    <nav class="tab-bar" id="bottomTabBar">
+        <a href="/" class="tab-bar-item" data-path="/">
+            <span class="tab-icon">
+                <i class="ph ph-house" data-active-class="ph-fill ph-house"></i>
+            </span>
             <span class="tab-label">首页</span>
         </a>
-        <a href="/gamelist" class="tab-bar-item{% if request.url.path == '/gamelist' %} active{% endif %}">
-            <span class="tab-icon">🎮</span>
+        <a href="/gamelist" class="tab-bar-item" data-path="/gamelist">
+            <span class="tab-icon">
+                <i class="ph ph-game-controller" data-active-class="ph-fill ph-game-controller"></i>
+            </span>
             <span class="tab-label">游戏</span>
         </a>
-        <a href="/#leaderboard" class="tab-bar-item">
-            <span class="tab-icon">🏆</span>
+        <a href="/#leaderboard" class="tab-bar-item" data-path="/#leaderboard">
+            <span class="tab-icon">
+                <i class="ph ph-trophy" data-active-class="ph-fill ph-trophy"></i>
+            </span>
             <span class="tab-label">排行</span>
         </a>
     </nav>
@@ -54,6 +60,65 @@
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.register('/static/sw.js').catch(function () {});
         }
+    </script>
+
+    <!-- Tab Bar State Manager -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var tabBar = document.getElementById('bottomTabBar');
+            if (!tabBar) return;
+            
+            function updateActiveTab() {
+                var path = window.location.pathname;
+                var hash = window.location.hash;
+                var items = tabBar.querySelectorAll('.tab-bar-item');
+                
+                items.forEach(function(item) {
+                    var itemPath = item.getAttribute('data-path');
+                    var isActive = false;
+                    
+                    if (itemPath === '/#leaderboard') {
+                        isActive = (hash === '#leaderboard');
+                    } else if (itemPath === '/') {
+                        isActive = (path === '/' && hash !== '#leaderboard');
+                    } else {
+                        isActive = (path === itemPath);
+                    }
+                    
+                    var icon = item.querySelector('i');
+                    if (isActive) {
+                        item.classList.add('active');
+                        if (icon) {
+                            var activeClass = icon.getAttribute('data-active-class');
+                            if (activeClass) icon.className = activeClass;
+                        }
+                    } else {
+                        item.classList.remove('active');
+                        if (icon) {
+                            var activeClass = icon.getAttribute('data-active-class');
+                            if (activeClass) {
+                                var inactiveClass = activeClass.replace('ph-fill', 'ph');
+                                icon.className = inactiveClass;
+                            }
+                        }
+                    }
+                });
+            }
+            
+            updateActiveTab();
+            window.addEventListener('hashchange', updateActiveTab);
+            
+            // Listen for clicks on the leaderboard tab to scroll smoothly
+            var rankTab = tabBar.querySelector('a[data-path="/#leaderboard"]');
+            if (rankTab) {
+                rankTab.addEventListener('click', function() {
+                    if (window.location.pathname === '/' && window.location.hash === '#leaderboard') {
+                        var lb = document.getElementById('leaderboard');
+                        if (lb) lb.scrollIntoView({ behavior: 'smooth' });
+                    }
+                });
+            }
+        });
     </script>
     {% block extra_body %}{% endblock %}
 </body>

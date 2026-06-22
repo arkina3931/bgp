@@ -11,6 +11,7 @@ class GameCard extends HTMLElement {
     connectedCallback() {
         var name = this.getAttribute('name') || '';
         var iconEmoji = this.getAttribute('icon-emoji') || '';
+        var iconClass = this.getAttribute('icon-class') || '';
         var color = this.getAttribute('color') || 'blue';
         var href = this.getAttribute('href') || '#';
         var disabled = this.hasAttribute('disabled');
@@ -21,7 +22,10 @@ class GameCard extends HTMLElement {
 
         // Icon
         var iconHtml = '';
-        if (iconEmoji) {
+        if (iconClass) {
+            iconHtml = '<div class="gc-icon bg-' + escHtml(color) + ' text-' + escHtml(color) + '">' +
+                '<i class="ph-fill ' + escHtml(iconClass) + '" style="font-size:1.4rem;"></i></div>';
+        } else if (iconEmoji) {
             iconHtml = '<div class="gc-icon bg-' + escHtml(color) + ' text-' + escHtml(color) + '">' +
                 escHtml(iconEmoji) + '</div>';
         }
@@ -69,12 +73,16 @@ class PlayerList extends HTMLElement {
     }
 
     _render() {
-        var html = '<div style="display:flex;gap:8px;margin-bottom:12px;">' +
-            '<input class="input-field js-pl-input" placeholder="输入玩家名" style="flex:1;" ' +
+        var html = '<div class="list" style="margin-bottom:16px;">' +
+            '<div class="list-item" style="padding:4px 16px;">' +
+            '<input class="js-pl-input" placeholder="输入玩家姓名..." style="flex:1;border:none;padding:8px 0;background:transparent;font-size:1.05rem;color:var(--color-text);outline:none;" ' +
             'onkeydown="if(event.key===\'Enter\')this.closest(\'player-list\').addPlayer()">' +
-            '<button class="btn btn-primary" onclick="this.closest(\'player-list\').addPlayer()">添加</button>' +
+            '<button class="btn btn-primary btn-sm" style="border-radius:50%;width:30px;height:30px;min-height:30px;padding:0;display:flex;align-items:center;justify-content:center;flex-shrink:0;" onclick="this.closest(\'player-list\').addPlayer()">' +
+            '<i class="ph-bold ph-plus"></i>' +
+            '</button>' +
             '</div>' +
-            '<div class="js-pl-list"></div>';
+            '</div>' +
+            '<div class="list js-pl-list" style="margin-bottom:16px;"></div>';
 
         if (this._mode !== 'simple') {
             html += '<div class="js-pl-winner"></div>';
@@ -98,15 +106,15 @@ class PlayerList extends HTMLElement {
         if (!listEl) return;
 
         if (this._players.length === 0) {
-            listEl.innerHTML = '<p class="text-muted" style="font-size:0.9rem;text-align:center;">暂无玩家</p>';
+            listEl.innerHTML = '<div class="list-item"><div class="list-item-content text-center text-muted" style="font-size:0.9rem;">暂无参与玩家</div></div>';
         } else {
             var self = this;
             listEl.innerHTML = this._players.map(function(name) {
-                return '<div class="list-item" style="padding:8px 0;">' +
+                return '<div class="list-item">' +
                     '<div class="list-item-content">' +
                     '<div class="list-item-title">' + escHtml(name) + '</div>' +
                     '</div>' +
-                    '<button class="btn btn-secondary btn-sm" style="padding:4px 12px;font-size:0.8rem;" ' +
+                    '<button class="btn btn-secondary btn-sm" style="padding:4px 12px;font-size:0.8rem;color:var(--color-red);background:rgba(255,59,48,0.1);font-weight:600;" ' +
                     'data-name="' + escHtml(name) + '">移除</button>' +
                     '</div>';
             }).join('');
@@ -129,30 +137,38 @@ class PlayerList extends HTMLElement {
         if (!el) return;
 
         if (this._players.length === 0) {
-            el.innerHTML = '<p class="text-muted" style="font-size:0.9rem;text-align:center;">请先添加玩家</p>';
+            el.innerHTML = '';
             return;
         }
 
         if (this._mode === 'coop') {
-            el.innerHTML = '<div style="display:flex;gap:8px;">' +
-                '<button class="btn btn-primary" style="flex:1;" ' +
+            el.innerHTML = '<div style="display:flex;gap:12px;margin-top:16px;">' +
+                '<button class="btn btn-primary" style="flex:1;box-shadow: 0 4px 12px rgba(52, 199, 89, 0.25);" ' +
                 'onclick="this.closest(\'player-list\')._notifyRecord(true)">全员胜利 🎉</button>' +
-                '<button class="btn btn-danger" style="flex:1;" ' +
+                '<button class="btn btn-danger" style="flex:1;box-shadow: 0 4px 12px rgba(255, 59, 48, 0.25);" ' +
                 'onclick="this.closest(\'player-list\')._notifyRecord(false)">全员失败 💀</button>' +
                 '</div>';
         } else if (this._mode === 'winner-select') {
             var self = this;
-            el.innerHTML = this._players.map(function(name) {
+            var html = '<div class="list-header">🏆 选择本局胜者</div>' +
+                '<div class="list">';
+
+            html += this._players.map(function(name) {
                 var isSelected = self._selectedWinner === name;
-                return '<button class="btn ' + (isSelected ? 'btn-primary' : 'btn-secondary') + '" ' +
-                    'style="margin:4px;" ' +
-                    'data-name="' + escHtml(name) + '">' +
-                    escHtml(name) + '</button>';
+                return '<div class="list-item js-winner-cell" style="cursor:pointer;" data-name="' + escHtml(name) + '">' +
+                    '<div class="list-item-content">' +
+                    '<div class="list-item-title" style="font-weight:' + (isSelected ? '700' : '500') + ';color:' + (isSelected ? 'var(--color-blue)' : 'var(--color-text)') + '">' + escHtml(name) + '</div>' +
+                    '</div>' +
+                    (isSelected ? '<div style="color:var(--color-blue);display:flex;align-items:center;"><i class="ph-bold ph-check" style="font-size:1.2rem;"></i></div>' : '') +
+                    '</div>';
             }).join('');
 
-            el.querySelectorAll('button').forEach(function(btn) {
-                btn.addEventListener('click', function() {
-                    var name = btn.getAttribute('data-name');
+            html += '</div>';
+            el.innerHTML = html;
+
+            el.querySelectorAll('.js-winner-cell').forEach(function(cell) {
+                cell.addEventListener('click', function() {
+                    var name = cell.getAttribute('data-name');
                     if (self._selectedWinner === name) {
                         self._selectedWinner = '';
                     } else {

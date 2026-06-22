@@ -8,50 +8,52 @@
    ========================================== */
 
 :root {
-    /* ---- Core Colors ---- */
-    --color-bg: #f5f5f7;
-    --color-surface: #ffffff;
-    --color-text: #1d1d1f;
-    --color-text-secondary: #86868b;
-    --color-border: rgba(0, 0, 0, 0.08);
+    /* ---- Core Colors (iOS Grouped Layout) ---- */
+    --color-bg: #f2f2f7;                  /* iOS systemGroupedBackground */
+    --color-surface: #ffffff;             /* iOS secondarySystemGroupedBackground */
+    --color-text: #000000;                /* iOS label */
+    --color-text-secondary: rgba(60, 60, 67, 0.6); /* iOS secondaryLabel */
+    --color-border: rgba(60, 60, 67, 0.12); /* iOS separator */
 
-    /* ---- Semantic Colors ---- */
-    --color-blue: #0071e3;
+    /* ---- Semantic Colors (Apple HIG Palette) ---- */
+    --color-blue: #0071e3;                /* SF Blue */
     --color-blue-bg: rgba(0, 113, 227, 0.08);
-    --color-green: #34c759;
+    --color-green: #34c759;               /* SF Green */
     --color-green-bg: rgba(52, 199, 89, 0.08);
-    --color-red: #ff3b30;
+    --color-red: #ff3b30;                 /* SF Red */
     --color-red-bg: rgba(255, 59, 48, 0.08);
-    --color-orange: #ff9500;
+    --color-orange: #ff9500;              /* SF Orange */
     --color-orange-bg: rgba(255, 149, 0, 0.08);
-    --color-purple: #af52de;
+    --color-purple: #af52de;              /* SF Purple */
     --color-purple-bg: rgba(175, 82, 222, 0.08);
-    --color-yellow: #ffcc00;
-    --color-teal: #5ac8fa;
+    --color-yellow: #ffcc00;              /* SF Yellow */
+    --color-teal: #5ac8fa;                /* SF Teal */
     --color-teal-bg: rgba(90, 200, 250, 0.08);
+    --color-indigo: #5856d6;              /* SF Indigo */
+    --color-indigo-bg: rgba(88, 86, 214, 0.08);
 
     /* ---- Typography ---- */
-    --font-stack: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, sans-serif;
+    --font-stack: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Helvetica Neue", Arial, sans-serif;
 
     /* ---- Shadows ---- */
-    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.04);
-    --shadow-md: 0 4px 14px rgba(0, 0, 0, 0.06);
-    --shadow-lg: 0 12px 40px rgba(0, 0, 0, 0.08);
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.05);
+    --shadow-lg: 0 12px 30px rgba(0, 0, 0, 0.08);
 
     /* ---- Radii ---- */
     --radius-sm: 8px;
-    --radius-md: 12px;
-    --radius-lg: 18px;
-    --radius-xl: 24px;
+    --radius-md: 10px;
+    --radius-lg: 12px;
+    --radius-xl: 18px;
     --radius-full: 999px;
 
     /* ---- Spacing (4px grid) ---- */
     --space-xs: 4px;
     --space-sm: 8px;
     --space-md: 16px;
-    --space-lg: 24px;
-    --space-xl: 40px;
-    --space-2xl: 60px;
+    --space-lg: 20px;
+    --space-xl: 32px;
+    --space-2xl: 48px;
 
     /* ---- Safe Areas ---- */
     --safe-bottom: env(safe-area-inset-bottom, 0px);
@@ -59,7 +61,7 @@
 
     /* ---- Transitions ---- */
     --ease-out: cubic-bezier(0.25, 1, 0.5, 1);
-    --transition-fast: 0.2s var(--ease-out);
+    --transition-fast: 0.15s var(--ease-out);
     --transition-normal: 0.3s var(--ease-out);
 
     /* ---- Button hover colors ---- */
@@ -67,15 +69,15 @@
     --color-red-hover: #e0352b;
 
     /* ---- Description text ---- */
-    --color-desc: #48484a;
+    --color-desc: #3c3c43;
 
     /* ---- Legacy support (aliases) ---- */
     --apple-bg: var(--color-bg);
     --apple-white: var(--color-surface);
     --apple-black: var(--color-text);
     --apple-gray: var(--color-text-secondary);
-    --apple-gray-light: #d2d2d7;
-    --apple-gray-bg: #fbfbfd;
+    --apple-gray-light: rgba(60, 60, 67, 0.3);
+    --apple-gray-bg: var(--color-bg);
     --apple-blue: var(--color-blue);
     --apple-blue-hover: var(--color-blue-hover);
     --apple-blue-light: var(--color-blue-bg);
@@ -90,12 +92,13 @@
     --apple-purple-light: var(--color-purple-bg);
     --apple-teal: var(--color-teal);
     --apple-teal-light: var(--color-teal-bg);
-    --apple-indigo: #5856d6;
+    --apple-indigo: var(--color-indigo);
     --font-family: var(--font-stack);
     --shadow-card: var(--shadow-sm);
     --radius-pill: var(--radius-full);
     --ease-apple: var(--ease-out);
-    --hero-gradient-cabo: linear-gradient(135deg, #00b894, #00cec9, #0984e3);
+    --hero-gradient-cabo: linear-gradient(135deg, #34c759, #5ac8fa, #0071e3);
+}
 }
 
 /* ==========================================
@@ -201,11 +204,17 @@ a:hover {
     left: 0;
     right: 0;
     z-index: 1000;
-    background: rgba(245, 245, 247, 0.82);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border-bottom: 1px solid var(--color-border);
+    background: rgba(242, 242, 247, 0.8);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border-bottom: 0.5px solid var(--color-border);
     padding-top: var(--safe-top);
+}
+
+@media (prefers-color-scheme: dark) {
+    .top-nav {
+        background: rgba(0, 0, 0, 0.8);
+    }
 }
 
 .top-nav-inner {
@@ -213,7 +222,7 @@ a:hover {
     align-items: center;
     justify-content: center;
     position: relative;
-    height: 56px;
+    height: 52px;
     padding: 0 16px;
     max-width: 680px;
     margin: 0 auto;
@@ -221,7 +230,7 @@ a:hover {
 
 .top-nav-title {
     font-size: 1.05rem;
-    font-weight: 700;
+    font-weight: 600;
     color: var(--color-text);
     letter-spacing: -0.02em;
 }
@@ -245,16 +254,25 @@ a:hover {
     align-items: center;
     gap: 4px;
     color: var(--color-blue);
-    font-size: 0.95rem;
+    font-size: 1rem;
     font-weight: 400;
     text-decoration: none;
     min-height: 44px;
     cursor: pointer;
     transition: opacity var(--transition-fast);
+    -webkit-tap-highlight-color: transparent;
+}
+
+.top-nav-back i {
+    font-size: 1.2rem;
 }
 
 .top-nav-back:hover {
     opacity: 0.7;
+}
+
+.top-nav-back:active {
+    opacity: 0.5;
 }
 
 /* ==========================================
@@ -270,11 +288,17 @@ a:hover {
     display: flex;
     justify-content: space-around;
     align-items: center;
-    background: rgba(245, 245, 247, 0.82);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border-top: 1px solid var(--color-border);
+    background: rgba(242, 242, 247, 0.85);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border-top: 0.5px solid var(--color-border);
     padding-bottom: var(--safe-bottom);
+}
+
+@media (prefers-color-scheme: dark) {
+    .tab-bar {
+        background: rgba(0, 0, 0, 0.85);
+    }
 }
 
 .tab-bar-item {
@@ -283,12 +307,13 @@ a:hover {
     align-items: center;
     justify-content: center;
     gap: 2px;
-    min-height: 56px;
+    min-height: 50px;
+    padding-top: 4px;
     flex: 1;
     color: var(--color-text-secondary);
     text-decoration: none;
     cursor: pointer;
-    transition: color var(--transition-fast);
+    transition: color var(--transition-fast), transform var(--transition-fast);
     -webkit-tap-highlight-color: transparent;
 }
 
@@ -296,15 +321,28 @@ a:hover {
     color: var(--color-blue);
 }
 
+.tab-bar-item:active {
+    transform: scale(0.95);
+}
+
 .tab-icon {
-    font-size: 1.4rem;
+    font-size: 1.35rem;
     line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 24px;
+}
+
+.tab-icon i {
+    font-size: 1.35rem;
 }
 
 .tab-label {
     font-size: 0.65rem;
-    font-weight: 600;
+    font-weight: 500;
     line-height: 1;
+    margin-bottom: 2px;
 }
 
 /* ==========================================
@@ -615,23 +653,44 @@ a:hover {
     border-radius: var(--radius-lg);
     overflow: hidden;
     box-shadow: var(--shadow-sm);
+    margin-bottom: var(--space-md);
 }
 
 .list-item {
     display: flex;
     align-items: center;
-    padding: 14px 16px;
-    border-bottom: 0.5px solid var(--color-border);
-    gap: 16px;
-    transition: background var(--transition-fast);
+    padding: 12px 16px;
+    gap: 14px;
+    transition: background-color var(--transition-fast);
+    position: relative;
+    -webkit-tap-highlight-color: transparent;
 }
 
-.list-item:last-child {
-    border-bottom: none;
+.list-item:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    left: 16px;
+    right: 0;
+    bottom: 0;
+    height: 0.5px;
+    background-color: var(--color-border);
+}
+
+/* If item has a badge or icon, adjust separator left position to align with text */
+.list-item:has(.rank-badge):not(:last-child)::after,
+.list-item:has(.rank-num):not(:last-child)::after,
+.list-item:has(.apple-list-item-icon):not(:last-child)::after {
+    left: 64px;
 }
 
 .list-item:active {
-    background: rgba(0, 0, 0, 0.02);
+    background-color: rgba(0, 0, 0, 0.04);
+}
+
+@media (prefers-color-scheme: dark) {
+    .list-item:active {
+        background-color: rgba(255, 255, 255, 0.04);
+    }
 }
 
 .list-item-content {
@@ -643,6 +702,9 @@ a:hover {
     font-size: 1rem;
     font-weight: 600;
     color: var(--color-text);
+    display: flex;
+    align-items: center;
+    gap: 6px;
 }
 
 .list-item-subtitle {
@@ -652,7 +714,7 @@ a:hover {
 }
 
 .list-item-trailing {
-    font-size: 1.2rem;
+    font-size: 1.15rem;
     font-weight: 700;
     color: var(--color-text);
     text-align: right;
@@ -661,13 +723,15 @@ a:hover {
 }
 
 .list-header {
-    padding: 14px var(--space-lg);
+    padding: 8px 16px;
     font-size: 0.8rem;
-    font-weight: 600;
+    font-weight: 400;
     color: var(--color-text-secondary);
     text-transform: uppercase;
-    letter-spacing: 0.04em;
-    background: var(--color-bg);
+    letter-spacing: 0.03em;
+    background: transparent;
+    margin-top: 16px;
+    margin-bottom: 6px;
 }
 
 /* ==========================================
@@ -744,14 +808,14 @@ a:hover {
 }
 
 /* ==========================================
-   13. FILTER CHIPS
+   13. SEGMENTED CONTROL & FILTER CHIPS (iOS HIG)
    ========================================== */
 
 .filter-scroll {
     display: flex;
     gap: 8px;
     overflow-x: auto;
-    padding: 4px 16px 12px;
+    padding: 8px 16px 14px;
     scrollbar-width: none;
     -ms-overflow-style: none;
     scroll-snap-type: x mandatory;
@@ -764,13 +828,13 @@ a:hover {
 
 .filter-chip {
     flex-shrink: 0;
-    padding: 8px 18px;
+    padding: 7px 16px;
     border-radius: var(--radius-full);
-    background: rgba(0, 0, 0, 0.06);
+    background: rgba(120, 120, 128, 0.12);
     color: var(--color-text);
     font-size: 0.85rem;
-    font-weight: 600;
-    min-height: 38px;
+    font-weight: 500;
+    min-height: 34px;
     border: none;
     cursor: pointer;
     transition: all var(--transition-fast);
@@ -778,28 +842,81 @@ a:hover {
     -webkit-tap-highlight-color: transparent;
     white-space: nowrap;
     font-family: var(--font-stack);
+    outline: none;
+}
+
+@media (prefers-color-scheme: dark) {
+    .filter-chip {
+        background: rgba(120, 120, 128, 0.24);
+    }
 }
 
 .filter-chip.active {
     background: var(--color-blue);
     color: #ffffff;
-    box-shadow: 0 4px 12px rgba(0, 113, 227, 0.3);
+    font-weight: 600;
+    box-shadow: 0 2px 8px rgba(0, 113, 227, 0.25);
 }
 
-.filter-chip:hover:not(.active) {
-    background: rgba(0, 0, 0, 0.1);
+.filter-chip:active {
+    transform: scale(0.95);
+}
+
+/* iOS-style Segmented Control (for fixed layouts like rule sheets) */
+.segmented-control {
+    display: flex;
+    background: rgba(120, 120, 128, 0.12);
+    border-radius: 9px;
+    padding: 2px;
+    margin: 8px 0 var(--space-md);
+    position: relative;
+    user-select: none;
+}
+
+@media (prefers-color-scheme: dark) {
+    .segmented-control {
+        background: rgba(120, 120, 128, 0.24);
+    }
+}
+
+.segmented-btn {
+    flex: 1;
+    border: none;
+    background: transparent;
+    padding: 6px 0;
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--color-text-secondary);
+    border-radius: 7px;
+    cursor: pointer;
+    transition: background-color var(--transition-fast), box-shadow var(--transition-fast), transform var(--transition-fast), color var(--transition-fast);
+    font-family: var(--font-stack);
+    text-align: center;
+    -webkit-tap-highlight-color: transparent;
+    outline: none;
+}
+
+.segmented-btn.active {
+    background: var(--color-surface);
+    color: var(--color-blue);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 1px rgba(0, 0, 0, 0.05);
+    font-weight: 600;
+}
+
+.segmented-btn:active:not(.active) {
+    transform: scale(0.97);
 }
 
 /* Legacy alias */
 .filter-btn {
     flex-shrink: 0;
-    padding: 10px 20px;
-    border-radius: 22px;
-    min-height: 44px;
-    background: rgba(142, 142, 147, 0.08);
+    padding: 8px 18px;
+    border-radius: var(--radius-full);
+    min-height: 38px;
+    background: rgba(120, 120, 128, 0.12);
     color: var(--color-text);
-    font-size: 1rem;
-    font-weight: 600;
+    font-size: 0.85rem;
+    font-weight: 500;
     border: none;
     cursor: pointer;
     transition: all var(--transition-fast);
@@ -811,7 +928,7 @@ a:hover {
 .filter-btn.active {
     background: var(--color-blue);
     color: #ffffff;
-    box-shadow: 0 4px 12px rgba(0, 113, 227, 0.3);
+    box-shadow: 0 2px 8px rgba(0, 113, 227, 0.25);
 }
 
 .filter-btn:hover:not(.active) {
@@ -1400,22 +1517,31 @@ a:hover {
 @media (prefers-color-scheme: dark) {
     :root {
         /* Core colors inverted */
-        --color-bg: #000000;
-        --color-surface: #1c1c1e;
-        --color-text: #f5f5f7;
-        --color-text-secondary: #98989d;
-        --color-border: rgba(255, 255, 255, 0.08);
+        --color-bg: #000000;                  /* iOS systemGroupedBackground (Dark) */
+        --color-surface: #1c1c1e;             /* iOS secondarySystemGroupedBackground (Dark) */
+        --color-text: #ffffff;                /* iOS label (Dark) */
+        --color-text-secondary: rgba(235, 235, 245, 0.6); /* iOS secondaryLabel (Dark) */
+        --color-border: rgba(235, 235, 245, 0.15); /* iOS separator (Dark) */
 
-        /* Semantic bg colors — more opacity for dark */
+        /* Semantic colors (Apple HIG Dark Palette) */
+        --color-blue: #0a84ff;                /* SF Blue (Dark) */
         --color-blue-bg: rgba(10, 132, 255, 0.15);
+        --color-green: #30d158;               /* SF Green (Dark) */
         --color-green-bg: rgba(48, 209, 88, 0.15);
+        --color-red: #ff453a;                 /* SF Red (Dark) */
         --color-red-bg: rgba(255, 69, 58, 0.15);
+        --color-orange: #ff9f0a;              /* SF Orange (Dark) */
         --color-orange-bg: rgba(255, 159, 10, 0.15);
+        --color-purple: #bf5af2;              /* SF Purple (Dark) */
         --color-purple-bg: rgba(191, 90, 242, 0.15);
+        --color-yellow: #ffd60a;              /* SF Yellow (Dark) */
+        --color-teal: #64d2ff;                /* SF Teal (Dark) */
         --color-teal-bg: rgba(100, 210, 255, 0.15);
+        --color-indigo: #5e5ce6;              /* SF Indigo (Dark) */
+        --color-indigo-bg: rgba(94, 92, 230, 0.15);
 
         /* Description text */
-        --color-desc: #b0b0b5;
+        --color-desc: rgba(235, 235, 245, 0.7);
 
         /* Shadows */
         --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);

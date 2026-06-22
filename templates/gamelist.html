@@ -2,35 +2,42 @@
 
 {% block title %}游戏列表 - 桌游助手{% endblock %}
 
-{% block nav_title %}🎮 游戏列表{% endblock %}
+{% block nav_title %}游戏{% endblock %}
 
 {% block extra_head %}
+<script src="/static/components.js"></script>
 <style>
+    .top-nav-title {
+        opacity: 0;
+        transition: opacity var(--transition-fast);
+    }
+    .large-title-area {
+        padding: 16px 16px 8px;
+        margin-bottom: 8px;
+    }
+    .large-title {
+        font-size: 2.1rem;
+        font-weight: 800;
+        color: var(--color-text);
+        letter-spacing: -0.03em;
+    }
     .game-cards-container {
-        padding: 0 var(--space-md);
+        padding: 0 16px;
         margin-bottom: var(--space-2xl);
     }
-
-    .game-detail-card.hidden {
-        display: none !important;
-    }
-
     .gd-icon {
         color: #fff;
     }
-
     .gd-name {
         font-size: 1.1rem;
         font-weight: 700;
         margin: 0;
     }
-
     .gd-en-name {
         font-size: 0.8rem;
         color: var(--color-text-secondary);
         font-weight: 500;
     }
-
     .gd-rating {
         display: flex;
         align-items: center;
@@ -38,20 +45,17 @@
         font-size: 0.85rem;
         font-weight: 600;
     }
-
     .gd-star {
         color: var(--color-yellow);
     }
-
     .gd-rating-num {
         color: var(--color-text-secondary);
         font-size: 0.8rem;
         margin-left: 4px;
     }
-
     .gd-header .rules-btn {
         flex-shrink: 0;
-        background: rgba(0, 0, 0, 0.06);
+        background: rgba(120, 120, 128, 0.12);
         border: none;
         width: 36px;
         height: 36px;
@@ -61,100 +65,68 @@
         justify-content: center;
         cursor: pointer;
         font-size: 1rem;
-        color: var(--color-text-secondary);
-        transition: background var(--transition-fast);
+        color: var(--color-blue);
+        transition: background-color var(--transition-fast), transform var(--transition-fast);
         font-family: var(--font-stack);
+        outline: none;
+        -webkit-tap-highlight-color: transparent;
     }
-
-    .gd-header .rules-btn:hover {
-        background: rgba(0, 0, 0, 0.12);
+    .gd-header .rules-btn:active {
+        transform: scale(0.9);
+        background: rgba(120, 120, 128, 0.2);
     }
-
     .gd-btn-row {
         margin-top: var(--space-md);
     }
-
-    .sheet-tab-bar {
-        display: flex;
-        gap: 8px;
-        margin: 0 var(--space-lg) var(--space-md);
-        padding: 4px;
-        border-radius: 12px;
-        background: rgba(0, 0, 0, 0.04);
-    }
-
-    .sheet-tab-btn {
-        flex: 1;
-        min-height: 36px;
-        border: none;
-        border-radius: 10px;
-        background: transparent;
-        color: var(--color-text-secondary);
-        font-size: 0.92rem;
-        font-weight: 600;
-        cursor: pointer;
-        transition: all var(--transition-fast);
-        font-family: var(--font-stack);
-    }
-
-    .sheet-tab-btn:hover {
-        background: rgba(0, 0, 0, 0.04);
-        color: var(--color-text);
-    }
-
-    .sheet-tab-btn.active {
-        background: var(--color-surface);
-        color: var(--color-blue);
-        box-shadow: var(--shadow-sm);
-    }
-
     .sheet-body {
         padding: 0 var(--space-lg);
         overflow-y: auto;
         flex: 1;
     }
-
     .sheet-body h4 {
         margin: var(--space-md) 0 var(--space-sm);
-        font-size: 1rem;
+        font-size: 1.05rem;
         color: var(--color-text);
+        font-weight: 700;
     }
-
     .sheet-body p {
         margin: 0 0 12px;
         color: var(--color-desc);
-        font-size: 0.9rem;
+        font-size: 0.92rem;
         line-height: 1.6;
     }
-
     .sheet-body ul {
         margin: 4px 0 var(--space-md);
         padding-left: 1.2rem;
     }
-
     .sheet-body li {
         margin-bottom: 6px;
         color: var(--color-desc);
-        font-size: 0.9rem;
+        font-size: 0.92rem;
         line-height: 1.55;
     }
-
     .sheet-body strong {
         color: var(--color-text);
         font-weight: 600;
     }
-
     .sheet-close-btn {
         padding: var(--space-md) var(--space-lg);
-        border-top: 1px solid var(--color-border);
+        border-top: 0.5px solid var(--color-border);
         flex-shrink: 0;
     }
 </style>
 {% endblock %}
 
 {% block content %}
-<!-- Filter Chips -->
-<div class="filter-scroll" id="filterScroll">
+<div class="container" style="padding-top: 60px; padding-left: 0; padding-right: 0;">
+
+  <!-- iOS Large Title -->
+  <div class="large-title-area">
+    <h1 class="large-title">游戏</h1>
+  </div>
+
+  <!-- Filter Chips -->
+  <div class="filter-scroll" id="filterScroll">
     <button class="filter-chip active" data-players="0" onclick="handleFilterClick(this)">全部</button>
     <button class="filter-chip" data-players="2" onclick="handleFilterClick(this)">2人</button>
     <button class="filter-chip" data-players="3" onclick="handleFilterClick(this)">3人</button>
@@ -164,30 +136,35 @@
     <button class="filter-chip" data-players="7" onclick="handleFilterClick(this)">7人</button>
     <button class="filter-chip" data-players="8" onclick="handleFilterClick(this)">8人</button>
     <button class="filter-chip" data-players="9" onclick="handleFilterClick(this)">9人+</button>
-</div>
+  </div>
 
-<!-- Game Cards Container (JS-rendered) -->
-<div class="game-cards-container" id="gameCardsContainer"></div>
+  <!-- Game Cards Container (JS-rendered) -->
+  <div class="game-cards-container" id="gameCardsContainer"></div>
 
-<!-- Rules Bottom Sheet -->
-<div class="sheet-overlay" id="rulesSheet" onclick="if(event.target === this) closeRules()">
+  <!-- Rules Bottom Sheet -->
+  <div class="sheet-overlay" id="rulesSheet" onclick="if(event.target === this) closeRules()">
     <div class="sheet-content">
-        <div class="sheet-handle"></div>
-        <div class="modal-header" style="border-bottom: none; padding-bottom: 0;">
-            <h2 class="modal-title" id="sheetTitle">📖 规则</h2>
-            <button class="modal-close" onclick="closeRules()">
-                <i class="ph-bold ph-x"></i>
-            </button>
-        </div>
-        <div class="sheet-tab-bar">
-            <button id="sheetRuleBtn" class="sheet-tab-btn active" onclick="switchRulesTab('rule')">📋 规则</button>
-            <button id="sheetGuideBtn" class="sheet-tab-btn" onclick="switchRulesTab('guide')">💡 攻略</button>
-        </div>
-        <div class="sheet-body" id="sheetContent"></div>
-        <div class="sheet-close-btn">
-            <button class="btn btn-secondary btn-block" onclick="closeRules()">关闭</button>
-        </div>
+      <div class="sheet-handle"></div>
+      <div class="modal-header" style="border-bottom: none; padding-bottom: 0;">
+        <h2 class="modal-title" id="sheetTitle">规则</h2>
+        <button class="modal-close" onclick="closeRules()">
+          <i class="ph-bold ph-x"></i>
+        </button>
+      </div>
+      <div class="segmented-control" style="margin: 8px 16px 16px;">
+        <button id="sheetRuleBtn" class="segmented-btn active" onclick="switchRulesTab('rule')">
+          <i class="ph-bold ph-book-open" style="margin-right: 4px; vertical-align: middle;"></i>规则
+        </button>
+        <button id="sheetGuideBtn" class="segmented-btn" onclick="switchRulesTab('guide')">
+          <i class="ph-bold ph-lightbulb" style="margin-right: 4px; vertical-align: middle;"></i>攻略
+        </button>
+      </div>
+      <div class="sheet-body" id="sheetContent"></div>
+      <div class="sheet-close-btn">
+        <button class="btn btn-secondary btn-block" onclick="closeRules()">关闭</button>
+      </div>
     </div>
+  </div>
 </div>
 {% endblock %}
 
@@ -336,7 +313,7 @@ function renderGameCards(filterPlayers) {
         html += '        <span class="gd-rating-num">' + escHtml(g.rating) + '</span>';
         html += '      </div>';
         html += '    </div>';
-        html += '    <button class="rules-btn" onclick="openRules(\'' + g.id + '\', event)" title="规则">📖</button>';
+        html += '    <button class="rules-btn" onclick="openRules(\'' + g.id + '\', event)" title="规则"><i class="ph-bold ph-info" style="font-size:1.2rem;"></i></button>';
         html += '  </div>';
         html += '  <div class="gd-stats">';
         html += '    <div class="gd-stat">👥 推荐 ' + escHtml(g.recP) + '人</div>';
@@ -395,7 +372,7 @@ function openRules(gameId, event) {
     currentGameId = gameId;
     currentTab = 'rule';
 
-    document.getElementById('sheetTitle').textContent = '📖 ' + game.name;
+    document.getElementById('sheetTitle').textContent = game.name;
     updateRulesContent();
 
     document.getElementById('rulesSheet').classList.add('show');
@@ -439,6 +416,19 @@ function updateRulesContent() {
     var content = currentTab === 'rule' ? game.rule : game.guide;
     document.getElementById('sheetContent').innerHTML = content || '<p>暂无内容</p>';
 }
+
+// --- iOS Scroll Title Reveal ---
+window.addEventListener('scroll', function() {
+    var navTitle = document.querySelector('.top-nav-title');
+    var largeTitle = document.querySelector('.large-title');
+    if (!navTitle || !largeTitle) return;
+    var rect = largeTitle.getBoundingClientRect();
+    if (rect.bottom < 52) {
+        navTitle.style.opacity = '1';
+    } else {
+        navTitle.style.opacity = '0';
+    }
+});
 
 // ============================================
 // Initial render

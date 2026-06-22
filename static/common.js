@@ -33,18 +33,18 @@ window.api = async function(url, opts) {
     return res.json();
 };
 
-// --- 3. Toast Notification ---
+// --- 3. Toast Notification (iOS notification banner style) ---
 window.showToast = function(message, type) {
     type = type || 'info';
 
     // Remove any existing toast
-    var existing = document.querySelector('.toast');
+    var existing = document.querySelector('.apple-toast') || document.querySelector('.toast');
     if (existing) existing.remove();
 
     var toast = document.createElement('div');
-    toast.className = 'toast';
-    if (type === 'success') toast.classList.add('toast-success');
-    if (type === 'error') toast.classList.add('toast-error');
+    toast.className = 'apple-toast';
+    if (type === 'success') toast.classList.add('apple-toast-success');
+    if (type === 'error') toast.classList.add('apple-toast-error');
     toast.textContent = message;
     document.body.appendChild(toast);
 
@@ -55,10 +55,10 @@ window.showToast = function(message, type) {
     setTimeout(function() {
         toast.classList.remove('show');
         setTimeout(function() { toast.remove(); }, 300);
-    }, 3000);
+    }, 2800);
 };
 
-// --- 4. Confirm Dialog (returns Promise<boolean>) ---
+// --- 4. Confirm Dialog (iOS UIAlertController style, returns Promise<boolean>) ---
 window.showConfirm = function(message, confirmText, cancelText) {
     confirmText = confirmText || '确认';
     cancelText = cancelText || '取消';
@@ -68,50 +68,52 @@ window.showConfirm = function(message, confirmText, cancelText) {
         var overlay = document.createElement('div');
         overlay.style.cssText =
             'position:fixed;inset:0;background:rgba(0,0,0,0.4);' +
-            'backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);' +
+            'backdrop-filter:blur(15px);-webkit-backdrop-filter:blur(15px);' +
             'z-index:10000;display:flex;align-items:center;justify-content:center;' +
-            'opacity:0;transition:opacity 0.3s cubic-bezier(0.25,1,0.5,1);';
+            'opacity:0;transition:opacity 0.25s cubic-bezier(0.25,1,0.5,1);';
 
         // Modal
         var modal = document.createElement('div');
         modal.style.cssText =
-            'background:var(--color-surface,#fff);border-radius:24px;' +
-            'box-shadow:0 12px 40px rgba(0,0,0,0.08);width:290px;' +
+            'background:var(--color-surface,#fff);border-radius:14px;' +
+            'box-shadow:0 8px 30px rgba(0,0,0,0.15);width:270px;' +
             'text-align:center;overflow:hidden;' +
-            'transform:scale(0.95);transition:transform 0.3s cubic-bezier(0.25,1,0.5,1);' +
-            'padding-top:24px;';
+            'transform:scale(1.08);opacity:0;transition:transform 0.25s cubic-bezier(0.25,1,0.5,1), opacity 0.25s cubic-bezier(0.25,1,0.5,1);';
 
         // Message
         var msg = document.createElement('div');
         msg.style.cssText =
-            'padding:0 16px 24px;font-size:1.05rem;font-weight:600;' +
-            'color:var(--color-text,#1d1d1f);line-height:1.4;';
+            'padding:20px 16px 20px;font-size:1.05rem;font-weight:600;' +
+            'color:var(--color-text,#1d1d1f);line-height:1.4;letter-spacing:-0.01em;';
         msg.textContent = message;
 
         // Button row
         var btnRow = document.createElement('div');
         btnRow.style.cssText =
-            'display:flex;border-top:1px solid rgba(0,0,0,0.1);';
+            'display:flex;border-top:0.5px solid var(--color-border);';
 
         var btnCancel = document.createElement('button');
         btnCancel.textContent = cancelText;
         btnCancel.style.cssText =
-            'flex:1;padding:14px 0;background:transparent;border:none;' +
-            'border-right:1px solid rgba(0,0,0,0.1);' +
-            'font-size:1.05rem;color:var(--color-text-secondary,#86868b);' +
-            'font-family:inherit;font-weight:500;cursor:pointer;';
+            'flex:1;padding:12px 0;background:transparent;border:none;' +
+            'border-right:0.5px solid var(--color-border);' +
+            'font-size:1.05rem;color:var(--color-blue,#0071e3);' +
+            'font-family:inherit;font-weight:400;cursor:pointer;' +
+            '-webkit-tap-highlight-color:transparent;outline:none;';
 
         var btnConfirm = document.createElement('button');
         btnConfirm.textContent = confirmText;
         btnConfirm.style.cssText =
-            'flex:1;padding:14px 0;background:transparent;border:none;' +
+            'flex:1;padding:12px 0;background:transparent;border:none;' +
             'font-size:1.05rem;color:var(--color-blue,#0071e3);' +
-            'font-family:inherit;font-weight:700;cursor:pointer;';
+            'font-family:inherit;font-weight:600;cursor:pointer;' +
+            '-webkit-tap-highlight-color:transparent;outline:none;';
 
         function cleanup(result) {
             overlay.style.opacity = '0';
-            modal.style.transform = 'scale(0.95)';
-            setTimeout(function() { overlay.remove(); }, 300);
+            modal.style.transform = 'scale(0.92)';
+            modal.style.opacity = '0';
+            setTimeout(function() { overlay.remove(); }, 250);
             resolve(result);
         }
 
@@ -128,6 +130,7 @@ window.showConfirm = function(message, confirmText, cancelText) {
         requestAnimationFrame(function() {
             overlay.style.opacity = '1';
             modal.style.transform = 'scale(1)';
+            modal.style.opacity = '1';
         });
     });
 };
