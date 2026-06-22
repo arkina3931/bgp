@@ -130,7 +130,7 @@ async def broadcast_update():
 @router.get("/", response_class=HTMLResponse)
 async def index(request: Request):
     data = engine.calculate_data()
-    return templates.TemplateResponse("index.html", {"request": request, "data": data, "stats": data['stats']})
+    return templates.TemplateResponse(request=request, name="index.html", context={"request": request, "data": data, "stats": data['stats']})
 
 
 # ---------------------------------------------------------------------------

@@ -41,7 +41,7 @@ class EndRoundRequest(BaseModel):
 
 @router.get("/", response_class=HTMLResponse)
 async def index(request: Request):
-    return templates.TemplateResponse("index.html", {"request": request})
+    return templates.TemplateResponse(request=request, name="index.html", context={"request": request})
 
 @router.post("/api/join")
 async def join_game(req: JoinRoomRequest):

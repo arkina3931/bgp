@@ -64,7 +64,7 @@ for mount_path, module_name in APPS_CONFIG.items():
         print(f"Error importing {mount_path}: {e}")
 
 # Templates for Landing Page
-templates = Jinja2Templates(directory="templates", cache_size=0)  # cache_size=0 for Python 3.14 compat
+templates = Jinja2Templates(directory="templates")
 
 @app.get("/", response_class=HTMLResponse)
 async def index(request: Request):
@@ -78,7 +78,7 @@ async def index(request: Request):
             game_weights.append({"name": game.name, "weight": round(game.weight, 2)})
     game_weights.sort(key=lambda x: x["weight"], reverse=True)
     
-    return templates.TemplateResponse("index.html", {
+    return templates.TemplateResponse(request=request, name="index.html", context={
         "request": request, 
         "leaderboard": leaderboard, 
         "loaded_apps": loaded_apps,
@@ -87,7 +87,7 @@ async def index(request: Request):
 
 @app.get("/gamelist", response_class=HTMLResponse)
 async def gamelist(request: Request):
-    return templates.TemplateResponse("gamelist.html", {"request": request})
+    return templates.TemplateResponse(request=request, name="gamelist.html", context={"request": request})
 
 @app.get("/api/leaderboard")
 async def get_leaderboard_api():
