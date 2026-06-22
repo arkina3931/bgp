@@ -14,20 +14,19 @@ from fastapi.templating import Jinja2Templates
 from pydantic import BaseModel
 
 import database
-from explodingkittens.engine import GameState, SimpleGameEngine
+from services.simple_game import SimpleGameService
 
 router = APIRouter(prefix="/explodingkittens", tags=["ExplodingKittens"])
 base_dir = os.path.dirname(os.path.abspath(__file__))
 templates = Jinja2Templates(directory=[base_dir, "templates"])
 
 # ---------------------------------------------------------------------------
-# 状态 & 引擎实例
+# 状态 & 服务实例
 # ---------------------------------------------------------------------------
-game_state = GameState()
-engine = SimpleGameEngine()
 global_lock = asyncio.Lock()
 
 GAME_NAME = "ExplodingKittens"
+service = SimpleGameService("game:explodingkittens:players", GAME_NAME)
 
 # ---------------------------------------------------------------------------
 # 请求模型
@@ -46,39 +45,26 @@ class RecordRequest(BaseModel):
 @router.post("/api/add_player")
 async def add_player(req: NameRequest):
     async with global_lock:
-        return engine.add_player(game_state, req.name)
+        return await service.add_player(req.name)
 
 @router.post("/api/remove_player")
 async def remove_player(req: NameRequest):
     async with global_lock:
-        return engine.remove_player(game_state, req.name)
+        return await service.remove_player(req.name)
 
 @router.post("/api/record")
 async def record_game(req: RecordRequest):
     async with global_lock:
-        validation = engine.validate_record(game_state, req.winner)
-        if validation["status"] != "ok":
-            return validation
-
-        for player_name in game_state.players:
-            await database.record_result(
-                GAME_NAME, player_name, player_name == req.winner
-            )
-
-        players_snapshot = list(game_state.players)
-        engine.reset(game_state)
-
-    return {"status": "ok", "players": players_snapshot, "winner": req.winner}
+        return await service.record_winner(req.winner)
 
 @router.post("/api/reset")
 async def reset_game():
     async with global_lock:
-        engine.reset(game_state)
-    return {"status": "ok"}
+        return await service.reset()
 
 @router.get("/api/status")
 async def get_status():
-    return engine.get_status(game_state)
+    return await service.status()
 
 @router.get("/api/leaderboard")
 async def get_leaderboard():
