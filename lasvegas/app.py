@@ -7,8 +7,8 @@ from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 from pydantic import BaseModel
 
+from core.events import channel_for_game, publish_game_event
 from database import get_lasvegas_leaderboard, record_lasvegas_game
-from state_store import get_store
 from lasvegas.engine import GameState, LasVegasEngine
 
 router = APIRouter(prefix="/lasvegas", tags=["LasVegas"])
@@ -24,8 +24,12 @@ global_lock = asyncio.Lock()
 
 
 async def _publish(event: str) -> None:
-    """通过 state_store 发布状态变更事件（由推送网关自动广播）。"""
-    await get_store().publish("game:lasvegas", {"game": "lasvegas", "event": event})
+    """通过事件网关发布状态变更事件（由推送网关自动广播）。"""
+    await publish_game_event(
+        channel_for_game("lasvegas"),
+        event,
+        payload={"game": "lasvegas"},
+    )
 
 
 # ---------------------------------------------------------------------------

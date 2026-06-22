@@ -1,6 +1,10 @@
 from state_store import get_store
 
 
+def channel_for_game(game_id: str) -> str:
+    return f"game:{game_id}"
+
+
 async def publish_game_event(
     channel: str,
     event: str,

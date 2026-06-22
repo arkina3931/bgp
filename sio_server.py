@@ -4,7 +4,7 @@ sio_server.py - Socket.IO 推送网关 (Event Gateway)
 职责：
   1. 维护全局 Socket.IO 服务端实例
   2. EventGateway 订阅 state_store 的事件频道，自动向前端广播 state_update
-  3. 游戏模块不再直接调用 sio.emit()，而是通过 state_store.publish() 发布事件
+  3. 游戏模块不再直接调用 sio.emit()，而是通过 core.events 发布事件
 """
 
 import socketio
