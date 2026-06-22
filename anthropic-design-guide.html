@@ -1,0 +1,1459 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Anthropic 设计语言指南</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;1,400&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+/* =========================================
+   ANTHROPIC 官方品牌 CSS 变量系统
+   直接复制到你的项目中使用
+========================================= */
+:root {
+  /* 核心色彩系统 */
+  --color-dark:       #141413;   /* 主文本 / 深色背景 */
+  --color-light:      #faf9f5;   /* 浅色背景 / 深色背景上的文字 */
+  --color-mid-gray:   #b0aea5;   /* 次要元素 / 占位符 */
+  --color-light-gray: #e8e6dc;   /* 微妙背景 / 分隔线 */
+  --color-warm-white: #f5f4ef;   /* 卡片背景 */
+
+  /* 强调色 */
+  --color-orange:     #d97757;   /* 主要强调色 - CTA按钮 / 重点 */
+  --color-blue:       #6a9bcc;   /* 次要强调色 - 链接 / 信息 */
+  --color-green:      #788c5d;   /* 三级强调色 - 成功状态 */
+
+  /* 字体系统 */
+  /* 正式商用：Styrene A/B (Display) + Tiempos Text (Body) */
+  /* 开源替代方案如下 */
+  --font-display: 'Lora', 'Georgia', serif;         /* Tiempos 替代 */
+  --font-body:    'DM Sans', 'Helvetica Neue', sans-serif;   /* Styrene 替代 */
+  --font-mono:    'DM Mono', 'Menlo', monospace;
+
+  /* 间距系统 - 8px 基础网格 */
+  --space-1:  4px;
+  --space-2:  8px;
+  --space-3:  12px;
+  --space-4:  16px;
+  --space-5:  24px;
+  --space-6:  32px;
+  --space-7:  48px;
+  --space-8:  64px;
+  --space-9:  96px;
+  --space-10: 128px;
+
+  /* 圆角 */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 20px;
+  --radius-pill: 999px;
+
+  /* 字号 */
+  --text-xs:   11px;
+  --text-sm:   13px;
+  --text-base: 15px;
+  --text-md:   17px;
+  --text-lg:   20px;
+  --text-xl:   24px;
+  --text-2xl:  32px;
+  --text-3xl:  42px;
+  --text-4xl:  56px;
+  --text-5xl:  72px;
+
+  /* 行高 */
+  --leading-tight:  1.2;
+  --leading-snug:   1.35;
+  --leading-normal: 1.6;
+  --leading-loose:  1.75;
+
+  /* 字重 */
+  --weight-light:   300;
+  --weight-normal:  400;
+  --weight-medium:  500;
+  --weight-semi:    600;
+
+  /* 动效 */
+  --ease-out:    cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out: cubic-bezier(0.83, 0, 0.17, 1);
+  --duration-fast:   150ms;
+  --duration-normal: 280ms;
+  --duration-slow:   500ms;
+
+  /* 阴影（极克制使用） */
+  --shadow-sm: 0 1px 3px rgba(20,20,19,0.06), 0 1px 2px rgba(20,20,19,0.04);
+  --shadow-md: 0 4px 16px rgba(20,20,19,0.08), 0 2px 4px rgba(20,20,19,0.04);
+}
+
+/* =========================================
+   基础重置
+========================================= */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  font-weight: var(--weight-normal);
+  line-height: var(--leading-normal);
+  color: var(--color-dark);
+  background-color: var(--color-light);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* =========================================
+   页面布局
+========================================= */
+.page-wrapper { max-width: 960px; margin: 0 auto; padding: 0 var(--space-6); }
+
+.section {
+  padding: var(--space-9) 0;
+  border-bottom: 1px solid var(--color-light-gray);
+}
+.section:last-child { border-bottom: none; }
+
+.section-label {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-medium);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-mid-gray);
+  margin-bottom: var(--space-4);
+}
+
+.section-title {
+  font-family: var(--font-display);
+  font-size: var(--text-2xl);
+  font-weight: var(--weight-medium);
+  line-height: var(--leading-snug);
+  color: var(--color-dark);
+  margin-bottom: var(--space-3);
+}
+
+.section-desc {
+  font-size: var(--text-md);
+  color: var(--color-mid-gray);
+  line-height: var(--leading-loose);
+  max-width: 560px;
+  margin-bottom: var(--space-7);
+}
+
+/* =========================================
+   导航栏 - 可直接复制
+========================================= */
+.nav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(250,249,245,0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--color-light-gray);
+}
+
+.nav-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 0 var(--space-6);
+  height: 56px;
+}
+
+.nav-logo {
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+  font-weight: var(--weight-medium);
+  color: var(--color-dark);
+  text-decoration: none;
+  letter-spacing: -0.02em;
+}
+
+.nav-logo span {
+  color: var(--color-orange);
+  font-style: italic;
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: var(--space-5);
+  list-style: none;
+}
+
+.nav-links a {
+  font-size: var(--text-sm);
+  font-weight: var(--weight-normal);
+  color: var(--color-mid-gray);
+  text-decoration: none;
+  transition: color var(--duration-fast) var(--ease-out);
+}
+
+.nav-links a:hover { color: var(--color-dark); }
+
+.nav-cta {
+  font-size: var(--text-sm) !important;
+  font-weight: var(--weight-medium) !important;
+  color: var(--color-dark) !important;
+  background: var(--color-dark);
+  color: var(--color-light) !important;
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-pill);
+  transition: opacity var(--duration-fast) var(--ease-out) !important;
+}
+.nav-cta:hover { opacity: 0.8; }
+
+/* =========================================
+   HERO 区块
+========================================= */
+.hero {
+  padding: var(--space-10) 0 var(--space-9);
+  max-width: 960px;
+  margin: 0 auto;
+  padding-left: var(--space-6);
+  padding-right: var(--space-6);
+}
+
+.hero-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-orange);
+  margin-bottom: var(--space-5);
+}
+
+.hero-eyebrow::before {
+  content: '';
+  display: block;
+  width: 20px;
+  height: 1px;
+  background: var(--color-orange);
+}
+
+.hero-title {
+  font-family: var(--font-display);
+  font-size: clamp(var(--text-3xl), 6vw, var(--text-5xl));
+  font-weight: var(--weight-normal);
+  line-height: var(--leading-tight);
+  letter-spacing: -0.02em;
+  color: var(--color-dark);
+  margin-bottom: var(--space-6);
+  max-width: 720px;
+}
+
+.hero-title em {
+  font-style: italic;
+  color: var(--color-orange);
+}
+
+.hero-body {
+  font-size: var(--text-md);
+  line-height: var(--leading-loose);
+  color: var(--color-mid-gray);
+  max-width: 520px;
+  margin-bottom: var(--space-7);
+}
+
+/* =========================================
+   颜色展示
+========================================= */
+.color-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: var(--space-4);
+}
+
+.color-swatch {
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  border: 1px solid var(--color-light-gray);
+}
+
+.swatch-color {
+  height: 88px;
+  position: relative;
+}
+
+.swatch-info {
+  padding: var(--space-3);
+  background: white;
+}
+
+.swatch-name {
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  color: var(--color-dark);
+  margin-bottom: 2px;
+}
+
+.swatch-hex {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--color-mid-gray);
+}
+
+.swatch-usage {
+  font-size: 10px;
+  color: var(--color-mid-gray);
+  margin-top: 4px;
+  line-height: 1.4;
+}
+
+/* =========================================
+   字体展示
+========================================= */
+.type-specimen {
+  border: 1px solid var(--color-light-gray);
+  border-radius: var(--radius-lg);
+  padding: var(--space-6);
+  margin-bottom: var(--space-4);
+  background: white;
+}
+
+.type-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--space-5);
+  padding-bottom: var(--space-4);
+  border-bottom: 1px solid var(--color-light-gray);
+}
+
+.type-tag {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  background: var(--color-light-gray);
+  padding: 3px 8px;
+  border-radius: var(--radius-pill);
+  color: var(--color-dark);
+  letter-spacing: 0.05em;
+}
+
+.type-sample-large {
+  font-family: var(--font-display);
+  font-size: var(--text-4xl);
+  font-weight: var(--weight-normal);
+  line-height: var(--leading-tight);
+  letter-spacing: -0.02em;
+  color: var(--color-dark);
+  margin-bottom: var(--space-4);
+}
+
+.type-sample-large em { font-style: italic; }
+
+.type-sample-body {
+  font-family: var(--font-body);
+  font-size: var(--text-md);
+  line-height: var(--leading-loose);
+  color: var(--color-mid-gray);
+}
+
+.type-scale-row {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-4);
+  padding: var(--space-3) 0;
+  border-bottom: 1px solid var(--color-light-gray);
+}
+.type-scale-row:last-child { border-bottom: none; }
+
+.type-scale-label {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--color-mid-gray);
+  min-width: 80px;
+  flex-shrink: 0;
+}
+
+/* =========================================
+   按钮系统
+========================================= */
+.btn-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  align-items: center;
+  margin-bottom: var(--space-6);
+}
+
+/* 主按钮 - 深色 */
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  color: var(--color-light);
+  background: var(--color-dark);
+  border: none;
+  border-radius: var(--radius-pill);
+  padding: 10px 20px;
+  cursor: pointer;
+  text-decoration: none;
+  transition: opacity var(--duration-fast) var(--ease-out),
+              transform var(--duration-fast) var(--ease-out);
+  white-space: nowrap;
+}
+.btn-primary:hover { opacity: 0.82; transform: translateY(-1px); }
+.btn-primary:active { transform: translateY(0); opacity: 0.7; }
+
+/* 次要按钮 - 线框 */
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  color: var(--color-dark);
+  background: transparent;
+  border: 1px solid var(--color-light-gray);
+  border-radius: var(--radius-pill);
+  padding: 10px 20px;
+  cursor: pointer;
+  text-decoration: none;
+  transition: border-color var(--duration-fast) var(--ease-out),
+              background var(--duration-fast) var(--ease-out),
+              transform var(--duration-fast) var(--ease-out);
+  white-space: nowrap;
+}
+.btn-secondary:hover {
+  border-color: var(--color-mid-gray);
+  background: var(--color-warm-white);
+  transform: translateY(-1px);
+}
+
+/* 强调按钮 - 橙色 */
+.btn-accent {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  color: white;
+  background: var(--color-orange);
+  border: none;
+  border-radius: var(--radius-pill);
+  padding: 10px 20px;
+  cursor: pointer;
+  text-decoration: none;
+  transition: filter var(--duration-fast) var(--ease-out),
+              transform var(--duration-fast) var(--ease-out);
+  white-space: nowrap;
+}
+.btn-accent:hover { filter: brightness(1.08); transform: translateY(-1px); }
+
+/* 幽灵按钮 */
+.btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  color: var(--color-mid-gray);
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-pill);
+  padding: 10px 20px;
+  cursor: pointer;
+  text-decoration: none;
+  transition: color var(--duration-fast) var(--ease-out);
+}
+.btn-ghost:hover { color: var(--color-dark); }
+
+/* 图标按钮 */
+.btn-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  background: transparent;
+  border: 1px solid var(--color-light-gray);
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 16px;
+  transition: border-color var(--duration-fast), background var(--duration-fast);
+}
+.btn-icon:hover {
+  border-color: var(--color-mid-gray);
+  background: var(--color-warm-white);
+}
+
+/* =========================================
+   卡片系统
+========================================= */
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: var(--space-4);
+  margin-bottom: var(--space-6);
+}
+
+/* 基础卡片 */
+.card {
+  background: white;
+  border: 1px solid var(--color-light-gray);
+  border-radius: var(--radius-lg);
+  padding: var(--space-5);
+  transition: border-color var(--duration-normal) var(--ease-out),
+              transform var(--duration-normal) var(--ease-out),
+              box-shadow var(--duration-normal) var(--ease-out);
+}
+
+.card:hover {
+  border-color: var(--color-mid-gray);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.card-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-md);
+  background: var(--color-light-gray);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  margin-bottom: var(--space-4);
+}
+
+.card-title {
+  font-size: var(--text-base);
+  font-weight: var(--weight-medium);
+  color: var(--color-dark);
+  margin-bottom: var(--space-2);
+}
+
+.card-body {
+  font-size: var(--text-sm);
+  color: var(--color-mid-gray);
+  line-height: var(--leading-loose);
+}
+
+/* 深色卡片 */
+.card-dark {
+  background: var(--color-dark);
+  border-color: transparent;
+  color: var(--color-light);
+}
+.card-dark:hover { border-color: rgba(255,255,255,0.15); }
+.card-dark .card-title { color: var(--color-light); }
+.card-dark .card-body { color: var(--color-mid-gray); }
+.card-dark .card-icon { background: rgba(255,255,255,0.1); }
+
+/* 暖色卡片 */
+.card-warm {
+  background: var(--color-warm-white);
+  border-color: var(--color-light-gray);
+}
+
+/* =========================================
+   标签与徽章
+========================================= */
+.badge-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-bottom: var(--space-5);
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-medium);
+  padding: 4px 10px;
+  border-radius: var(--radius-pill);
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+
+.badge-default {
+  background: var(--color-light-gray);
+  color: var(--color-dark);
+}
+
+.badge-orange {
+  background: rgba(217,119,87,0.12);
+  color: var(--color-orange);
+}
+
+.badge-blue {
+  background: rgba(106,155,204,0.12);
+  color: var(--color-blue);
+}
+
+.badge-green {
+  background: rgba(120,140,93,0.12);
+  color: var(--color-green);
+}
+
+.badge-dark {
+  background: var(--color-dark);
+  color: var(--color-light);
+}
+
+/* =========================================
+   输入框
+========================================= */
+.input-group {
+  margin-bottom: var(--space-4);
+}
+
+.input-label {
+  display: block;
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  color: var(--color-dark);
+  margin-bottom: var(--space-2);
+}
+
+.input-field {
+  width: 100%;
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  color: var(--color-dark);
+  background: white;
+  border: 1px solid var(--color-light-gray);
+  border-radius: var(--radius-md);
+  padding: 10px var(--space-4);
+  outline: none;
+  transition: border-color var(--duration-fast) var(--ease-out),
+              box-shadow var(--duration-fast) var(--ease-out);
+  -webkit-appearance: none;
+}
+
+.input-field::placeholder { color: var(--color-mid-gray); }
+
+.input-field:hover { border-color: var(--color-mid-gray); }
+
+.input-field:focus {
+  border-color: var(--color-dark);
+  box-shadow: 0 0 0 3px rgba(20,20,19,0.07);
+}
+
+/* =========================================
+   代码块
+========================================= */
+.code-block {
+  background: var(--color-dark);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  margin-bottom: var(--space-6);
+}
+
+.code-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-3) var(--space-4);
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+
+.code-dots {
+  display: flex;
+  gap: 6px;
+}
+
+.code-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.code-filename {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--color-mid-gray);
+}
+
+pre {
+  padding: var(--space-5);
+  overflow-x: auto;
+}
+
+code {
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  line-height: 1.8;
+  color: #e8e6dc;
+}
+
+.c-comment { color: #6a7a5a; }
+.c-key { color: #d97757; }
+.c-val { color: #6a9bcc; }
+.c-str { color: #a8c97a; }
+.c-tag { color: #b0aea5; }
+
+/* =========================================
+   分隔线
+========================================= */
+.divider {
+  border: none;
+  border-top: 1px solid var(--color-light-gray);
+  margin: var(--space-6) 0;
+}
+
+/* =========================================
+   Hero 区块示例 - 完整页面组件
+========================================= */
+.demo-hero {
+  background: var(--color-dark);
+  border-radius: var(--radius-xl);
+  padding: var(--space-9) var(--space-7);
+  margin-bottom: var(--space-4);
+  position: relative;
+  overflow: hidden;
+}
+
+.demo-hero::before {
+  content: '';
+  position: absolute;
+  top: -60px;
+  right: -60px;
+  width: 300px;
+  height: 300px;
+  background: radial-gradient(circle, rgba(217,119,87,0.15) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.demo-hero-label {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-orange);
+  margin-bottom: var(--space-5);
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.demo-hero-label::before {
+  content: '';
+  display: block;
+  width: 16px;
+  height: 1px;
+  background: var(--color-orange);
+}
+
+.demo-hero-title {
+  font-family: var(--font-display);
+  font-size: clamp(var(--text-2xl), 5vw, var(--text-4xl));
+  font-weight: var(--weight-normal);
+  line-height: var(--leading-tight);
+  letter-spacing: -0.02em;
+  color: var(--color-light);
+  margin-bottom: var(--space-5);
+  max-width: 500px;
+}
+
+.demo-hero-title em {
+  font-style: italic;
+  color: var(--color-orange);
+}
+
+.demo-hero-body {
+  font-size: var(--text-base);
+  line-height: var(--leading-loose);
+  color: var(--color-mid-gray);
+  max-width: 440px;
+  margin-bottom: var(--space-6);
+}
+
+.demo-hero-actions {
+  display: flex;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+}
+
+.btn-hero-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  color: var(--color-dark);
+  background: var(--color-light);
+  border: none;
+  border-radius: var(--radius-pill);
+  padding: 11px 22px;
+  cursor: pointer;
+  text-decoration: none;
+  transition: opacity var(--duration-fast);
+}
+.btn-hero-primary:hover { opacity: 0.88; }
+
+.btn-hero-secondary {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-normal);
+  color: var(--color-mid-gray);
+  background: transparent;
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: var(--radius-pill);
+  padding: 11px 22px;
+  cursor: pointer;
+  text-decoration: none;
+  transition: border-color var(--duration-fast), color var(--duration-fast);
+}
+.btn-hero-secondary:hover {
+  border-color: rgba(255,255,255,0.35);
+  color: var(--color-light);
+}
+
+/* =========================================
+   标注框 / Callout
+========================================= */
+.callout {
+  border-radius: var(--radius-lg);
+  padding: var(--space-4) var(--space-5);
+  margin-bottom: var(--space-4);
+  border-left: 3px solid;
+  display: flex;
+  gap: var(--space-3);
+}
+
+.callout-neutral {
+  background: var(--color-warm-white);
+  border-color: var(--color-mid-gray);
+}
+.callout-orange {
+  background: rgba(217,119,87,0.07);
+  border-color: var(--color-orange);
+}
+.callout-blue {
+  background: rgba(106,155,204,0.07);
+  border-color: var(--color-blue);
+}
+
+.callout-content { flex: 1; }
+.callout-title {
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  color: var(--color-dark);
+  margin-bottom: 4px;
+}
+.callout-body {
+  font-size: var(--text-sm);
+  color: var(--color-mid-gray);
+  line-height: var(--leading-normal);
+}
+
+/* =========================================
+   动效演示
+========================================= */
+.motion-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: var(--space-4);
+  margin-bottom: var(--space-6);
+}
+
+.motion-card {
+  background: white;
+  border: 1px solid var(--color-light-gray);
+  border-radius: var(--radius-lg);
+  padding: var(--space-5);
+  text-align: center;
+  cursor: pointer;
+  transition: all var(--duration-normal) var(--ease-out);
+}
+
+.motion-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-md);
+  border-color: var(--color-mid-gray);
+}
+
+.motion-icon {
+  font-size: 28px;
+  margin-bottom: var(--space-3);
+  display: block;
+}
+
+.motion-name {
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  color: var(--color-dark);
+  margin-bottom: var(--space-1);
+}
+
+.motion-desc {
+  font-size: var(--text-xs);
+  color: var(--color-mid-gray);
+}
+
+/* =========================================
+   间距可视化
+========================================= */
+.spacing-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  padding: var(--space-2) 0;
+  border-bottom: 1px solid var(--color-light-gray);
+}
+.spacing-row:last-child { border-bottom: none; }
+
+.spacing-bar-wrapper { flex: 1; }
+.spacing-bar {
+  background: var(--color-light-gray);
+  border-radius: 2px;
+  height: 16px;
+  display: flex;
+  align-items: center;
+  padding-left: 8px;
+}
+.spacing-bar-fill {
+  background: var(--color-orange);
+  height: 100%;
+  border-radius: 2px;
+  opacity: 0.4;
+}
+
+.spacing-label {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--color-mid-gray);
+  min-width: 60px;
+}
+.spacing-value {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--color-dark);
+  min-width: 40px;
+  text-align: right;
+}
+
+/* =========================================
+   页尾
+========================================= */
+.footer {
+  background: var(--color-dark);
+  color: var(--color-light);
+  padding: var(--space-7) 0;
+}
+.footer-inner {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 0 var(--space-6);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.footer-logo {
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+  font-weight: var(--weight-medium);
+  letter-spacing: -0.02em;
+}
+.footer-logo em { font-style: italic; color: var(--color-orange); }
+.footer-copy {
+  font-size: var(--text-xs);
+  color: var(--color-mid-gray);
+  font-family: var(--font-mono);
+}
+
+/* =========================================
+   页面入场动画
+========================================= */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.fade-up {
+  animation: fadeUp var(--duration-slow) var(--ease-out) both;
+}
+.fade-up-1 { animation-delay: 80ms; }
+.fade-up-2 { animation-delay: 160ms; }
+.fade-up-3 { animation-delay: 240ms; }
+.fade-up-4 { animation-delay: 320ms; }
+</style>
+</head>
+<body>
+
+<!-- 导航栏 -->
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="#" class="nav-logo">Anthropic<span>/</span></a>
+    <ul class="nav-links">
+      <li><a href="#colors">颜色</a></li>
+      <li><a href="#typography">字体</a></li>
+      <li><a href="#components">组件</a></li>
+      <li><a href="#motion">动效</a></li>
+      <li><a class="nav-cta" href="#code">获取代码</a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- Hero -->
+<div class="hero fade-up">
+  <span class="hero-eyebrow">Design Language Guide</span>
+  <h1 class="hero-title fade-up fade-up-1">
+    Anthropic<br>设计语言<em>完整指南</em>
+  </h1>
+  <p class="hero-body fade-up fade-up-2">
+    涵盖色彩系统、字体排版、组件库与动效原则。所有 CSS 变量与代码可直接复制到你的项目中使用。
+  </p>
+</div>
+
+<div class="page-wrapper">
+
+  <!-- ===== 颜色系统 ===== -->
+  <section class="section" id="colors">
+    <p class="section-label">01 — Color System</p>
+    <h2 class="section-title">色彩系统</h2>
+    <p class="section-desc">Anthropic 的调色板以温暖的中性色为基础，通过克制的强调色传递活力感。核心哲学是"少即是多"，背景永远是暖白而非纯白。</p>
+
+    <p style="font-size:var(--text-sm);font-weight:var(--weight-medium);color:var(--color-dark);margin-bottom:var(--space-3);">核心色</p>
+    <div class="color-grid" style="margin-bottom:var(--space-6);">
+      <div class="color-swatch">
+        <div class="swatch-color" style="background:#141413;"></div>
+        <div class="swatch-info">
+          <div class="swatch-name">Dark</div>
+          <div class="swatch-hex">#141413</div>
+          <div class="swatch-usage">主文本 / 深色背景 / 主按钮</div>
+        </div>
+      </div>
+      <div class="color-swatch">
+        <div class="swatch-color" style="background:#faf9f5; border-bottom:1px solid #e8e6dc;"></div>
+        <div class="swatch-info">
+          <div class="swatch-name">Light</div>
+          <div class="swatch-hex">#faf9f5</div>
+          <div class="swatch-usage">页面背景（暖白）</div>
+        </div>
+      </div>
+      <div class="color-swatch">
+        <div class="swatch-color" style="background:#b0aea5;"></div>
+        <div class="swatch-info">
+          <div class="swatch-name">Mid Gray</div>
+          <div class="swatch-hex">#b0aea5</div>
+          <div class="swatch-usage">次要文本 / 占位符</div>
+        </div>
+      </div>
+      <div class="color-swatch">
+        <div class="swatch-color" style="background:#e8e6dc;"></div>
+        <div class="swatch-info">
+          <div class="swatch-name">Light Gray</div>
+          <div class="swatch-hex">#e8e6dc</div>
+          <div class="swatch-usage">边框 / 分隔线 / 微妙背景</div>
+        </div>
+      </div>
+      <div class="color-swatch">
+        <div class="swatch-color" style="background:#f5f4ef; border-bottom:1px solid #e8e6dc;"></div>
+        <div class="swatch-info">
+          <div class="swatch-name">Warm White</div>
+          <div class="swatch-hex">#f5f4ef</div>
+          <div class="swatch-usage">卡片背景 / 悬停状态</div>
+        </div>
+      </div>
+    </div>
+
+    <p style="font-size:var(--text-sm);font-weight:var(--weight-medium);color:var(--color-dark);margin-bottom:var(--space-3);">强调色</p>
+    <div class="color-grid">
+      <div class="color-swatch">
+        <div class="swatch-color" style="background:#d97757;"></div>
+        <div class="swatch-info">
+          <div class="swatch-name">Orange ★</div>
+          <div class="swatch-hex">#d97757</div>
+          <div class="swatch-usage">主要强调色 · CTA · Logo 斜杠 · 品牌标志性用色</div>
+        </div>
+      </div>
+      <div class="color-swatch">
+        <div class="swatch-color" style="background:#6a9bcc;"></div>
+        <div class="swatch-info">
+          <div class="swatch-name">Blue</div>
+          <div class="swatch-hex">#6a9bcc</div>
+          <div class="swatch-usage">次要强调色 · 链接 · 信息状态</div>
+        </div>
+      </div>
+      <div class="color-swatch">
+        <div class="swatch-color" style="background:#788c5d;"></div>
+        <div class="swatch-info">
+          <div class="swatch-name">Green</div>
+          <div class="swatch-hex">#788c5d</div>
+          <div class="swatch-usage">三级强调色 · 成功状态 · 自然元素</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== 字体系统 ===== -->
+  <section class="section" id="typography">
+    <p class="section-label">02 — Typography</p>
+    <h2 class="section-title">字体排版</h2>
+    <p class="section-desc">官方字体为 Styrene（标题/显示）搭配 Tiempos Text（正文），皆为商用授权字体。下方提供可免费使用的替代方案。</p>
+
+    <div class="type-specimen">
+      <div class="type-meta">
+        <div>
+          <div class="swatch-name" style="margin-bottom:4px;">Display / Heading Font</div>
+          <div class="swatch-hex">Tiempos Text → 开源替代: Lora (Google Fonts)</div>
+        </div>
+        <span class="type-tag">serif · display</span>
+      </div>
+      <div class="type-sample-large">AI for the <em>long term.</em></div>
+      <div style="font-family:var(--font-display);font-size:var(--text-xl);color:var(--color-mid-gray);font-weight:var(--weight-normal);line-height:var(--leading-snug);letter-spacing:-0.01em;">
+        Building reliable, interpretable,<br>and steerable AI systems.
+      </div>
+    </div>
+
+    <div class="type-specimen">
+      <div class="type-meta">
+        <div>
+          <div class="swatch-name" style="margin-bottom:4px;">Body / UI Font</div>
+          <div class="swatch-hex">Styrene A → 开源替代: DM Sans (Google Fonts)</div>
+        </div>
+        <span class="type-tag">sans-serif · body</span>
+      </div>
+      <div class="type-sample-body">
+        Anthropic 的设计语言追求在技术精准性与人文温度之间取得平衡。每一个排版决策都服务于清晰表达，而非装饰。字体应当退居内容之后，成为信息传递的无形工具。
+      </div>
+    </div>
+
+    <div class="type-specimen">
+      <div class="type-meta">
+        <div>
+          <div class="swatch-name" style="margin-bottom:4px;">字号规范</div>
+          <div class="swatch-hex">基于 8px 网格，标题使用负字间距</div>
+        </div>
+        <span class="type-tag">type scale</span>
+      </div>
+      <div>
+        <div class="type-scale-row">
+          <span class="type-scale-label">--text-5xl</span>
+          <span style="font-family:var(--font-display);font-size:var(--text-5xl);font-weight:var(--weight-normal);letter-spacing:-0.02em;line-height:1;color:var(--color-dark);">72px</span>
+        </div>
+        <div class="type-scale-row">
+          <span class="type-scale-label">--text-4xl</span>
+          <span style="font-family:var(--font-display);font-size:var(--text-4xl);font-weight:var(--weight-normal);letter-spacing:-0.02em;line-height:1;color:var(--color-dark);">56px</span>
+        </div>
+        <div class="type-scale-row">
+          <span class="type-scale-label">--text-3xl</span>
+          <span style="font-family:var(--font-display);font-size:var(--text-3xl);font-weight:var(--weight-normal);letter-spacing:-0.02em;color:var(--color-dark);">42px</span>
+        </div>
+        <div class="type-scale-row">
+          <span class="type-scale-label">--text-2xl</span>
+          <span style="font-family:var(--font-display);font-size:var(--text-2xl);font-weight:var(--weight-normal);letter-spacing:-0.02em;color:var(--color-dark);">32px</span>
+        </div>
+        <div class="type-scale-row">
+          <span class="type-scale-label">--text-xl</span>
+          <span style="font-size:var(--text-xl);font-weight:var(--weight-medium);color:var(--color-dark);">24px – Section Heading</span>
+        </div>
+        <div class="type-scale-row">
+          <span class="type-scale-label">--text-md</span>
+          <span style="font-size:var(--text-md);color:var(--color-dark);">17px – Lead / Subtitle</span>
+        </div>
+        <div class="type-scale-row">
+          <span class="type-scale-label">--text-base</span>
+          <span style="font-size:var(--text-base);color:var(--color-mid-gray);">15px – Body text, line-height 1.6</span>
+        </div>
+        <div class="type-scale-row">
+          <span class="type-scale-label">--text-sm</span>
+          <span style="font-size:var(--text-sm);color:var(--color-mid-gray);">13px – Caption / Secondary info</span>
+        </div>
+        <div class="type-scale-row">
+          <span class="type-scale-label">--text-xs</span>
+          <span style="font-family:var(--font-mono);font-size:var(--text-xs);letter-spacing:0.1em;text-transform:uppercase;color:var(--color-mid-gray);">11px – LABEL / MONO TAG</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== 组件 ===== -->
+  <section class="section" id="components">
+    <p class="section-label">03 — Components</p>
+    <h2 class="section-title">组件系统</h2>
+    <p class="section-desc">所有组件以简洁为原则，通过精准的过渡动画与细腻的状态反馈建立品质感。</p>
+
+    <!-- 按钮 -->
+    <h3 style="font-size:var(--text-base);font-weight:var(--weight-medium);margin-bottom:var(--space-4);">按钮</h3>
+    <div class="btn-grid">
+      <button class="btn-primary">开始使用 →</button>
+      <button class="btn-secondary">了解更多</button>
+      <button class="btn-accent">立即体验</button>
+      <button class="btn-ghost">查看文档</button>
+      <button class="btn-icon">✕</button>
+      <button class="btn-icon">↗</button>
+    </div>
+
+    <hr class="divider">
+
+    <!-- 卡片 -->
+    <h3 style="font-size:var(--text-base);font-weight:var(--weight-medium);margin-bottom:var(--space-4);">卡片</h3>
+    <div class="card-grid">
+      <div class="card">
+        <div class="card-icon">🔬</div>
+        <div class="card-title">AI Safety Research</div>
+        <div class="card-body">致力于构建可解释、可控制的 AI 系统，确保长期安全。</div>
+      </div>
+      <div class="card card-dark">
+        <div class="card-icon">⚡</div>
+        <div class="card-title">Claude API</div>
+        <div class="card-body">将 Claude 的能力集成到你的产品，构建下一代智能应用。</div>
+      </div>
+      <div class="card card-warm">
+        <div class="card-icon">📖</div>
+        <div class="card-title">Constitutional AI</div>
+        <div class="card-body">通过原则性训练方法使 AI 更加安全、可靠、诚实。</div>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <!-- 标签 -->
+    <h3 style="font-size:var(--text-base);font-weight:var(--weight-medium);margin-bottom:var(--space-4);">徽章与标签</h3>
+    <div class="badge-row">
+      <span class="badge badge-default">Default</span>
+      <span class="badge badge-orange">● Orange</span>
+      <span class="badge badge-blue">● Blue</span>
+      <span class="badge badge-green">● Green</span>
+      <span class="badge badge-dark">New</span>
+      <span class="badge badge-orange">Beta</span>
+      <span class="badge badge-default">Safety</span>
+      <span class="badge badge-blue">Research</span>
+    </div>
+
+    <hr class="divider">
+
+    <!-- 标注框 -->
+    <h3 style="font-size:var(--text-base);font-weight:var(--weight-medium);margin-bottom:var(--space-4);">标注框 Callout</h3>
+    <div class="callout callout-orange">
+      <div>⚡</div>
+      <div class="callout-content">
+        <div class="callout-title">设计原则</div>
+        <div class="callout-body">Anthropic 的视觉哲学：做有效的简单事物。每个设计决策都应有明确目的，拒绝装饰性冗余。</div>
+      </div>
+    </div>
+    <div class="callout callout-blue">
+      <div>ℹ</div>
+      <div class="callout-content">
+        <div class="callout-title">字体授权说明</div>
+        <div class="callout-body">Styrene 和 Tiempos 为商业授权字体，个人项目可用 DM Sans + Lora（Google Fonts）替代，风格高度相似。</div>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <!-- 表单 -->
+    <h3 style="font-size:var(--text-base);font-weight:var(--weight-medium);margin-bottom:var(--space-4);">表单输入</h3>
+    <div style="max-width:440px;">
+      <div class="input-group">
+        <label class="input-label">邮箱地址</label>
+        <input class="input-field" type="email" placeholder="hello@example.com">
+      </div>
+      <div class="input-group">
+        <label class="input-label">使用场景</label>
+        <input class="input-field" type="text" placeholder="描述你的项目或团队...">
+      </div>
+      <button class="btn-primary" style="margin-top:var(--space-2);">提交申请 →</button>
+    </div>
+  </section>
+
+  <!-- ===== 完整组件 Demo ===== -->
+  <section class="section">
+    <p class="section-label">04 — Hero Demo</p>
+    <h2 class="section-title">完整 Hero 区块示例</h2>
+    <p class="section-desc">深色 Hero 是 Anthropic 最标志性的视觉语言，橙色光晕强调灯为画面注入温度。</p>
+
+    <div class="demo-hero">
+      <div class="demo-hero-label">AI Safety Company</div>
+      <h2 class="demo-hero-title">
+        Built for the <em>benefit</em><br>of humanity.
+      </h2>
+      <p class="demo-hero-body">
+        We're an AI safety company working to build reliable, interpretable, and steerable AI systems.
+      </p>
+      <div class="demo-hero-actions">
+        <a href="#" class="btn-hero-primary">Explore Claude →</a>
+        <a href="#" class="btn-hero-secondary">Learn about safety</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== 动效 ===== -->
+  <section class="section" id="motion">
+    <p class="section-label">05 — Motion</p>
+    <h2 class="section-title">动效原则</h2>
+    <p class="section-desc">悬停上方体验动效。Anthropic 使用 ease-out 曲线（cubic-bezier(0.16, 1, 0.3, 1)）— 快速开始，优雅减速。</p>
+
+    <div class="motion-grid">
+      <div class="motion-card">
+        <span class="motion-icon">↑</span>
+        <div class="motion-name">Lift</div>
+        <div class="motion-desc">translateY(-4px) + shadow</div>
+      </div>
+      <div class="motion-card" style="transition:all 280ms cubic-bezier(0.16,1,0.3,1);">
+        <span class="motion-icon">○</span>
+        <div class="motion-name">Border Glow</div>
+        <div class="motion-desc">border-color transition</div>
+      </div>
+      <div class="motion-card" style="transition:all 500ms cubic-bezier(0.16,1,0.3,1);">
+        <span class="motion-icon">◎</span>
+        <div class="motion-name">Slow Reveal</div>
+        <div class="motion-desc">duration: 500ms ease-out</div>
+      </div>
+    </div>
+
+    <div class="callout callout-neutral">
+      <div>→</div>
+      <div class="callout-content">
+        <div class="callout-title">动效核心规则</div>
+        <div class="callout-body">Anthropic 的动画设计：克制、有目的、服务于内容。避免跳跳龙式的夸张弹簧效果，偏好线性感强的 ease-out 曲线。页面入场使用 staggered fadeUp（交错延迟 80ms），而非同时出现。</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== CSS 代码 ===== -->
+  <section class="section" id="code">
+    <p class="section-label">06 — CSS Variables</p>
+    <h2 class="section-title">可直接使用的 CSS 变量</h2>
+    <p class="section-desc">将以下代码复制到你项目的 <code style="font-family:var(--font-mono);font-size:var(--text-sm);background:var(--color-light-gray);padding:2px 6px;border-radius:4px;">:root</code> 中即可开始使用 Anthropic 设计语言。</p>
+
+    <div class="code-block">
+      <div class="code-header">
+        <div class="code-dots">
+          <div class="code-dot" style="background:#ff5f56;"></div>
+          <div class="code-dot" style="background:#febc2e;"></div>
+          <div class="code-dot" style="background:#28c840;"></div>
+        </div>
+        <span class="code-filename">styles/tokens.css</span>
+      </div>
+      <pre><code><span class="c-tag">:root</span> {
+  <span class="c-comment">/* ── 品牌核心色 ───────────────────── */</span>
+  <span class="c-key">--color-dark</span>:       <span class="c-str">#141413</span>;
+  <span class="c-key">--color-light</span>:      <span class="c-str">#faf9f5</span>;
+  <span class="c-key">--color-mid-gray</span>:   <span class="c-str">#b0aea5</span>;
+  <span class="c-key">--color-light-gray</span>: <span class="c-str">#e8e6dc</span>;
+  <span class="c-key">--color-warm-white</span>: <span class="c-str">#f5f4ef</span>;
+
+  <span class="c-comment">/* ── 强调色 ───────────────────────── */</span>
+  <span class="c-key">--color-orange</span>:     <span class="c-str">#d97757</span>; <span class="c-comment">/* 主要强调色 */</span>
+  <span class="c-key">--color-blue</span>:       <span class="c-str">#6a9bcc</span>;
+  <span class="c-key">--color-green</span>:      <span class="c-str">#788c5d</span>;
+
+  <span class="c-comment">/* ── 字体 ─────────────────────────── */</span>
+  <span class="c-key">--font-display</span>: <span class="c-str">'Lora'</span>, Georgia, serif;
+  <span class="c-key">--font-body</span>:    <span class="c-str">'DM Sans'</span>, sans-serif;
+  <span class="c-key">--font-mono</span>:    <span class="c-str">'DM Mono'</span>, monospace;
+
+  <span class="c-comment">/* ── 间距（8px 网格）──────────────── */</span>
+  <span class="c-key">--space-1</span>: <span class="c-val">4px</span>;   <span class="c-key">--space-2</span>: <span class="c-val">8px</span>;
+  <span class="c-key">--space-3</span>: <span class="c-val">12px</span>;  <span class="c-key">--space-4</span>: <span class="c-val">16px</span>;
+  <span class="c-key">--space-5</span>: <span class="c-val">24px</span>;  <span class="c-key">--space-6</span>: <span class="c-val">32px</span>;
+  <span class="c-key">--space-7</span>: <span class="c-val">48px</span>;  <span class="c-key">--space-8</span>: <span class="c-val">64px</span>;
+  <span class="c-key">--space-9</span>: <span class="c-val">96px</span>;
+
+  <span class="c-comment">/* ── 圆角 ─────────────────────────── */</span>
+  <span class="c-key">--radius-sm</span>:   <span class="c-val">4px</span>;
+  <span class="c-key">--radius-md</span>:   <span class="c-val">8px</span>;
+  <span class="c-key">--radius-lg</span>:   <span class="c-val">12px</span>;
+  <span class="c-key">--radius-pill</span>: <span class="c-val">999px</span>;
+
+  <span class="c-comment">/* ── 动效 ─────────────────────────── */</span>
+  <span class="c-key">--ease-out</span>:        <span class="c-val">cubic-bezier(0.16, 1, 0.3, 1)</span>;
+  <span class="c-key">--duration-fast</span>:   <span class="c-val">150ms</span>;
+  <span class="c-key">--duration-normal</span>: <span class="c-val">280ms</span>;
+  <span class="c-key">--duration-slow</span>:   <span class="c-val">500ms</span>;
+}</code></pre>
+    </div>
+
+    <!-- 字体引入代码 -->
+    <div class="code-block">
+      <div class="code-header">
+        <div class="code-dots">
+          <div class="code-dot" style="background:#ff5f56;"></div>
+          <div class="code-dot" style="background:#febc2e;"></div>
+          <div class="code-dot" style="background:#28c840;"></div>
+        </div>
+        <span class="code-filename">index.html — 字体引入（开源替代）</span>
+      </div>
+      <pre><code><span class="c-comment">&lt;!-- 在 &lt;head&gt; 中引入 Google Fonts --&gt;</span>
+<span class="c-tag">&lt;link</span> <span class="c-key">rel</span>=<span class="c-str">"preconnect"</span> <span class="c-key">href</span>=<span class="c-str">"https://fonts.googleapis.com"</span><span class="c-tag">&gt;</span>
+<span class="c-tag">&lt;link</span> <span class="c-key">href</span>=<span class="c-str">"https://fonts.googleapis.com/css2?
+  family=Lora:ital,wght@0,400;0,500;1,400
+  &amp;family=DM+Sans:wght@300;400;500
+  &amp;family=DM+Mono:wght@400;500
+  &amp;display=swap"</span>
+  <span class="c-key">rel</span>=<span class="c-str">"stylesheet"</span><span class="c-tag">&gt;</span>
+
+<span class="c-comment">&lt;!-- 商业授权版（完整还原） --&gt;</span>
+<span class="c-comment">&lt;!-- Styrene A/B: commercial.type/fonts/styrene-a --&gt;</span>
+<span class="c-comment">&lt;!-- Tiempos Text: klim.co.nz/retail/tiempos-text --&gt;</span></code></pre>
+    </div>
+  </section>
+
+  <!-- ===== 设计原则 ===== -->
+  <section class="section">
+    <p class="section-label">07 — Design Principles</p>
+    <h2 class="section-title">六条核心设计原则</h2>
+    <p class="section-desc">由 Geist 设计工作室为 Anthropic 制定，指导所有视觉决策。</p>
+    <div class="card-grid">
+      <div class="card">
+        <div class="card-icon" style="background:rgba(217,119,87,0.1);color:var(--color-orange);">①</div>
+        <div class="card-title">暖白而非纯白</div>
+        <div class="card-body">背景使用 #faf9f5（暖米白），避免冰冷的纯白。整个品牌调性偏暖。</div>
+      </div>
+      <div class="card">
+        <div class="card-icon" style="background:rgba(217,119,87,0.1);color:var(--color-orange);">②</div>
+        <div class="card-title">衬线标题 + 无衬线正文</div>
+        <div class="card-body">大号标题用 Tiempos（衬线）传递人文温度，正文用 Styrene（无衬线）保持清晰。</div>
+      </div>
+      <div class="card">
+        <div class="card-icon" style="background:rgba(217,119,87,0.1);color:var(--color-orange);">③</div>
+        <div class="card-title">负字间距 + 斜体</div>
+        <div class="card-body">大号标题使用 letter-spacing: -0.02em。斜体用于强调关键词，不用粗体。</div>
+      </div>
+      <div class="card">
+        <div class="card-icon" style="background:rgba(217,119,87,0.1);color:var(--color-orange);">④</div>
+        <div class="card-title">克制的强调色</div>
+        <div class="card-body">橙色 (#d97757) 是唯一主要强调色，仅用于最重要的 CTA 和 Logo 细节。</div>
+      </div>
+      <div class="card">
+        <div class="card-icon" style="background:rgba(217,119,87,0.1);color:var(--color-orange);">⑤</div>
+        <div class="card-title">模块化网格布局</div>
+        <div class="card-body">8px 基础网格，内容区宽度 960px。大量留白，信息密度低，呼吸感强。</div>
+      </div>
+      <div class="card">
+        <div class="card-icon" style="background:rgba(217,119,87,0.1);color:var(--color-orange);">⑥</div>
+        <div class="card-title">Pill 形状按钮</div>
+        <div class="card-body">所有主要按钮使用 border-radius: 999px 的胶囊形，与技术品牌方块风格区分开。</div>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<!-- Footer -->
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-logo">Anthropic<em>/</em></div>
+    <div class="footer-copy">设计语言指南 · 仅供学习参考</div>
+  </div>
+</footer>
+
+</body>
+</html>

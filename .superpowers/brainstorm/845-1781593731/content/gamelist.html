@@ -1,0 +1,122 @@
+<h2>Game List Design — 游戏列表页</h2>
+<p class="subtitle" style="margin-bottom:24px">Tab 2: 游戏列表 — 人数过滤器 + 详情卡片 + 规则弹窗</p>
+
+<div class="split">
+  <div class="mockup">
+    <div class="mockup-header">游戏列表页</div>
+    <div class="mockup-body" style="padding:0;overflow:hidden;max-width:390px;margin:0 auto">
+      <!-- Top Nav -->
+      <div style="background:rgba(245,245,247,0.72);backdrop-filter:blur(20px);border-bottom:1px solid rgba(0,0,0,0.06);padding:12px 16px;display:flex;align-items:center;justify-content:center;min-height:44px">
+        <span style="font-weight:700;font-size:1.1rem">🎮 游戏列表</span>
+      </div>
+      <!-- Filter Chips -->
+      <div style="background:#f5f5f7;padding:16px 16px 8px">
+        <div style="display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;padding-bottom:8px">
+          <span style="flex-shrink:0;padding:8px 18px;border-radius:20px;background:#0071e3;color:white;font-size:0.85rem;font-weight:600">全部</span>
+          <span style="flex-shrink:0;padding:8px 18px;border-radius:20px;background:rgba(0,0,0,0.06);font-size:0.85rem;font-weight:600">2人</span>
+          <span style="flex-shrink:0;padding:8px 18px;border-radius:20px;background:rgba(0,0,0,0.06);font-size:0.85rem;font-weight:600">3人</span>
+          <span style="flex-shrink:0;padding:8px 18px;border-radius:20px;background:rgba(0,0,0,0.06);font-size:0.85rem;font-weight:600">4人</span>
+          <span style="flex-shrink:0;padding:8px 18px;border-radius:20px;background:rgba(0,0,0,0.06);font-size:0.85rem;font-weight:600">5人</span>
+          <span style="flex-shrink:0;padding:8px 18px;border-radius:20px;background:rgba(0,0,0,0.06);font-size:0.85rem;font-weight:600">6人</span>
+          <span style="flex-shrink:0;padding:8px 18px;border-radius:20px;background:rgba(0,0,0,0.06);font-size:0.85rem;font-weight:600">7人</span>
+          <span style="flex-shrink:0;padding:8px 18px;border-radius:20px;background:rgba(0,0,0,0.06);font-size:0.85rem;font-weight:600">8人+</span>
+        </div>
+      </div>
+      <!-- Game Cards -->
+      <div style="padding:8px 16px 24px;background:#f5f5f7;min-height:300px">
+        <!-- Card 1 -->
+        <div style="background:white;border-radius:18px;padding:20px;margin-bottom:12px;box-shadow:0 1px 4px rgba(0,0,0,0.04)">
+          <div style="display:flex;align-items:center;gap:14px;margin-bottom:14px">
+            <div style="width:52px;height:52px;border-radius:14px;background:rgba(0,113,227,0.08);display:flex;align-items:center;justify-content:center;font-size:1.5rem;flex-shrink:0">🛡️</div>
+            <div style="flex:1">
+              <div style="font-weight:700;font-size:1.1rem">阿瓦隆 <span style="font-size:0.7rem;color:#86868b;font-weight:500;margin-left:4px">Avalon</span></div>
+              <div style="display:flex;align-items:center;gap:4px;margin-top:2px">
+                <span style="color:#ffcc00;font-size:0.85rem">★★★★★★★☆</span>
+                <span style="font-weight:700;font-size:0.85rem;color:#1d1d1f">7.4</span>
+              </div>
+            </div>
+            <button style="background:rgba(0,113,227,0.08);border:none;border-radius:10px;padding:8px 14px;font-size:0.8rem;font-weight:600;color:#0071e3">规则</button>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px">
+            <div style="display:flex;align-items:center;gap:6px;font-size:0.8rem;color:#86868b">👥 推荐 7-8人</div>
+            <div style="display:flex;align-items:center;gap:6px;font-size:0.8rem;color:#86868b">⏱ 30分钟</div>
+            <div style="display:flex;align-items:center;gap:6px;font-size:0.8rem;color:#86868b">🎂 年龄 13+</div>
+            <div style="display:flex;align-items:center;gap:6px;font-size:0.8rem;color:#86868b">📊 难度 2.12/5</div>
+          </div>
+          <p style="font-size:0.85rem;color:#48484a;line-height:1.6;margin-bottom:10px">阵营推理游戏。好人阵营想让任务成功，邪恶阵营潜伏破坏。梅林知道坏人是谁但必须隐藏身份。</p>
+          <div style="display:flex;flex-wrap:wrap;gap:6px">
+            <span style="padding:4px 10px;border-radius:6px;background:rgba(0,0,0,0.04);font-size:0.75rem;font-weight:600;color:#86868b">推理</span>
+            <span style="padding:4px 10px;border-radius:6px;background:rgba(0,0,0,0.04);font-size:0.75rem;font-weight:600;color:#86868b">阵营</span>
+            <span style="padding:4px 10px;border-radius:6px;background:rgba(0,0,0,0.04);font-size:0.75rem;font-weight:600;color:#86868b">身份隐藏</span>
+            <span style="padding:4px 10px;border-radius:6px;background:rgba(0,0,0,0.04);font-size:0.75rem;font-weight:600;color:#86868b">投票</span>
+          </div>
+        </div>
+        <!-- Card 2 (compact) -->
+        <div style="background:white;border-radius:18px;padding:20px;margin-bottom:12px;box-shadow:0 1px 4px rgba(0,0,0,0.04)">
+          <div style="display:flex;align-items:center;gap:14px;margin-bottom:14px">
+            <div style="width:52px;height:52px;border-radius:14px;background:rgba(52,199,89,0.08);display:flex;align-items:center;justify-content:center;font-size:1.5rem;flex-shrink:0">🎲</div>
+            <div style="flex:1">
+              <div style="font-weight:700;font-size:1.1rem">拉斯维加斯 <span style="font-size:0.7rem;color:#86868b;font-weight:500;margin-left:4px">Las Vegas</span></div>
+              <div style="display:flex;align-items:center;gap:4px;margin-top:2px">
+                <span style="color:#ffcc00;font-size:0.85rem">★★★★★★★½</span>
+                <span style="font-weight:700;font-size:0.85rem;color:#1d1d1f">7.5</span>
+              </div>
+            </div>
+            <button style="background:rgba(0,113,227,0.08);border:none;border-radius:10px;padding:8px 14px;font-size:0.8rem;font-weight:600;color:#0071e3">规则</button>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px">
+            <div style="display:flex;align-items:center;gap:6px;font-size:0.8rem;color:#86868b">👥 推荐 4-5人</div>
+            <div style="display:flex;align-items:center;gap:6px;font-size:0.8rem;color:#86868b">⏱ 45-60分钟</div>
+            <div style="display:flex;align-items:center;gap:6px;font-size:0.8rem;color:#86868b">🎂 年龄 8+</div>
+            <div style="display:flex;align-items:center;gap:6px;font-size:0.8rem;color:#86868b">📊 难度 1.42/5</div>
+          </div>
+          <p style="font-size:0.85rem;color:#48484a;line-height:1.6;margin-bottom:10px">欢乐掷骰抢赌场游戏。把骰子押到赌场争抢钞票，平手全灭是核心互动规则。</p>
+          <div style="display:flex;flex-wrap:wrap;gap:6px">
+            <span style="padding:4px 10px;border-radius:6px;background:rgba(0,0,0,0.04);font-size:0.75rem;font-weight:600;color:#86868b">掷骰</span>
+            <span style="padding:4px 10px;border-radius:6px;background:rgba(0,0,0,0.04);font-size:0.75rem;font-weight:600;color:#86868b">区域控制</span>
+            <span style="padding:4px 10px;border-radius:6px;background:rgba(0,0,0,0.04);font-size:0.75rem;font-weight:600;color:#86868b">竞标</span>
+          </div>
+        </div>
+      </div>
+      <!-- Tab Bar -->
+      <div style="background:rgba(245,245,247,0.88);backdrop-filter:blur(20px);border-top:1px solid rgba(0,0,0,0.06);display:flex;padding:8px 16px">
+        <div style="flex:1;text-align:center;padding:8px 0;color:#86868b"><div style="font-size:1.3rem">🏠</div><div style="font-size:0.65rem;font-weight:600">首页</div></div>
+        <div style="flex:1;text-align:center;padding:8px 0;color:#0071e3"><div style="font-size:1.3rem">🎮</div><div style="font-size:0.65rem;font-weight:700;color:#0071e3">游戏</div></div>
+        <div style="flex:1;text-align:center;padding:8px 0;color:#86868b"><div style="font-size:1.3rem">🏆</div><div style="font-size:0.65rem;font-weight:600">排行</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="mockup">
+    <div class="mockup-header">规则弹窗</div>
+    <div class="mockup-body" style="padding:0;overflow:hidden;max-width:390px;margin:0 auto">
+      <div style="background:rgba(0,0,0,0.4);backdrop-filter:blur(8px);display:flex;align-items:flex-end;justify-content:center;min-height:400px">
+        <div style="background:white;border-radius:22px 22px 0 0;width:100%;max-height:80%;overflow:hidden;display:flex;flex-direction:column">
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:20px 20px 12px;border-bottom:1px solid rgba(0,0,0,0.06);flex-shrink:0">
+            <span style="font-weight:800;font-size:1.15rem">📖 阿瓦隆</span>
+            <button style="width:32px;height:32px;border-radius:50%;background:rgba(0,0,0,0.06);border:none;font-size:1rem;cursor:pointer">✕</button>
+          </div>
+          <!-- Tab switch -->
+          <div style="display:flex;gap:8px;padding:12px 20px;background:rgba(0,0,0,0.02);flex-shrink:0">
+            <span style="flex:1;text-align:center;padding:8px;border-radius:10px;background:white;font-weight:600;font-size:0.9rem;box-shadow:0 1px 3px rgba(0,0,0,0.08)">📋 规则</span>
+            <span style="flex:1;text-align:center;padding:8px;border-radius:10px;font-weight:600;font-size:0.9rem;color:#86868b">💡 攻略</span>
+          </div>
+          <div style="padding:20px;overflow-y:auto;flex:1">
+            <div style="margin-bottom:16px">
+              <strong style="color:#1d1d1f">⚙️ 胜利条件</strong>
+              <p style="margin:4px 0 0;font-size:0.85rem;color:#48484a;line-height:1.6">蓝方让3个任务成功且梅林未被刺杀 → 蓝方胜<br>红方让3个任务失败，或刺客成功刺杀梅林 → 红方胜</p>
+            </div>
+            <div style="margin-bottom:16px">
+              <strong style="color:#1d1d1f">🔄 回合流程</strong>
+              <p style="margin:4px 0 0;font-size:0.85rem;color:#48484a;line-height:1.6">队长组队 → 全员公投 → 执行任务 → 记录结果<br>5轮任务中先取3胜者进入结算</p>
+            </div>
+            <div>
+              <strong style="color:#1d1d1f">⚠️ 常见易错</strong>
+              <p style="margin:4px 0 0;font-size:0.85rem;color:#48484a;line-height:1.6">好人不能投失败票<br>蓝方3胜≠立刻赢（还要防刺杀）<br>7-10人第4轮需2失败才炸车</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

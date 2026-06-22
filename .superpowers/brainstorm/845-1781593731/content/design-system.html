@@ -1,0 +1,129 @@
+<h2>Design System — 基础设计语言</h2>
+<p class="subtitle">Apple HIG 风格优化版，面向移动端桌游助手</p>
+
+<div class="section">
+  <h3>🎨 色彩系统</h3>
+  <p>保持 iOS 风格色彩基调，优化暗黑模式对比度</p>
+  <div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:16px">
+    <div style="width:80px;height:80px;border-radius:16px;background:#0071e3;color:white;display:flex;align-items:flex-end;padding:8px;font-size:0.7rem;font-weight:600">Blue<br>#0071E3</div>
+    <div style="width:80px;height:80px;border-radius:16px;background:#34c759;color:white;display:flex;align-items:flex-end;padding:8px;font-size:0.7rem;font-weight:600">Green<br>#34C759</div>
+    <div style="width:80px;height:80px;border-radius:16px;background:#ff3b30;color:white;display:flex;align-items:flex-end;padding:8px;font-size:0.7rem;font-weight:600">Red<br>#FF3B30</div>
+    <div style="width:80px;height:80px;border-radius:16px;background:#ff9500;color:white;display:flex;align-items:flex-end;padding:8px;font-size:0.7rem;font-weight:600">Orange<br>#FF9500</div>
+    <div style="width:80px;height:80px;border-radius:16px;background:#af52de;color:white;display:flex;align-items:flex-end;padding:8px;font-size:0.7rem;font-weight:600">Purple<br>#AF52DE</div>
+  </div>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+    <div style="background:#f5f5f7;border-radius:12px;padding:16px">
+      <span class="label">Light Mode</span>
+      <div style="display:flex;gap:8px;margin-top:8px">
+        <div style="width:40px;height:40px;border-radius:8px;background:#ffffff;border:1px solid #e5e5ea"></div>
+        <div style="width:40px;height:40px;border-radius:8px;background:#f5f5f7;border:1px solid #e5e5ea"></div>
+        <div style="width:40px;height:40px;border-radius:8px;background:#1d1d1f"></div>
+        <div style="width:40px;height:40px;border-radius:8px;background:#86868b"></div>
+      </div>
+    </div>
+    <div style="background:#000000;border-radius:12px;padding:16px;color:white">
+      <span class="label">Dark Mode</span>
+      <div style="display:flex;gap:8px;margin-top:8px">
+        <div style="width:40px;height:40px;border-radius:8px;background:#1c1c1e;border:1px solid #3a3a3c"></div>
+        <div style="width:40px;height:40px;border-radius:8px;background:#000000;border:1px solid #3a3a3c"></div>
+        <div style="width:40px;height:40px;border-radius:8px;background:#f5f5f7"></div>
+        <div style="width:40px;height:40px;border-radius:8px;background:#98989d"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <h3>🔤 排版</h3>
+  <div style="background:white;border-radius:16px;padding:24px;box-shadow:0 2px 12px rgba(0,0,0,0.06)">
+    <div style="font-size:2rem;font-weight:800;letter-spacing:-0.04em;margin-bottom:4px">Heading 1 — 32px/800</div>
+    <div style="font-size:1.5rem;font-weight:700;letter-spacing:-0.03em;margin-bottom:4px">Heading 2 — 24px/700</div>
+    <div style="font-size:1.25rem;font-weight:600;letter-spacing:-0.02em;margin-bottom:4px">Heading 3 — 20px/600</div>
+    <div style="font-size:1rem;font-weight:500;color:#86868b;margin-bottom:4px">Body — 16px/500, system font stack</div>
+    <div style="font-size:0.82rem;font-weight:500;color:#86868b">Caption — 13px/500, for metadata</div>
+  </div>
+</div>
+
+<div class="section">
+  <h3>🧩 核心组件</h3>
+
+  <div class="mockup" style="margin-bottom:16px">
+    <div class="mockup-header">Buttons</div>
+    <div class="mockup-body" style="display:flex;flex-direction:column;gap:12px;align-items:flex-start">
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button style="background:#0071e3;color:white;border:none;padding:12px 24px;border-radius:24px;font-size:0.9rem;font-weight:600">Primary</button>
+        <button style="background:rgba(0,0,0,0.06);border:none;padding:12px 24px;border-radius:24px;font-size:0.9rem;font-weight:600">Secondary</button>
+        <button style="background:transparent;border:1.5px solid #d2d2d7;padding:12px 24px;border-radius:24px;font-size:0.9rem;font-weight:600;color:#0071e3">Outline</button>
+        <button style="background:#ff3b30;color:white;border:none;padding:12px 24px;border-radius:24px;font-size:0.9rem;font-weight:600">Danger</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="mockup" style="margin-bottom:16px">
+    <div class="mockup-header">Cards</div>
+    <div class="mockup-body">
+      <div style="background:white;border-radius:18px;padding:20px;box-shadow:0 2px 12px rgba(0,0,0,0.06);margin-bottom:12px;display:flex;align-items:center;gap:16px">
+        <div style="width:56px;height:56px;border-radius:16px;background:rgba(0,113,227,0.08);display:flex;align-items:center;justify-content:center;font-size:1.5rem">🎲</div>
+        <div>
+          <div style="font-weight:700;font-size:1.1rem">Game Card Component</div>
+          <div style="color:#86868b;font-size:0.85rem">Subtitle &mdash; description text</div>
+        </div>
+        <span style="margin-left:auto;color:#86868b">→</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="mockup" style="margin-bottom:16px">
+    <div class="mockup-header">List Items (Leaderboard)</div>
+    <div class="mockup-body">
+      <div style="background:white;border-radius:18px;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,0.06)">
+        <div style="display:flex;align-items:center;padding:14px 20px;border-bottom:0.5px solid rgba(0,0,0,0.06)">
+          <div style="width:32px;height:32px;border-radius:50%;background:#ff9500;color:white;display:flex;align-items:center;justify-content:center;font-size:0.85rem;font-weight:700;margin-right:16px;flex-shrink:0">👑</div>
+          <div style="flex:1"><strong>玩家名</strong><br><span style="font-size:0.8rem;color:#86868b">42局 · 胜28场 · 战力68%</span></div>
+          <div style="text-align:right;font-weight:700;font-size:1.2rem;color:#0071e3">68%</div>
+        </div>
+        <div style="display:flex;align-items:center;padding:14px 20px;border-bottom:0.5px solid rgba(0,0,0,0.06)">
+          <div style="width:32px;height:32px;border-radius:50%;background:#a0aec0;color:white;display:flex;align-items:center;justify-content:center;font-size:0.85rem;font-weight:700;margin-right:16px;flex-shrink:0">2</div>
+          <div style="flex:1"><strong>玩家名</strong><br><span style="font-size:0.8rem;color:#86868b">30局 · 胜20场 · 战力64%</span></div>
+          <div style="text-align:right;font-weight:700;font-size:1.2rem;color:#0071e3">64%</div>
+        </div>
+        <div style="display:flex;align-items:center;padding:14px 20px">
+          <div style="width:32px;height:32px;border-radius:50%;background:#cd7f32;color:white;display:flex;align-items:center;justify-content:center;font-size:0.85rem;font-weight:700;margin-right:16px;flex-shrink:0">3</div>
+          <div style="flex:1"><strong>玩家名</strong><br><span style="font-size:0.8rem;color:#86868b">25局 · 胜15场 · 战力60%</span></div>
+          <div style="text-align:right;font-weight:700;font-size:1.2rem;color:#0071e3">60%</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="mockup">
+    <div class="mockup-header">Modal / Sheet</div>
+    <div class="mockup-body">
+      <div style="background:white;border-radius:22px;padding:24px;box-shadow:0 12px 40px rgba(0,0,0,0.15);max-width:320px;margin:0 auto">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+          <span style="font-weight:700;font-size:1.15rem">Modal Title</span>
+          <div style="width:32px;height:32px;border-radius:50%;background:rgba(0,0,0,0.06);display:flex;align-items:center;justify-content:center;cursor:pointer">✕</div>
+        </div>
+        <p style="color:#86868b;margin-bottom:20px">Modal body text goes here. Clean, readable, with proper spacing.</p>
+        <div style="display:flex;gap:12px">
+          <button style="flex:1;padding:12px;border-radius:20px;border:none;background:rgba(0,0,0,0.06);font-weight:600">Cancel</button>
+          <button style="flex:1;padding:12px;border-radius:20px;border:none;background:#0071e3;color:white;font-weight:600">Confirm</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <h3>📐 间距系统</h3>
+  <p>基于 4px 网格，保持一致的呼吸感</p>
+  <div style="display:flex;gap:8px;align-items:flex-end;margin-top:12px">
+    <div style="text-align:center"><div style="width:4px;height:4px;background:#0071e3;border-radius:2px;margin:0 auto 4px"></div><span style="font-size:0.7rem;color:#86868b">4</span></div>
+    <div style="text-align:center"><div style="width:8px;height:8px;background:#0071e3;border-radius:2px;margin:0 auto 4px"></div><span style="font-size:0.7rem;color:#86868b">8</span></div>
+    <div style="text-align:center"><div style="width:16px;height:16px;background:#0071e3;border-radius:4px;margin:0 auto 4px"></div><span style="font-size:0.7rem;color:#86868b">16</span></div>
+    <div style="text-align:center"><div style="width:24px;height:24px;background:#0071e3;border-radius:6px;margin:0 auto 4px"></div><span style="font-size:0.7rem;color:#86868b">24</span></div>
+    <div style="text-align:center"><div style="width:40px;height:40px;background:#0071e3;border-radius:8px;margin:0 auto 4px"></div><span style="font-size:0.7rem;color:#86868b">40</span></div>
+    <div style="text-align:center"><div style="width:60px;height:60px;background:#0071e3;border-radius:10px;margin:0 auto 4px"></div><span style="font-size:0.7rem;color:#86868b">60</span></div>
+  </div>
+</div>
