@@ -10,43 +10,7 @@
 
 {% block extra_head %}
 <style>
-    .section-title {
-        font-size: 1.25rem;
-        font-weight: 700;
-        margin-bottom: var(--space-md);
-        display: flex;
-        align-items: center;
-        gap: 8px;
-    }
-
-    /* Players list */
-    .player-list {
-        list-style: none;
-        padding: 0;
-        margin: 0 0 var(--space-md);
-    }
-
-    .player-item {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 12px;
-        background: rgba(0, 0, 0, 0.02);
-        border-radius: 12px;
-        margin-bottom: 8px;
-    }
-
-    .player-item .name {
-        font-weight: 600;
-        font-size: 1.05rem;
-    }
-
-    .player-item .score {
-        font-weight: 700;
-        font-size: 1.2rem;
-        color: var(--apple-blue);
-    }
-
+    /* Players list (uses shared .list/.list-item) */
     .remove-btn {
         color: var(--apple-red);
         background: none;
@@ -83,81 +47,12 @@
         border-color: var(--apple-blue);
     }
 
-    /* FAB */
-    .fab {
-        position: fixed;
-        bottom: calc(24px + env(safe-area-inset-bottom, 0px));
-        right: 24px;
-        width: 56px;
-        height: 56px;
-        border-radius: 28px;
-        background: var(--apple-purple);
-        color: white;
-        border: none;
-        box-shadow: 0 6px 20px rgba(175, 82, 222, 0.4);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-        z-index: 900;
-        font-size: 1.5rem;
-        transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
-        -webkit-tap-highlight-color: transparent;
-    }
-
-    .fab:active {
-        transform: scale(0.92);
-        box-shadow: 0 4px 12px rgba(175, 82, 222, 0.3);
-    }
-
-    /* Scoring Overlay */
-    .scoring-overlay {
-        position: fixed;
-        inset: 0;
-        z-index: 1000;
-        background: var(--color-bg);
-        display: flex;
-        flex-direction: column;
-        opacity: 0;
-        pointer-events: none;
-        transition: opacity 0.3s cubic-bezier(0.25, 1, 0.5, 1);
-    }
-
-    .scoring-overlay.show {
-        opacity: 1;
-        pointer-events: auto;
-    }
-
-    .scoring-overlay-header {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding: var(--space-md) var(--space-lg);
-        padding-top: calc(var(--space-md) + env(safe-area-inset-top, 0px));
-        background: var(--color-surface);
-        border-bottom: 1px solid var(--color-border);
-        flex-shrink: 0;
-    }
-
-    .scoring-overlay-header h3 {
-        margin: 0;
-        font-size: 1.15rem;
-        font-weight: 700;
-    }
-
-    .scoring-overlay-body {
+    /* Scoring sheet body (sheet wrapper uses shared .sheet-overlay) */
+    .scoring-sheet-body {
         flex: 1;
         overflow-y: auto;
         padding: var(--space-md);
         -webkit-overflow-scrolling: touch;
-    }
-
-    .scoring-overlay-footer {
-        padding: var(--space-md) var(--space-lg);
-        padding-bottom: calc(var(--space-md) + env(safe-area-inset-bottom, 0px));
-        background: var(--color-surface);
-        border-top: 1px solid var(--color-border);
-        flex-shrink: 0;
     }
 
     /* Player Cards (Accordion) */
@@ -361,46 +256,10 @@
         margin-top: 0;
     }
 
-    /* Game Over Modal */
-    .game-over-overlay {
-        position: fixed;
-        inset: 0;
-        background: rgba(0, 0, 0, 0.4);
-        backdrop-filter: blur(20px);
-        -webkit-backdrop-filter: blur(20px);
-        z-index: 2000;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: var(--space-lg);
-        opacity: 0;
-        pointer-events: none;
-        transition: opacity 0.4s cubic-bezier(0.25, 1, 0.5, 1);
-    }
-
-    .game-over-overlay.show {
-        opacity: 1;
-        pointer-events: auto;
-    }
-
-    .game-over-modal {
-        background: var(--color-surface);
-        border-radius: var(--radius-xl);
-        box-shadow: var(--shadow-lg);
-        width: 100%;
-        max-width: 380px;
-        overflow: hidden;
-        text-align: center;
-        transform: scale(0.95) translateY(20px);
-        transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
-    }
-
-    .game-over-overlay.show .game-over-modal {
-        transform: scale(1) translateY(0);
-    }
-
-    .game-over-modal .modal-body {
+    /* Game Over Modal (wrapper uses shared .modal-overlay/.modal-content) */
+    .game-over-body {
         padding: 40px 24px 24px;
+        text-align: center;
     }
 
     .winner-icon {
@@ -448,20 +307,6 @@
         color: var(--apple-blue);
     }
 
-    .modal-actions {
-        display: flex;
-        gap: var(--space-md);
-        padding: 0 24px 24px;
-    }
-
-    .modal-actions .btn {
-        flex: 1;
-        font-weight: 600;
-        padding: 14px 0;
-        border-radius: 20px;
-        font-size: 1.05rem;
-    }
-
     /* Round info badge */
     .round-info {
         font-size: 0.8rem;
@@ -480,7 +325,7 @@
 
 <div class="card" id="setup-section">
     <div class="section-title"><i class="ph-bold ph-users" style="color: var(--apple-blue);"></i> 玩家设置</div>
-    <ul class="player-list" id="player-list-ui"></ul>
+    <div class="list" id="player-list-ui"></div>
     <form class="add-player-form" onsubmit="addPlayer(event)">
         <input type="text" id="new-player-name" placeholder="输入玩家名字..." autocomplete="off" required>
         <button type="submit" class="btn btn-primary" style="padding: 0 20px;">增加</button>
@@ -499,39 +344,46 @@
 </div>
 
 <!-- FAB Scoring Button -->
-<button class="fab" id="fabScoring" style="display: none;" onclick="openScoring()">
-    <i class="ph-bold ph-pencil-simple"></i>
-</button>
+<div class="apple-fab" id="fabScoring" style="display: none;">
+    <button class="btn btn-primary btn-lg"
+        style="width:260px;box-shadow:0 8px 24px rgba(175,82,222,0.35);border-radius:30px;background:rgba(175,82,222,0.92);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);"
+        onclick="openScoring()">
+        <i class="ph-bold ph-pencil-simple" style="margin-right:8px;"></i> 记分
+    </button>
+</div>
 
-<!-- Scoring Overlay -->
-<div id="scoringOverlay" class="scoring-overlay">
-    <div class="scoring-overlay-header">
-        <button class="btn btn-sm btn-secondary" onclick="closeScoring()">✕ 取消</button>
-        <h3>第 <span id="roundNumDisplay">1</span> 回合计分</h3>
-        <div style="width: 44px;"></div>
-    </div>
-    <div class="scoring-overlay-body" id="scoringBody">
-    </div>
-    <div class="scoring-overlay-footer">
-        <button onclick="submitRound()" class="btn btn-primary btn-block btn-lg">
-            <i class="ph-bold ph-check-circle" style="margin-right: 6px;"></i> 结算回合分数
-        </button>
+<!-- Scoring Sheet -->
+<div id="scoringOverlay" class="sheet-overlay" onclick="if(event.target === this) closeScoring()">
+    <div class="sheet-content">
+        <div class="sheet-handle"></div>
+        <div class="modal-header" style="border-bottom: none; padding-bottom: 0;">
+            <h2 class="modal-title">第 <span id="roundNumDisplay">1</span> 回合计分</h2>
+            <button class="modal-close" onclick="closeScoring()">
+                <i class="ph-bold ph-x"></i>
+            </button>
+        </div>
+        <div class="scoring-sheet-body" id="scoringBody"></div>
+        <div class="modal-footer" style="border-top: none; padding-top: 0;">
+            <button onclick="submitRound()" class="btn btn-primary btn-block btn-lg">
+                <i class="ph-bold ph-check-circle" style="margin-right: 6px;"></i> 结算回合分数
+            </button>
+        </div>
     </div>
 </div>
 
-<!-- Game Over Overlay -->
-<div id="gameOverOverlay" class="game-over-overlay">
-    <div class="game-over-modal">
-        <div class="modal-body">
+<!-- Game Over Modal -->
+<div id="gameOverOverlay" class="modal-overlay" onclick="if(event.target === this) closeGameOver()">
+    <div class="modal-content">
+        <div class="game-over-body">
             <span class="winner-icon" id="gameOverEmoji">🏆</span>
-            <h2 style="font-size: 1.4rem; color: var(--apple-black); margin-bottom: 12px;">游戏结束！</h2>
+            <h2 style="font-size: 1.4rem; margin-bottom: 12px;">游戏结束！</h2>
             <div class="winner-name" id="winnerNameUi"></div>
             <div class="winner-score" id="winnerScoreUi"></div>
             <div class="final-scores" id="finalScoresList"></div>
         </div>
-        <div class="modal-actions">
-            <button onclick="closeGameOver()" class="btn btn-primary">太棒了</button>
-            <button onclick="newGameAfterOver()" class="btn btn-secondary">新游戏</button>
+        <div class="modal-footer">
+            <button onclick="closeGameOver()" class="btn btn-primary" style="flex:1;">太棒了</button>
+            <button onclick="newGameAfterOver()" class="btn btn-secondary" style="flex:1;">新游戏</button>
         </div>
     </div>
 </div>
@@ -571,7 +423,7 @@
                 document.getElementById('fabScoring').style.display = 'none';
                 renderPlayers(true);
             } else {
-                document.getElementById('fabScoring').style.display = players.length > 0 ? 'flex' : 'none';
+                document.getElementById('fabScoring').style.display = players.length > 0 ? '' : 'none';
                 renderPlayers(false);
             }
         } catch (e) {
@@ -690,34 +542,40 @@
     // ===== Rendering =====
 
     function renderPlayers(isFinished) {
-        var ul = document.getElementById('player-list-ui');
-        ul.innerHTML = '';
+        var listEl = document.getElementById('player-list-ui');
+        listEl.innerHTML = '';
 
         if (!rankedPlayers || rankedPlayers.length === 0) {
-            var emptyLi = document.createElement('li');
-            emptyLi.style.cssText = 'text-align:center;color:var(--apple-gray);padding:20px;font-size:0.95rem;';
-            emptyLi.textContent = '添加玩家开始游戏';
-            ul.appendChild(emptyLi);
+            listEl.innerHTML = '<div class="text-center text-muted" style="padding:var(--space-xl);">添加玩家开始游戏</div>';
             return;
         }
 
         for (var i = 0; i < rankedPlayers.length; i++) {
             var p = rankedPlayers[i];
-            var li = document.createElement('li');
-            li.className = 'player-item';
-
             var rankDisplay = p.rank || (i + 1);
-            var rankIcon = rankDisplay === 1 ? '👑 ' : '';
 
-            var leftDiv = document.createElement('div');
-            leftDiv.style.cssText = 'display: flex; align-items: center; gap: 8px;';
-            leftDiv.innerHTML =
-                '<span style="color: var(--apple-gray); font-weight: 700; width: 24px; text-align: center;">' + rankDisplay + '</span>' +
-                '<span class="name">' + escHtml(p.name) + '</span>';
+            var item = document.createElement('div');
+            item.className = 'list-item';
 
-            var rightDiv = document.createElement('div');
-            rightDiv.style.cssText = 'display: flex; align-items: center; gap: 12px;';
-            rightDiv.innerHTML = '<span class="score">' + escHtml(String(p.total_score)) + ' 分</span>';
+            var badge = document.createElement('div');
+            badge.className = 'rank-badge ' + (rankDisplay === 1 ? 'rank-1' : 'rank-other');
+            badge.textContent = rankDisplay === 1 ? '👑' : rankDisplay;
+
+            var content = document.createElement('div');
+            content.className = 'list-item-content';
+
+            var nameEl = document.createElement('div');
+            nameEl.className = 'list-item-title';
+            nameEl.textContent = p.name;
+            content.appendChild(nameEl);
+
+            var trailing = document.createElement('div');
+            trailing.className = 'list-item-trailing';
+            trailing.textContent = String(p.total_score) + ' 分';
+
+            item.appendChild(badge);
+            item.appendChild(content);
+            item.appendChild(trailing);
 
             if (!isFinished) {
                 var rmBtn = document.createElement('button');
@@ -726,12 +584,10 @@
                 rmBtn.onclick = (function(playerName) {
                     return function() { removePlayer(playerName); };
                 })(p.name);
-                rightDiv.appendChild(rmBtn);
+                item.appendChild(rmBtn);
             }
 
-            li.appendChild(leftDiv);
-            li.appendChild(rightDiv);
-            ul.appendChild(li);
+            listEl.appendChild(item);
         }
     }
 
