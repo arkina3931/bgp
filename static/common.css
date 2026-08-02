@@ -130,6 +130,13 @@ html {
     color-scheme: light dark;
 }
 
+/* Horizontal overflow guard: clip never creates a scroll container */
+html,
+body {
+    overflow-x: hidden;
+    overflow-x: clip;
+}
+
 body {
     background: var(--color-bg);
     color: var(--color-text);
@@ -465,13 +472,13 @@ a:hover {
 /* ---- Game Card Grid (index page) ---- */
 .game-card-grid {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 12px;
 }
 
 @media (min-width: 500px) {
     .game-card-grid {
-        grid-template-columns: repeat(3, 1fr);
+        grid-template-columns: repeat(3, minmax(0, 1fr));
     }
 }
 
@@ -556,7 +563,7 @@ a:hover {
 
 .gd-stats {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 6px;
     margin-bottom: var(--space-md);
     background: rgba(142, 142, 147, 0.04);
@@ -822,6 +829,7 @@ a:hover {
     display: flex;
     gap: 8px;
     overflow-x: auto;
+    max-width: 100%;
     padding: 8px 16px 14px;
     scrollbar-width: none;
     -ms-overflow-style: none;
@@ -1454,7 +1462,7 @@ a:hover {
 .items-center { align-items: center; }
 .justify-center { justify-content: center; }
 .justify-between { justify-content: space-between; }
-.flex-1 { flex: 1; }
+.flex-1 { flex: 1; min-width: 0; }
 .w-full { width: 100%; }
 .gap-sm { gap: var(--space-sm); }
 .gap-md { gap: var(--space-md); }
