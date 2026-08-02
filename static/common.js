@@ -246,17 +246,24 @@ window.renderLeaderboard = function(container, data, opts) {
         content.appendChild(nameEl);
         content.appendChild(subtitle);
 
-        // Right-side trailing
+        // Right-side trailing: avg score and/or win-loss (both may render)
         var trailing = document.createElement('div');
         trailing.className = 'list-item-trailing';
         if (showAvgScore && p.avg_score != null) {
-            trailing.innerHTML =
-                '<span style="font-size:0.72rem;color:var(--color-text-secondary,#86868b);display:block;">' +
-                escHtml(avgScoreLabel) + '</span>' +
-                Number(p.avg_score).toFixed(1);
-        } else if (showWinLoss) {
+            var avgLabel = document.createElement('span');
+            avgLabel.style.cssText = 'font-size:0.72rem;color:var(--color-text-secondary,#86868b);display:block;';
+            avgLabel.textContent = avgScoreLabel;
+            trailing.appendChild(avgLabel);
+            var avgValue = document.createElement('span');
+            avgValue.textContent = Number(p.avg_score).toFixed(1);
+            trailing.appendChild(avgValue);
+        }
+        if (showWinLoss) {
             var loss = total - wins;
-            trailing.textContent = wins + '/' + loss;
+            var wlLine = document.createElement('span');
+            wlLine.style.cssText = 'font-size:0.72rem;color:var(--color-text-secondary,#86868b);display:block;';
+            wlLine.textContent = wins + '/' + loss;
+            trailing.appendChild(wlLine);
         }
 
         item.appendChild(badge);

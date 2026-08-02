@@ -17,10 +17,6 @@
 {% block extra_head %}
 <script src="https://cdn.socket.io/4.7.4/socket.io.min.js"></script>
 <style>
-    body {
-        padding-bottom: calc(90px + env(safe-area-inset-bottom));
-    }
-
     /* ---- Page Hero (Customized gradient) ---- */
     .hero h1 {
         background: linear-gradient(135deg, #ff6b6b, #ee5253, #e84393);
@@ -412,9 +408,9 @@
         {% include 'header.svg' %}
     </div>
 
-    <div class="apple-segment" style="margin: 16px auto 0; display: inline-flex;">
-        <button id="btn-basic" class="apple-segment-btn" onclick="switchMode('basic')" style="min-width: 80px;">2-4人</button>
-        <button id="btn-ext" class="apple-segment-btn" onclick="switchMode('extension')" style="min-width: 80px;">5-8人</button>
+    <div class="segmented-control" style="margin: 16px auto 0; max-width: 300px;">
+        <button id="btn-basic" class="segmented-btn" onclick="switchMode('basic')">2-4人</button>
+        <button id="btn-ext" class="segmented-btn" onclick="switchMode('extension')">5-8人</button>
     </div>
 </div>
 
@@ -533,10 +529,10 @@
     }
 
     function updateModeButtons(mode) {
-        document.getElementById('btn-basic').className = mode === 'basic' ? 'apple-segment-btn active' :
-            'apple-segment-btn';
-        document.getElementById('btn-ext').className = mode === 'extension' ? 'apple-segment-btn active' :
-            'apple-segment-btn';
+        document.getElementById('btn-basic').className = mode === 'basic' ? 'segmented-btn active' :
+            'segmented-btn';
+        document.getElementById('btn-ext').className = mode === 'extension' ? 'segmented-btn active' :
+            'segmented-btn';
     }
 
     updateModeButtons('{{ data.current_mode }}');
