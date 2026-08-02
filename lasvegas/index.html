@@ -23,17 +23,6 @@
         background-clip: text;
     }
 
-    /* ---- Section Title ---- */
-    .section-title {
-        font-size: 0.85rem;
-        font-weight: 700;
-        color: var(--apple-gray);
-        text-transform: uppercase;
-        letter-spacing: 0.05em;
-        margin-bottom: var(--space-sm);
-        padding-left: 8px;
-    }
-
     /* ---- Add Player ---- */
     .add-player-row {
         display: flex;
@@ -301,43 +290,7 @@
         border-radius: 30px;
     }
 
-    /* ---- End Game Overlay ---- */
-    .end-overlay {
-        position: fixed;
-        inset: 0;
-        background: rgba(0, 0, 0, 0.4);
-        backdrop-filter: blur(20px);
-        -webkit-backdrop-filter: blur(20px);
-        z-index: 10000;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: var(--space-lg);
-        opacity: 0;
-        pointer-events: none;
-        transition: opacity 0.4s cubic-bezier(0.25, 1, 0.5, 1);
-    }
-
-    .end-overlay.show {
-        opacity: 1;
-        pointer-events: auto;
-    }
-
-    .end-modal {
-        background: var(--apple-bg);
-        border-radius: var(--radius-xl);
-        box-shadow: var(--shadow-lg);
-        width: 100%;
-        max-width: 380px;
-        overflow: hidden;
-        transform: scale(0.95) translateY(20px);
-        transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
-    }
-
-    .end-overlay.show .end-modal {
-        transform: scale(1) translateY(0);
-    }
-
+    /* ---- End Game Modal (wrapper uses shared .modal-overlay/.modal-content) ---- */
     .end-modal-header {
         text-align: center;
         padding: var(--space-xl) var(--space-lg) var(--space-md);
@@ -356,10 +309,6 @@
         font-weight: 500;
     }
 
-    .end-modal-body {
-        padding: 0 var(--space-lg) var(--space-lg);
-    }
-
     .end-modal-result {
         display: flex;
         justify-content: space-between;
@@ -371,20 +320,6 @@
 
     .end-modal-result:last-child {
         border-bottom: none;
-    }
-
-    .end-modal-actions {
-        display: flex;
-        gap: var(--space-md);
-        padding: 0 var(--space-lg) var(--space-xl);
-    }
-
-    .end-modal-actions .btn {
-        flex: 1;
-        font-weight: 600;
-        padding: 14px 0;
-        border-radius: 20px;
-        font-size: 1.05rem;
     }
 
     /* ---- Tile Buttons Row ---- */
@@ -437,81 +372,7 @@
         transform: translateY(-2px);
     }
 
-    /* ---- Tile Modal ---- */
-    .tile-overlay {
-        position: fixed;
-        inset: 0;
-        background: rgba(0, 0, 0, 0.45);
-        backdrop-filter: blur(24px);
-        -webkit-backdrop-filter: blur(24px);
-        z-index: 10000;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: var(--space-lg);
-        opacity: 0;
-        pointer-events: none;
-        transition: opacity 0.4s cubic-bezier(0.25, 1, 0.5, 1);
-    }
-
-    .tile-overlay.show {
-        opacity: 1;
-        pointer-events: auto;
-    }
-
-    .tile-modal {
-        background: var(--apple-bg);
-        border-radius: var(--radius-xl);
-        box-shadow: 0 24px 80px rgba(0, 0, 0, 0.25);
-        width: 100%;
-        max-width: 480px;
-        max-height: 85vh;
-        overflow: hidden;
-        display: flex;
-        flex-direction: column;
-        transform: scale(0.95) translateY(20px);
-        transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
-    }
-
-    .tile-overlay.show .tile-modal {
-        transform: scale(1) translateY(0);
-    }
-
-    .tile-modal-header {
-        text-align: center;
-        padding: var(--space-xl) var(--space-lg) var(--space-md);
-        flex-shrink: 0;
-    }
-
-    .tile-modal-header h3 {
-        font-size: 1.35rem;
-        font-weight: 800;
-        letter-spacing: -0.02em;
-        margin-bottom: 4px;
-    }
-
-    .tile-modal-header p {
-        font-size: 0.9rem;
-        color: var(--apple-gray);
-        font-weight: 500;
-    }
-
-    .tile-modal-body {
-        padding: 0 var(--space-lg) var(--space-md);
-        overflow-y: auto;
-        flex: 1;
-        -webkit-overflow-scrolling: touch;
-    }
-
-    .tile-modal-body::-webkit-scrollbar {
-        width: 4px;
-    }
-
-    .tile-modal-body::-webkit-scrollbar-thumb {
-        background: rgba(0, 0, 0, 0.15);
-        border-radius: 4px;
-    }
-
+    /* ---- Tile Sheet (wrapper uses shared .sheet-overlay) ---- */
     .tile-card {
         background: var(--apple-white);
         border-radius: var(--radius-lg);
@@ -644,38 +505,6 @@
         flex-shrink: 0;
     }
 
-    .tile-modal-footer {
-        padding: var(--space-md) var(--space-lg) var(--space-xl);
-        flex-shrink: 0;
-        text-align: center;
-    }
-
-    .tile-modal-close-btn {
-        font-family: var(--font-family);
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-        padding: 12px 32px;
-        border: none;
-        border-radius: 20px;
-        font-size: 1rem;
-        font-weight: 600;
-        cursor: pointer;
-        background: var(--apple-bg);
-        color: var(--apple-gray);
-        border: 1px solid rgba(0, 0, 0, 0.1);
-        transition: all 0.3s var(--ease-apple);
-    }
-
-    .tile-modal-close-btn:hover {
-        background: rgba(0, 0, 0, 0.05);
-        color: var(--apple-black);
-    }
-
-    .tile-modal-close-btn:active {
-        transform: scale(0.96);
-    }
-
     /* Bill Color overrides */
     .bill-30 {
         background: rgba(175, 82, 222, 0.12);
@@ -769,49 +598,57 @@
 
     <!-- ===== MODALS ===== -->
 
-    <!-- End Game Overlay -->
-    <div id="endOverlay" class="end-overlay">
-        <div class="end-modal">
+    <!-- End Game Modal -->
+    <div id="endOverlay" class="modal-overlay" onclick="if(event.target === this) hideOverlay('endOverlay')">
+        <div class="modal-content">
             <div class="end-modal-header">
                 <h3>🏁 结束本局</h3>
                 <p>以下结果将记录到排行榜</p>
             </div>
-            <div id="endModalBody" class="end-modal-body"></div>
-            <div class="end-modal-actions">
-                <button id="cancelEndBtn" class="btn btn-secondary">取消</button>
-                <button id="confirmEndBtn" class="btn btn-primary">
+            <div id="endModalBody" class="modal-body"></div>
+            <div class="modal-footer">
+                <button id="cancelEndBtn" class="btn btn-secondary" style="flex:1;">取消</button>
+                <button id="confirmEndBtn" class="btn btn-primary" style="flex:1;">
                     <i class="ph-bold ph-check"></i> 确认结束
                 </button>
             </div>
         </div>
     </div>
 
-    <!-- Setup Field Modal -->
-    <div id="setupOverlay" class="tile-overlay">
-        <div class="tile-modal">
-            <div class="tile-modal-header">
-                <h3>🎲 场地布置结果</h3>
-                <p>每个赌场已随机分配一块拓展板块</p>
+    <!-- Setup Field Sheet -->
+    <div id="setupOverlay" class="sheet-overlay" onclick="if(event.target === this) hideOverlay('setupOverlay')">
+        <div class="sheet-content">
+            <div class="sheet-handle"></div>
+            <div class="modal-header" style="border-bottom: none; padding-bottom: 0;">
+                <h2 class="modal-title">🎲 场地布置结果</h2>
+                <button class="modal-close" onclick="hideOverlay('setupOverlay')">
+                    <i class="ph-bold ph-x"></i>
+                </button>
             </div>
-            <div id="setupModalBody" class="tile-modal-body"></div>
-            <div class="tile-modal-footer">
-                <button id="closeSetupBtn" class="tile-modal-close-btn">
+            <p style="font-size: 0.9rem; color: var(--apple-gray); margin: 0 24px 8px;">每个赌场已随机分配一块拓展板块</p>
+            <div id="setupModalBody" class="modal-body"></div>
+            <div class="modal-footer" style="border-top: none; padding-top: 0;">
+                <button id="closeSetupBtn" class="btn btn-secondary btn-block">
                     <i class="ph-bold ph-x"></i> 关闭
                 </button>
             </div>
         </div>
     </div>
 
-    <!-- Field Info Modal -->
-    <div id="infoOverlay" class="tile-overlay">
-        <div class="tile-modal">
-            <div class="tile-modal-header">
-                <h3>📖 场地说明</h3>
-                <p>当前各赌场拓展板块的详细规则</p>
+    <!-- Field Info Sheet -->
+    <div id="infoOverlay" class="sheet-overlay" onclick="if(event.target === this) hideOverlay('infoOverlay')">
+        <div class="sheet-content">
+            <div class="sheet-handle"></div>
+            <div class="modal-header" style="border-bottom: none; padding-bottom: 0;">
+                <h2 class="modal-title">📖 场地说明</h2>
+                <button class="modal-close" onclick="hideOverlay('infoOverlay')">
+                    <i class="ph-bold ph-x"></i>
+                </button>
             </div>
-            <div id="infoModalBody" class="tile-modal-body"></div>
-            <div class="tile-modal-footer">
-                <button id="closeInfoBtn" class="tile-modal-close-btn">
+            <p style="font-size: 0.9rem; color: var(--apple-gray); margin: 0 24px 8px;">当前各赌场拓展板块的详细规则</p>
+            <div id="infoModalBody" class="modal-body"></div>
+            <div class="modal-footer" style="border-top: none; padding-top: 0;">
+                <button id="closeInfoBtn" class="btn btn-secondary btn-block">
                     <i class="ph-bold ph-x"></i> 关闭
                 </button>
             </div>
