@@ -69,8 +69,6 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Noto+Serif+SC:wght@700;900&display=swap" rel="stylesheet">
 <style>
-    body { padding-bottom: 80px; }
-
     .role-img {
         max-height: 280px; border-radius: 16px; margin-bottom: var(--space-md);
         box-shadow: 0 16px 32px rgba(0, 0, 0, 0.15);
@@ -190,45 +188,47 @@
     .team-display .names {
         font-size: 1.25rem; font-weight: 700; color: var(--apple-black); letter-spacing: -0.02em;
     }
-    .vote-overlay {
-        position: fixed; inset: 0; background: rgba(0, 0, 0, 0.4);
-        backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-        z-index: 10000; display: flex; flex-direction: column;
-        justify-content: center; align-items: center; padding: var(--space-lg);
-    }
-    .vote-overlay h2 { color: white; margin-bottom: var(--space-xl); font-size: 1.8rem; letter-spacing: -0.04em; }
+    /* Overlay wrapper uses shared .modal-overlay/.modal-content */
+    .avalon-modal-header { justify-content: center; }
     .vote-team-box, .lady-result-box {
         background: rgba(40, 40, 44, 0.85); backdrop-filter: blur(20px);
         padding: var(--space-lg) var(--space-xl); border-radius: var(--radius-xl);
-        margin-bottom: var(--space-xl); text-align: center; width: 85%;
+        margin-bottom: var(--space-xl); text-align: center; width: 100%;
         max-width: 340px; box-shadow: var(--shadow-lg); color: white;
+        margin-left: auto; margin-right: auto;
     }
     .vote-team-box strong { font-size: 1.4rem; font-weight: 800; letter-spacing: -0.02em; color: white; }
     .lady-result-box .alignment-good { color: var(--apple-blue); font-size: 2rem; font-weight: 800; margin-top: 10px; }
     .lady-result-box .alignment-evil { color: var(--apple-red); font-size: 2rem; font-weight: 800; margin-top: 10px; }
-    .vote-btn-big {
-        width: 85%; max-width: 320px; padding: 16px; border-radius: var(--radius-xl);
-        font-size: 1.25rem; font-weight: 700; letter-spacing: -0.01em; border: none;
-        margin: 8px 0; cursor: pointer; transition: all var(--transition-fast);
-        font-family: var(--font-family); background: rgba(255, 255, 255, 0.15);
-        color: white; box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
-    }
-    .vote-btn-big.green { background: var(--apple-green); }
-    .vote-btn-big.red { background: var(--apple-red); }
-    .vote-btn-big.blue { background: var(--apple-blue); }
-    .vote-btn-big:active { transform: scale(0.96); box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); }
-    .vote-btn-big:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 12px 32px rgba(0, 0, 0, 0.2); }
-    .vote-btn-big:disabled { opacity: 0.4; pointer-events: none; }
+    .btn-vote-green, .btn-vote-green:hover { background: var(--apple-green); border-color: var(--apple-green); color: #fff; }
+    .btn-vote-red, .btn-vote-red:hover { background: var(--apple-red); border-color: var(--apple-red); color: #fff; }
+    .btn-vote-blue, .btn-vote-blue:hover { background: var(--apple-blue); border-color: var(--apple-blue); color: #fff; }
+    .lady-target-list { display: flex; flex-direction: column; gap: 8px; width: 100%; }
 
-    .lady-target-btn {
-        padding: 16px; border-radius: 20px; font-size: 1.15rem; font-weight: 700;
-        border: none; background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(10px);
-        color: white; cursor: pointer; transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
-        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1); width: 100%;
+    /* Lightweight stats (replaces echarts) */
+    .avalon-stat-section { margin-top: var(--space-xl); }
+    .avalon-stat-label {
+        font-size: 0.85rem; font-weight: 700; color: var(--apple-gray);
+        text-transform: uppercase; letter-spacing: 0.05em;
+        margin-bottom: var(--space-sm); padding-left: 8px;
     }
-    .lady-target-btn:not(:disabled):hover { background: rgba(255, 255, 255, 0.25); transform: translateY(-2px); }
-    .lady-target-btn:not(:disabled):active { transform: scale(0.96); }
-    .lady-target-list { display: flex; flex-direction: column; gap: 8px; width: 85%; max-width: 320px; }
+    .avalon-stat-row {
+        display: flex; align-items: center; gap: 8px; padding: 6px 0;
+        border-bottom: 0.5px solid rgba(0, 0, 0, 0.06);
+    }
+    .avalon-stat-row:last-child { border-bottom: none; }
+    .avalon-stat-name { font-size: 0.95rem; font-weight: 600; min-width: 72px; flex-shrink: 0; }
+    .avalon-stat-badges { display: flex; gap: 6px; flex-wrap: wrap; }
+    .avalon-stat-badge {
+        display: inline-flex; align-items: center; justify-content: center;
+        min-width: 28px; height: 28px; padding: 0 6px; border-radius: 8px;
+        font-size: 0.8rem; font-weight: 700;
+    }
+    .avalon-stat-badge.ok { background: rgba(52, 199, 89, 0.12); color: #34c759; }
+    .avalon-stat-badge.no { background: rgba(255, 59, 48, 0.12); color: #ff3b30; }
+    .avalon-stat-badge.fail { background: rgba(191, 90, 242, 0.15); color: #bf5af2; animation: avalonPulse 1.8s infinite alternate; }
+    .avalon-stat-badge.on-team { box-shadow: 0 0 0 2px var(--apple-blue); }
+    @keyframes avalonPulse { from { opacity: 0.65; } to { opacity: 1; } }
 
     .error-toast {
         position: fixed; top: 24px; left: 50%; transform: translateX(-50%); z-index: 20000;
@@ -366,7 +366,6 @@
 
     #lady-toggle-input:checked + .toggle-slider { background: var(--apple-purple, #af52de) !important; }
 </style>
-<script src="https://unpkg.com/echarts@5.5.0/dist/echarts.min.js"></script>
 {% endblock %}
 
 {% block nav_left %}<a href="/" class="top-nav-back"><i class="ph-bold ph-caret-left"></i>返回</a>{% endblock %}
@@ -390,65 +389,107 @@
 
     <!-- Overlays (hidden by default, shown/hidden by JS) -->
 
-    <!-- Team Vote Overlay -->
-    <div id="overlay-team-vote" class="vote-overlay" style="display:none">
-        <h2>同意这个队伍吗?</h2>
-        <div id="overlay-team-vote-box" class="vote-team-box"></div>
-        <button class="vote-btn-big green" onclick="avalon_submitTeamVote('approve')">👍 同意</button>
-        <button class="vote-btn-big red" onclick="avalon_submitTeamVote('reject')">👎 反对</button>
-    </div>
-
-    <!-- Mission Vote Overlay -->
-    <div id="overlay-mission-vote" class="vote-overlay" style="display:none">
-        <h2>执行任务</h2>
-        <button id="overlay-mission-success" class="vote-btn-big blue" onclick="avalon_voteMission('success')">🛡️ 成功</button>
-        <button id="overlay-mission-fail" class="vote-btn-big red" onclick="avalon_voteMission('fail')">🗡️ 失败</button>
-        <div id="overlay-mission-hint-good" style="color: rgba(255,255,255,0.5); margin-top: var(--space-sm); font-size: 0.85rem; display:none;">好人只能投成功</div>
-        <div id="overlay-mission-hint-mustfail" style="color: rgba(255,255,255,0.5); margin-top: var(--space-sm); font-size: 0.85rem; display:none;">当前阵营为邪恶的兰斯洛特必须投失败</div>
-    </div>
-
-    <!-- Lady of Lake Overlay -->
-    <div id="overlay-lady-lake" class="vote-overlay" style="display:none">
-        <h2>🧚 湖中仙女</h2>
-        <p style="color: rgba(255,255,255,0.7); margin-bottom: var(--space-lg); text-align: center;">选择一名玩家查验其阵营</p>
-        <div id="overlay-lady-lake-list" class="lady-target-list"></div>
-    </div>
-
-    <!-- Lady of Lake Result Overlay -->
-    <div id="overlay-lady-result" class="vote-overlay" style="display:none" onclick="avalon_closeLadyResult()">
-        <h2>🧚 查验结果</h2>
-        <div class="lady-result-box">
-            <div id="lady-result-target" class="fw-700 mb-md" style="font-size:1.1rem;"></div>
-            <div id="lady-result-alignment"></div>
-            <p class="text-sm text-muted mt-md">你可以自由选择公布或隐瞒此结果</p>
+    <!-- Team Vote Modal -->
+    <div id="overlay-team-vote" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header avalon-modal-header">
+                <h2 class="modal-title">同意这个队伍吗?</h2>
+            </div>
+            <div class="modal-body">
+                <div id="overlay-team-vote-box" class="vote-team-box"></div>
+                <button class="btn btn-lg btn-block btn-vote-green" onclick="avalon_submitTeamVote('approve')">👍 同意</button>
+                <button class="btn btn-lg btn-block btn-vote-red" onclick="avalon_submitTeamVote('reject')">👎 反对</button>
+            </div>
         </div>
-        <p style="color: rgba(255,255,255,0.4); margin-top: var(--space-lg); font-size: 0.85rem;">点击任意处关闭</p>
     </div>
 
-    <!-- Excalibur Assign Overlay -->
-    <div id="overlay-excalibur-assign" class="vote-overlay" style="display:none">
-        <h2>🗡️ 分配王者之剑</h2>
-        <p style="color: rgba(255,255,255,0.7); margin-bottom: var(--space-lg); text-align: center;">选择一名队员持有王者之剑</p>
-        <div id="overlay-excalibur-assign-list" class="lady-target-list"></div>
+    <!-- Mission Vote Modal -->
+    <div id="overlay-mission-vote" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header avalon-modal-header">
+                <h2 class="modal-title">执行任务</h2>
+            </div>
+            <div class="modal-body">
+                <button id="overlay-mission-success" class="btn btn-lg btn-block btn-vote-blue" onclick="avalon_voteMission('success')">🛡️ 成功</button>
+                <button id="overlay-mission-fail" class="btn btn-lg btn-block btn-vote-red" onclick="avalon_voteMission('fail')">🗡️ 失败</button>
+                <div id="overlay-mission-hint-good" class="text-sm" style="color: var(--color-text-secondary); margin-top: var(--space-sm); display:none;">好人只能投成功</div>
+                <div id="overlay-mission-hint-mustfail" class="text-sm" style="color: var(--color-text-secondary); margin-top: var(--space-sm); display:none;">当前阵营为邪恶的兰斯洛特必须投失败</div>
+            </div>
+        </div>
     </div>
 
-    <!-- Excalibur Decide Overlay -->
-    <div id="overlay-excalibur-decide" class="vote-overlay" style="display:none">
-        <h2>🗡️ 王者之剑</h2>
-        <p style="color: rgba(255,255,255,0.7); margin-bottom: var(--space-lg); text-align: center;">选择一名队员替换其投票并查看结果，或跳过</p>
-        <div id="overlay-excalibur-decide-list" class="lady-target-list"></div>
-        <button class="lady-target-btn" style="background: rgba(255,255,255,0.08); margin-top: 8px; max-width:320px;" onclick="avalon_useExcalibur(null)">
-            ✕ 不使用
-        </button>
+    <!-- Lady of Lake Modal -->
+    <div id="overlay-lady-lake" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header avalon-modal-header">
+                <h2 class="modal-title">🧚 湖中仙女</h2>
+            </div>
+            <div class="modal-body">
+                <p class="text-sm" style="color: var(--color-text-secondary); margin-bottom: var(--space-lg); text-align: center;">选择一名玩家查验其阵营</p>
+                <div id="overlay-lady-lake-list" class="lady-target-list"></div>
+            </div>
+        </div>
     </div>
 
-    <!-- Excalibur Result Overlay -->
-    <div id="overlay-excalibur-result" class="vote-overlay" style="display:none" onclick="avalon_closeExcaliburResult()">
-        <h2>🗡️ 王者之剑结果</h2>
-        <div class="lady-result-box">
-            <div id="excalibur-result-target" class="fw-700 mb-md" style="font-size:1.1rem;"></div>
-            <div id="excalibur-result-vote"></div>
-            <div id="excalibur-result-replace" style="margin-top: var(--space-md); font-size: 0.85rem; color: rgba(255,255,255,0.5);">已替换投票，点击任意处关闭</div>
+    <!-- Lady of Lake Result Modal -->
+    <div id="overlay-lady-result" class="modal-overlay" onclick="if(event.target === this) avalon_closeLadyResult()">
+        <div class="modal-content">
+            <div class="modal-header avalon-modal-header">
+                <h2 class="modal-title">🧚 查验结果</h2>
+            </div>
+            <div class="modal-body">
+                <div class="lady-result-box">
+                    <div id="lady-result-target" class="fw-700 mb-md" style="font-size:1.1rem;"></div>
+                    <div id="lady-result-alignment"></div>
+                    <p class="text-sm text-muted mt-md">你可以自由选择公布或隐瞒此结果</p>
+                </div>
+                <p class="text-sm" style="color: var(--color-text-secondary); margin-top: var(--space-lg); text-align: center;">点击任意处关闭</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Excalibur Assign Modal -->
+    <div id="overlay-excalibur-assign" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header avalon-modal-header">
+                <h2 class="modal-title">🗡️ 分配王者之剑</h2>
+            </div>
+            <div class="modal-body">
+                <p class="text-sm" style="color: var(--color-text-secondary); margin-bottom: var(--space-lg); text-align: center;">选择一名队员持有王者之剑</p>
+                <div id="overlay-excalibur-assign-list" class="lady-target-list"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Excalibur Decide Modal -->
+    <div id="overlay-excalibur-decide" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header avalon-modal-header">
+                <h2 class="modal-title">🗡️ 王者之剑</h2>
+            </div>
+            <div class="modal-body">
+                <p class="text-sm" style="color: var(--color-text-secondary); margin-bottom: var(--space-lg); text-align: center;">选择一名队员替换其投票并查看结果，或跳过</p>
+                <div id="overlay-excalibur-decide-list" class="lady-target-list"></div>
+                <button class="btn btn-block btn-secondary" style="margin-top: 8px;" onclick="avalon_useExcalibur(null)">
+                    ✕ 不使用
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Excalibur Result Modal -->
+    <div id="overlay-excalibur-result" class="modal-overlay" onclick="if(event.target === this) avalon_closeExcaliburResult()">
+        <div class="modal-content">
+            <div class="modal-header avalon-modal-header">
+                <h2 class="modal-title">🗡️ 王者之剑结果</h2>
+            </div>
+            <div class="modal-body">
+                <div class="lady-result-box">
+                    <div id="excalibur-result-target" class="fw-700 mb-md" style="font-size:1.1rem;"></div>
+                    <div id="excalibur-result-vote"></div>
+                    <div id="excalibur-result-replace" class="text-sm" style="margin-top: var(--space-md); color: var(--color-text-secondary);">已替换投票，点击任意处关闭</div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -514,7 +555,6 @@ var state = {
     // Leaderboard
     lbData: [],
     history: [],
-    chartRendered: false,
     cacheBuster: Date.now()
 };
 
@@ -723,17 +763,12 @@ async function fetchAndUpdate() {
             state.gameWinner = d.game_winner;
             state.assassinTarget = d.assassin_target;
             state.history = d.history || [];
-            if (!state.chartRendered && state.history.length > 0) {
-                state.chartRendered = true;
-                setTimeout(function() { renderDashboard(); }, 200);
-            }
         } else if (d.status === 'empty') {
             state.step = 1;
             state.gameWinner = null;
             state.assassinTarget = null;
             state.revealedPlayers = [];
             state.history = [];
-            state.chartRendered = false;
         }
 
         state.currentCount = d.current_count;
@@ -846,7 +881,6 @@ window.avalon_resetGame = async function() {
         state.step = 1;
         state.status = 'empty';
         state.history = [];
-        state.chartRendered = false;
         await fetchLeaderboard();
         renderUI();
     } catch (e) { /* silent */ }
@@ -951,7 +985,6 @@ window.avalon_quickRestart = async function() {
         });
         state.step = 1;
         state.history = [];
-        state.chartRendered = false;
         renderUI();
     } catch (e) {
         showError(e.message || 'Error');
@@ -1078,10 +1111,18 @@ function renderUI() {
     // Render overlays
     renderOverlays();
 
-    // Render chart for ended state
-    if (state.status === 'ended' && state.revealedPlayers.length > 0 && state.history.length > 0 && !state.chartRendered) {
-        state.chartRendered = true;
-        setTimeout(function() { renderDashboard(); }, 300);
+    // Render stats + leaderboard via shared components
+    if (state.status === 'ended' && state.revealedPlayers.length > 0 && state.history.length > 0) {
+        renderStats();
+    }
+    var lbEl = document.getElementById('avalon-lb-container');
+    if (lbEl) {
+        renderLeaderboard(lbEl, state.lbData, {
+            showAvgScore: true,
+            showWinLoss: true,
+            showTotal: false,
+            emptyText: '还没人玩过呢，快去开一局！'
+        });
     }
 }
 
@@ -1161,53 +1202,12 @@ function renderStep1() {
     html += '</div>';
     html += '</div>';
 
-    // Leaderboard section
+    // Leaderboard section (rendered via shared renderLeaderboard)
     html += '<div id="inline-leaderboard-section">';
     html += '<div class="section-title" style="margin-top: var(--space-xl); margin-bottom: var(--space-md);">🏆 历史排行榜</div>';
-    html += '<div id="avalon-lb-container">';
-    if (state.lbData.length === 0) {
-        html += '<div class="text-center text-muted" style="padding: var(--space-xl);"><div class="empty-state"><span class="empty-icon">👻</span>还没人玩过呢，快去开一局！</div></div>';
-    } else {
-        html += renderLeaderboardHtml();
-    }
-    html += '</div>';
+    html += '<div id="avalon-lb-container"></div>';
     html += '</div>';
 
-    return html;
-}
-
-function renderLeaderboardHtml() {
-    if (!state.lbData || state.lbData.length === 0) {
-        return '<div class="text-center text-muted" style="padding: var(--space-xl);"><div class="empty-state"><span class="empty-icon">👻</span>还没人玩过呢，快去开一局！</div></div>';
-    }
-    var html = '<div class="list">';
-    for (var i = 0; i < state.lbData.length; i++) {
-        var p = state.lbData[i];
-        var rankClass = i === 0 ? 'rank-1' : (i === 1 ? 'rank-2' : (i === 2 ? 'rank-3' : 'rank-other'));
-        var rankDisplay = i === 0 ? '👑' : (i + 1);
-        var opacity = p.mastery === 'provisional' ? 'opacity:0.65;' : '';
-        var masteryBadge = '';
-        if (p.mastery === 'expert') masteryBadge = '<span style="font-size:0.7rem;color:var(--apple-orange);font-weight:700;">👑专精</span>';
-        else if (p.mastery === 'rookie') masteryBadge = '<span style="font-size:0.7rem;color:var(--apple-blue);font-weight:600;">🔰新手</span>';
-        else masteryBadge = '<span style="font-size:0.7rem;color:var(--apple-gray);font-weight:600;">⏳定级中</span>';
-
-        html += '<div class="list-item" style="' + opacity + '">';
-        html += '<div class="rank-num ' + rankClass + '">' + rankDisplay + '</div>';
-        html += '<div class="list-item-content">';
-        html += '<div class="list-item-title">' + h_esc(p.name) + ' ' + masteryBadge + '</div>';
-        html += '<div class="history-trail">' + (p.total || 0) + '局 · 胜' + (p.wins || 0) + '场 · 战力' + (p.smoothed_rate != null ? Number(p.smoothed_rate).toFixed(1) : '--') + '% · 胜率' + (p.win_rate != null ? Number(p.win_rate).toFixed(1) : '--') + '%</div>';
-        html += '</div>';
-        html += '<div style="text-align: right; display: flex; align-items: center; gap: 16px;">';
-        html += '<div style="text-align: right;">';
-        html += '<div class="history-trail" style="font-size: 0.7rem; margin-bottom: 2px;">均分</div>';
-        html += '<div class="score-badge" style="font-size: 1.2rem; color: var(--apple-blue);">' + (p.avg_score != null ? Number(p.avg_score).toFixed(1) : '--') + '</div>';
-        html += '</div>';
-        html += '<div style="text-align: right; width: 40px;">';
-        html += '<div class="history-trail" style="font-size: 0.7rem; margin-bottom: 2px;">胜负</div>';
-        html += '<div class="score-badge" style="font-size: 1.1rem; color: var(--apple-gray);">' + (p.wins || 0) + '-' + ((p.total || 0) - (p.wins || 0)) + '</div>';
-        html += '</div></div></div>';
-    }
-    html += '</div>';
     return html;
 }
 
@@ -1511,297 +1511,199 @@ function renderEnded() {
     html += '</div>';
     html += '</div>';
 
-    html += '<div id="dashboard-chart" style="width: 100%; height: 400px; margin-top: var(--space-2xl);"></div>';
+    html += '<div id="dashboard-chart" style="margin-top: var(--space-2xl);"></div>';
     html += '</div></div>';
 
     return html;
 }
 
 // ---- Overlays ----
+function avalon_overlay(id, show) {
+    var el = document.getElementById(id);
+    if (el) el.classList.toggle('show', show);
+}
+
 function renderOverlays() {
     // Team vote overlay
-    var tvOverlay = document.getElementById('overlay-team-vote');
-    if (tvOverlay) {
-        if (state.voteTeamActive && !state.teamVotes[state.myName]) {
-            tvOverlay.style.display = 'flex';
-            var box = document.getElementById('overlay-team-vote-box');
-            if (box) box.innerHTML = '<strong>' + h_esc((state.missionTeam || []).join('、')) + '</strong>';
-        } else {
-            tvOverlay.style.display = 'none';
-        }
+    if (state.voteTeamActive && !state.teamVotes[state.myName]) {
+        avalon_overlay('overlay-team-vote', true);
+        var box = document.getElementById('overlay-team-vote-box');
+        if (box) box.innerHTML = '<strong>' + h_esc((state.missionTeam || []).join('、')) + '</strong>';
+    } else {
+        avalon_overlay('overlay-team-vote', false);
     }
 
     // Mission vote overlay
-    var mvOverlay = document.getElementById('overlay-mission-vote');
-    if (mvOverlay) {
-        if (state.missionActive && state.missionTeam.indexOf(state.myName) !== -1 && !state.hasActed) {
-            mvOverlay.style.display = 'flex';
-            // Update button states
-            var btnSuccess = document.getElementById('overlay-mission-success');
-            var btnFail = document.getElementById('overlay-mission-fail');
-            var hintGood = document.getElementById('overlay-mission-hint-good');
-            var hintMustFail = document.getElementById('overlay-mission-hint-mustfail');
+    if (state.missionActive && state.missionTeam.indexOf(state.myName) !== -1 && !state.hasActed) {
+        avalon_overlay('overlay-mission-vote', true);
+        // Update button states
+        var btnSuccess = document.getElementById('overlay-mission-success');
+        var btnFail = document.getElementById('overlay-mission-fail');
+        var hintGood = document.getElementById('overlay-mission-hint-good');
+        var hintMustFail = document.getElementById('overlay-mission-hint-mustfail');
 
-            var mustFail = isLancelotMustFail();
-            var isEvil = isCurrentlyEvil();
+        var mustFail = isLancelotMustFail();
+        var isEvil = isCurrentlyEvil();
 
-            if (btnSuccess) btnSuccess.disabled = mustFail;
-            if (btnFail) btnFail.disabled = !isEvil;
-            if (hintGood) hintGood.style.display = !isEvil ? '' : 'none';
-            if (hintMustFail) hintMustFail.style.display = mustFail ? '' : 'none';
+        if (btnSuccess) btnSuccess.disabled = mustFail;
+        if (btnFail) btnFail.disabled = !isEvil;
+        if (hintGood) hintGood.style.display = !isEvil ? '' : 'none';
+        if (hintMustFail) hintMustFail.style.display = mustFail ? '' : 'none';
 
-            if (mustFail && btnSuccess) btnSuccess.style.opacity = '0.35';
-            else if (btnSuccess) btnSuccess.style.opacity = '';
-            if (!isEvil && btnFail) btnFail.style.opacity = '0.35';
-            else if (btnFail) btnFail.style.opacity = '';
-        } else {
-            mvOverlay.style.display = 'none';
-        }
+        if (mustFail && btnSuccess) btnSuccess.style.opacity = '0.35';
+        else if (btnSuccess) btnSuccess.style.opacity = '';
+        if (!isEvil && btnFail) btnFail.style.opacity = '0.35';
+        else if (btnFail) btnFail.style.opacity = '';
+    } else {
+        avalon_overlay('overlay-mission-vote', false);
     }
 
     // Lady of Lake overlay
-    var llOverlay = document.getElementById('overlay-lady-lake');
-    if (llOverlay) {
-        if (state.ladyOfLakeActive && state.ladyOfLakeHolder === state.myName) {
-            llOverlay.style.display = 'flex';
-            var llList = document.getElementById('overlay-lady-lake-list');
-            if (llList) {
-                var llHtml = '';
-                for (var i = 0; i < state.allPlayers.length; i++) {
-                    var p = state.allPlayers[i];
-                    var disabled = state.ladyOfLakeHistory.indexOf(p) !== -1 || p === state.myName;
-                    var hint = state.ladyOfLakeHistory.indexOf(p) !== -1 ? '<span style="font-size:0.75rem; opacity:0.5;">(已查验)</span>' : '';
-                    llHtml += '<button class="lady-target-btn" ' + (disabled ? 'disabled' : '') + ' onclick="avalon_inspectPlayer(\'' + h_esc(p) + '\')">' + h_esc(p) + ' ' + hint + '</button>';
-                }
-                llList.innerHTML = llHtml;
+    if (state.ladyOfLakeActive && state.ladyOfLakeHolder === state.myName) {
+        avalon_overlay('overlay-lady-lake', true);
+        var llList = document.getElementById('overlay-lady-lake-list');
+        if (llList) {
+            var llHtml = '';
+            for (var i = 0; i < state.allPlayers.length; i++) {
+                var p = state.allPlayers[i];
+                var disabled = state.ladyOfLakeHistory.indexOf(p) !== -1 || p === state.myName;
+                var hint = state.ladyOfLakeHistory.indexOf(p) !== -1 ? '<span style="font-size:0.75rem; opacity:0.5;">(已查验)</span>' : '';
+                llHtml += '<button class="btn btn-secondary btn-block" ' + (disabled ? 'disabled' : '') + ' onclick="avalon_inspectPlayer(\'' + h_esc(p) + '\')">' + h_esc(p) + ' ' + hint + '</button>';
             }
-        } else {
-            llOverlay.style.display = 'none';
+            llList.innerHTML = llHtml;
         }
+    } else {
+        avalon_overlay('overlay-lady-lake', false);
     }
 
     // Lady of Lake result overlay
-    var lrOverlay = document.getElementById('overlay-lady-result');
-    if (lrOverlay) {
-        if (state.showLadyResult) {
-            lrOverlay.style.display = 'flex';
-            var lrTarget = document.getElementById('lady-result-target');
-            var lrAlign = document.getElementById('lady-result-alignment');
-            if (lrTarget) lrTarget.textContent = state.ladyResultData.target || '';
-            if (lrAlign) {
-                if (state.ladyResultData.alignment === 'good') {
-                    lrAlign.className = 'alignment-good';
-                    lrAlign.textContent = '🛡️ 好人';
-                } else {
-                    lrAlign.className = 'alignment-evil';
-                    lrAlign.textContent = '🗡️ 坏人';
-                }
+    if (state.showLadyResult) {
+        avalon_overlay('overlay-lady-result', true);
+        var lrTarget = document.getElementById('lady-result-target');
+        var lrAlign = document.getElementById('lady-result-alignment');
+        if (lrTarget) lrTarget.textContent = state.ladyResultData.target || '';
+        if (lrAlign) {
+            if (state.ladyResultData.alignment === 'good') {
+                lrAlign.className = 'alignment-good';
+                lrAlign.textContent = '🛡️ 好人';
+            } else {
+                lrAlign.className = 'alignment-evil';
+                lrAlign.textContent = '🗡️ 坏人';
             }
-        } else {
-            lrOverlay.style.display = 'none';
         }
+    } else {
+        avalon_overlay('overlay-lady-result', false);
     }
 
     // Excalibur assign overlay
-    var eaOverlay = document.getElementById('overlay-excalibur-assign');
-    if (eaOverlay) {
-        if (state.excaliburPhase === 'assign' && state.myName === state.teamProposer) {
-            eaOverlay.style.display = 'flex';
-            var eaList = document.getElementById('overlay-excalibur-assign-list');
-            if (eaList) {
-                var eaHtml = '';
-                var mt = state.missionTeam || [];
-                for (var j = 0; j < mt.length; j++) {
-                    var mp = mt[j];
-                    eaHtml += '<button class="lady-target-btn" ' + (mp === state.myName ? 'disabled' : '') + ' onclick="avalon_assignExcalibur(\'' + h_esc(mp) + '\')">' + h_esc(mp);
-                    if (mp === state.myName) eaHtml += '<span style="font-size:0.75rem; opacity:0.5;">(自己)</span>';
-                    eaHtml += '</button>';
-                }
-                eaList.innerHTML = eaHtml;
+    if (state.excaliburPhase === 'assign' && state.myName === state.teamProposer) {
+        avalon_overlay('overlay-excalibur-assign', true);
+        var eaList = document.getElementById('overlay-excalibur-assign-list');
+        if (eaList) {
+            var eaHtml = '';
+            var mt = state.missionTeam || [];
+            for (var j = 0; j < mt.length; j++) {
+                var mp = mt[j];
+                eaHtml += '<button class="btn btn-secondary btn-block" ' + (mp === state.myName ? 'disabled' : '') + ' onclick="avalon_assignExcalibur(\'' + h_esc(mp) + '\')">' + h_esc(mp);
+                if (mp === state.myName) eaHtml += '<span style="font-size:0.75rem; opacity:0.5;">(自己)</span>';
+                eaHtml += '</button>';
             }
-        } else {
-            eaOverlay.style.display = 'none';
+            eaList.innerHTML = eaHtml;
         }
+    } else {
+        avalon_overlay('overlay-excalibur-assign', false);
     }
 
     // Excalibur decide overlay
-    var edOverlay = document.getElementById('overlay-excalibur-decide');
-    if (edOverlay) {
-        if (state.excaliburPhase === 'decide' && state.myName === state.excaliburHolder) {
-            edOverlay.style.display = 'flex';
-            var edList = document.getElementById('overlay-excalibur-decide-list');
-            if (edList) {
-                var edHtml = '';
-                var mtd = state.missionTeam || [];
-                for (var k = 0; k < mtd.length; k++) {
-                    var mdp = mtd[k];
-                    edHtml += '<button class="lady-target-btn" onclick="avalon_useExcalibur(\'' + h_esc(mdp) + '\')">🗡️ ' + h_esc(mdp) + '</button>';
-                }
-                edList.innerHTML = edHtml;
+    if (state.excaliburPhase === 'decide' && state.myName === state.excaliburHolder) {
+        avalon_overlay('overlay-excalibur-decide', true);
+        var edList = document.getElementById('overlay-excalibur-decide-list');
+        if (edList) {
+            var edHtml = '';
+            var mtd = state.missionTeam || [];
+            for (var k = 0; k < mtd.length; k++) {
+                var mdp = mtd[k];
+                edHtml += '<button class="btn btn-secondary btn-block" onclick="avalon_useExcalibur(\'' + h_esc(mdp) + '\')">🗡️ ' + h_esc(mdp) + '</button>';
             }
-        } else {
-            edOverlay.style.display = 'none';
+            edList.innerHTML = edHtml;
         }
+    } else {
+        avalon_overlay('overlay-excalibur-decide', false);
     }
 
     // Excalibur result overlay
-    var erOverlay = document.getElementById('overlay-excalibur-result');
-    if (erOverlay) {
-        if (state.showExcaliburResult) {
-            erOverlay.style.display = 'flex';
-            var erTarget = document.getElementById('excalibur-result-target');
-            var erVote = document.getElementById('excalibur-result-vote');
-            var erReplace = document.getElementById('excalibur-result-replace');
-            if (erTarget && state.excaliburResultData) {
-                erTarget.textContent = state.excaliburResultData.target || '';
-            }
-            if (erVote && state.excaliburResultData) {
-                if (state.excaliburResultData.original_vote === 'fail') {
-                    erVote.className = 'alignment-evil';
-                    erVote.textContent = '🗡️ 原始投票：失败';
-                    if (erReplace) erReplace.textContent = '已替换为成功票，点击任意处关闭';
-                } else {
-                    erVote.className = 'alignment-good';
-                    erVote.textContent = '🛡️ 原始投票：成功';
-                    if (erReplace) erReplace.textContent = '已替换为失败票，点击任意处关闭';
-                }
-            }
-        } else {
-            erOverlay.style.display = 'none';
+    if (state.showExcaliburResult) {
+        avalon_overlay('overlay-excalibur-result', true);
+        var erTarget = document.getElementById('excalibur-result-target');
+        var erVote = document.getElementById('excalibur-result-vote');
+        var erReplace = document.getElementById('excalibur-result-replace');
+        if (erTarget && state.excaliburResultData) {
+            erTarget.textContent = state.excaliburResultData.target || '';
         }
+        if (erVote && state.excaliburResultData) {
+            if (state.excaliburResultData.original_vote === 'fail') {
+                erVote.className = 'alignment-evil';
+                erVote.textContent = '🗡️ 原始投票：失败';
+                if (erReplace) erReplace.textContent = '已替换为成功票，点击任意处关闭';
+            } else {
+                erVote.className = 'alignment-good';
+                erVote.textContent = '🛡️ 原始投票：成功';
+                if (erReplace) erReplace.textContent = '已替换为失败票，点击任意处关闭';
+            }
+        }
+    } else {
+        avalon_overlay('overlay-excalibur-result', false);
     }
 }
-
-// ---- ECharts Dashboard ----
-function renderDashboard() {
+// ---- Lightweight Stats (CSS-only, replaces echarts) ----
+function renderStats() {
     var dom = document.getElementById('dashboard-chart');
     if (!dom) return;
-    if (typeof echarts === 'undefined') {
-        setTimeout(function() { renderDashboard(); }, 500);
-        return;
-    }
-    try {
-        var myChart = echarts.init(dom, isDarkMode() ? 'dark' : 'light');
-        var players = state.revealedPlayers.map(function(p) { return p.name; });
-        var xAxisData = [];
-        var seriesDataVotes = [];
-        var seriesDataMissions = [];
-        var seriesDataMissionFails = [];
+    if (!state.revealedPlayers || state.revealedPlayers.length === 0) return;
+    var players = state.revealedPlayers.map(function(p) { return p.name; });
 
-        for (var idx = 0; idx < state.history.length; idx++) {
-            var h = state.history[idx];
-            var label = 'R' + h.round_num + '.' + h.proposal_index;
-            xAxisData.push(label);
-            for (var y = 0; y < players.length; y++) {
-                var pname = players[y];
-                var vote = h.votes && h.votes[pname];
-                if (vote) seriesDataVotes.push([idx, y, vote === 'approve' ? 1 : -1, (h.team || []).indexOf(pname) !== -1]);
-                var mVote = h.mission_votes && h.mission_votes[pname];
-                if (mVote) {
-                    if (mVote === 'fail') {
-                        seriesDataMissionFails.push([idx, y, -1]);
-                    } else {
-                        seriesDataMissions.push([idx, y, 1]);
-                    }
-                }
-            }
+    var html = '';
+
+    // Team vote matrix
+    html += '<div class="avalon-stat-section">';
+    html += '<div class="avalon-stat-label">组队投票</div>';
+    for (var y = 0; y < players.length; y++) {
+        var pname = players[y];
+        html += '<div class="avalon-stat-row">';
+        html += '<span class="avalon-stat-name">' + h_esc(pname) + '</span>';
+        html += '<span class="avalon-stat-badges">';
+        for (var i = 0; i < state.history.length; i++) {
+            var h = state.history[i];
+            var vote = h.votes && h.votes[pname];
+            if (!vote) continue;
+            var onTeam = (h.team || []).indexOf(pname) !== -1;
+            html += '<span class="avalon-stat-badge ' + (vote === 'approve' ? 'ok' : 'no') + (onTeam ? ' on-team' : '') + '" title="第' + h.round_num + '轮 第' + h.proposal_index + '次组队">' + (vote === 'approve' ? '✓' : '✗') + '</span>';
         }
-
-        var dark = isDarkMode();
-        myChart.setOption({
-            backgroundColor: 'transparent',
-            textStyle: { fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, Helvetica, Arial, sans-serif' },
-            title: {
-                text: '对局记录', left: 'center', top: 15,
-                textStyle: { fontSize: 20, fontWeight: 800, letterSpacing: 1.5, color: dark ? '#ffffff' : '#1d1d1f', textShadowBlur: 10, textShadowColor: dark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.05)' }
-            },
-            tooltip: {
-                trigger: 'item',
-                backgroundColor: dark ? 'rgba(28, 28, 30, 0.75)' : 'rgba(255, 255, 255, 0.85)',
-                borderColor: dark ? 'rgba(255,255,255,0.15)' : 'rgba(0,0,0,0.08)',
-                borderWidth: 1,
-                padding: 0,
-                extraCssText: 'border-radius: 12px; box-shadow: 0 12px 48px rgba(0, 0, 0, 0.15); backdrop-filter: saturate(150%) blur(20px); -webkit-backdrop-filter: saturate(150%) blur(20px); overflow: hidden;',
-                formatter: function(params) {
-                    var isDark = dark;
-                    var textColor = isDark ? '#e5e5ea' : '#333333';
-                    var subTextColor = '#86868b';
-
-                    if (params.seriesName === '组队投票') {
-                        var isApprove = params.value[2] === 1;
-                        var headerColor = isApprove ? 'rgba(52, 199, 89, 0.15)' : 'rgba(255, 59, 48, 0.15)';
-                        var iconColor = isApprove ? '#34c759' : '#ff3b30';
-
-                        return '<div style="background: ' + headerColor + '; padding: 10px 16px; border-bottom: 1px solid ' + (isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)') + ';">' +
-                            '<span style="font-weight:700; font-size: 14px; color: ' + textColor + '">' + params.name + '</span></div>' +
-                            '<div style="padding: 12px 16px; display:flex; flex-direction: column; gap: 8px;">' +
-                            '<div style="display:flex; align-items:center; justify-content: space-between; gap: 16px;">' +
-                            '<span style="color: ' + subTextColor + '; font-size: 12px;">投票立场</span>' +
-                            '<span style="font-weight: 600; color: ' + iconColor + ';">' + (isApprove ? '● 赞成' : '■ 反对') + '</span></div>' +
-                            (params.value[3] ? '<div style="display:flex; align-items:center; justify-content: space-between; gap: 16px;"><span style="color: ' + subTextColor + '; font-size: 12px;">身份状态</span><span style="font-weight: 500; color: ' + textColor + ';">🛸 在车上</span></div>' : '') +
-                            '</div>';
-                    } else if (params.seriesName === '任务' || params.seriesName === '关键失败') {
-                        var isSuccess = params.value[2] === 1;
-                        var hColor = isSuccess ? 'rgba(0, 113, 227, 0.15)' : 'rgba(191, 90, 242, 0.15)';
-                        var iColor = isSuccess ? '#0071e3' : '#bf5af2';
-
-                        return '<div style="background: ' + hColor + '; padding: 10px 16px; border-bottom: 1px solid ' + (isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)') + ';">' +
-                            '<span style="font-weight:700; font-size: 14px; color: ' + textColor + '">' + params.name + '</span></div>' +
-                            '<div style="padding: 12px 16px;"><span style="font-weight: 600; font-size: 15px; color: ' + iColor + ';">' +
-                            (isSuccess ? '🛡️ 任务成功' : '🗡️ 任务失败') + '</span></div>';
-                    }
-                }
-            },
-            grid: { top: 80, bottom: 40, left: 90, right: 40 },
-            xAxis: {
-                type: 'category', data: xAxisData,
-                axisLine: { show: false }, axisTick: { show: false },
-                axisLabel: { color: '#86868b', fontWeight: 600, fontSize: 12, margin: 16 },
-                splitLine: { show: true, lineStyle: { type: 'dashed', color: dark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.06)' } }
-            },
-            yAxis: {
-                type: 'category', data: players,
-                axisLine: { show: false }, axisTick: { show: false },
-                axisLabel: { color: dark ? '#d2d2d7' : '#1d1d1f', fontWeight: 600, fontSize: 14, margin: 20 },
-                splitLine: { show: false },
-                splitArea: { show: true, areaStyle: { color: [dark ? 'rgba(255,255,255,0.02)' : 'rgba(0,0,0,0.02)', 'transparent'] } }
-            },
-            series: [
-                {
-                    name: '组队投票', type: 'scatter',
-                    symbolSize: function(val) { return val[3] ? 24 : 14; },
-                    itemStyle: {
-                        color: function(params) { return params.value[2] === 1 ? '#34c759' : '#ff3b30'; },
-                        opacity: function(params) { return params.value[3] ? 1 : 0.65; },
-                        borderColor: function(params) { return params.value[3] ? (dark ? '#ffffff' : '#ffffff') : 'transparent'; },
-                        borderWidth: function(params) { return params.value[3] ? 2.5 : 0; },
-                        shadowBlur: function(params) { return params.value[3] ? 12 : 4; },
-                        shadowColor: function(params) { return params.value[2] === 1 ? 'rgba(52, 199, 89, 0.4)' : 'rgba(255, 59, 48, 0.4)'; },
-                        shadowOffsetY: 2
-                    },
-                    data: seriesDataVotes
-                },
-                {
-                    name: '任务', type: 'scatter',
-                    symbol: 'path://M512 0c0 0-33.536 339.968-150.528 456.96C244.48 573.952 0 512 0 512s339.968 33.536 456.96 150.528C573.952 779.52 512 1024 512 1024s33.536-339.968 150.528-456.96C779.52 450.048 1024 512 1024 512s-339.968-33.536-456.96-150.528C450.048 244.48 512 0 512 0z',
-                    symbolSize: 28, zlevel: 2,
-                    itemStyle: { color: '#0071e3', shadowBlur: 16, shadowColor: 'rgba(0, 113, 227, 0.6)', shadowOffsetY: 4 },
-                    data: seriesDataMissions
-                },
-                {
-                    name: '关键失败', type: 'effectScatter',
-                    symbol: 'path://M512 0c0 0-33.536 339.968-150.528 456.96C244.48 573.952 0 512 0 512s339.968 33.536 456.96 150.528C573.952 779.52 512 1024 512 1024s33.536-339.968 150.528-456.96C779.52 450.048 1024 512 1024 512s-339.968-33.536-456.96-150.528C450.048 244.48 512 0 512 0z',
-                    symbolSize: 32, zlevel: 3,
-                    rippleEffect: { brushType: 'stroke', scale: 2.5, period: 3 },
-                    itemStyle: { color: '#bf5af2', shadowBlur: 20, shadowColor: 'rgba(191, 90, 242, 0.8)', shadowOffsetY: 4 },
-                    data: seriesDataMissionFails
-                }
-            ]
-        });
-    } catch (e) {
-        console.error('Dashboard render error:', e);
+        html += '</span></div>';
     }
+    html += '</div>';
+
+    // Mission vote matrix
+    html += '<div class="avalon-stat-section">';
+    html += '<div class="avalon-stat-label">任务投票</div>';
+    for (var y2 = 0; y2 < players.length; y2++) {
+        var p2 = players[y2];
+        html += '<div class="avalon-stat-row">';
+        html += '<span class="avalon-stat-name">' + h_esc(p2) + '</span>';
+        html += '<span class="avalon-stat-badges">';
+        for (var i2 = 0; i2 < state.history.length; i2++) {
+            var h2 = state.history[i2];
+            var mVote = h2.mission_votes && h2.mission_votes[p2];
+            if (!mVote) continue;
+            html += '<span class="avalon-stat-badge ' + (mVote === 'success' ? 'ok' : 'fail') + '" title="第' + h2.round_num + '轮任务">' + (mVote === 'success' ? '🛡️' : '🗡️') + '</span>';
+        }
+        html += '</span></div>';
+    }
+    html += '</div>';
+
+    dom.innerHTML = html;
 }
+
 
 // ---- Init ----
 (function init() {
