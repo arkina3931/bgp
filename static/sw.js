@@ -1,8 +1,12 @@
-var CACHE_NAME = 'bgp-v1';
+var CACHE_NAME = 'bgp-v2';
 var STATIC_ASSETS = [
     '/static/common.css',
     '/static/common.js',
     '/static/components.js',
+    '/static/manifest.json',
+    '/static/icons/icon-192.png',
+    '/static/icons/icon-512.png',
+    '/static/icons/apple-touch-icon.png',
     '/',
     '/gamelist'
 ];

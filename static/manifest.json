@@ -1,0 +1,13 @@
+{
+  "name": "桌游助手",
+  "short_name": "桌游助手",
+  "description": "多人桌游助手：阿瓦隆、情书、Las Vegas、Flip 7、现代艺术、Cabo 等",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f2f2f7",
+  "theme_color": "#1d1d1f",
+  "icons": [
+    { "src": "/static/icons/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/static/icons/icon-512.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}
