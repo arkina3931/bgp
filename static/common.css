@@ -113,6 +113,13 @@
     padding: 0;
 }
 
+/* Prevent media from overflowing the viewport */
+img,
+svg {
+    max-width: 100%;
+    height: auto;
+}
+
 html {
     -webkit-text-size-adjust: 100%;
     -moz-text-size-adjust: 100%;
@@ -2383,6 +2390,30 @@ input.apple-toggle-input:checked + .apple-toggle-btn {
     margin: 24px auto;
     display: flex;
     justify-content: center;
+}
+
+/* Game hero title (replaces SVG banner) */
+.game-hero {
+    width: 100%;
+    max-width: 500px;
+    margin: 24px auto;
+    text-align: center;
+    padding: 16px;
+}
+
+.game-hero-title {
+    margin: 0;
+    font-size: clamp(1.75rem, 6vw, 2.4rem);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    color: var(--color-text);
+}
+
+.game-hero-subtitle {
+    margin: 6px 0 0;
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: var(--color-text-secondary);
 }
 
 .animated-text {
