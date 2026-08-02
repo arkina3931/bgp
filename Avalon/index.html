@@ -86,6 +86,8 @@
         backdrop-filter: saturate(180%) blur(24px);
         -webkit-backdrop-filter: saturate(180%) blur(24px);
         box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.1), 0 24px 48px rgba(0, 0, 0, 0.5);
+    }
+    .vision-intel-card.anim-in {
         animation: visionReveal 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
     }
     @keyframes visionReveal {
@@ -293,7 +295,7 @@
     .toggle-switch input:checked + .toggle-slider { background: var(--apple-blue); }
     .toggle-switch input:checked + .toggle-slider::before { transform: translateX(20px); }
 
-    .dot { position: relative; }
+    .apple-dot { position: relative; }
     .swap-badge {
         position: absolute; top: -6px; right: -6px; font-size: 0.6rem;
         width: 16px; height: 16px; display: flex; align-items: center;
@@ -309,8 +311,8 @@
         70% { box-shadow: 0 0 0 12px rgba(255, 149, 0, 0); }
         100% { box-shadow: 0 0 0 0 rgba(255, 149, 0, 0); }
     }
-    .dot.swap-active { animation: pulseSwap 2s infinite; }
-    .dot.swap-active:not(.success):not(.fail) { border-color: var(--apple-orange) !important; }
+    .apple-dot.swap-active { animation: pulseSwap 2s infinite; }
+    .apple-dot.swap-active:not(.success):not(.fail) { border-color: var(--apple-orange) !important; }
 
     .reveal-list { list-style: none; padding: 0; }
     .reveal-list li {
@@ -556,7 +558,9 @@ var state = {
     // Leaderboard
     lbData: [],
     history: [],
-    cacheBuster: Date.now()
+    cacheBuster: Date.now(),
+    // Role-card animation plays only when role view changes, not on every 1s rebuild
+    _lastRoleAnimKey: null
 };
 
 var ROLE_MAP = {
@@ -1254,8 +1258,14 @@ function renderStep3() {
 
     if (state.showRole && state.myRole) {
         var evilClass = isCurrentlyEvil() ? 'evil' : 'good';
+        var roleAnimKey = (state.showRole ? '1' : '0') + '|' + state.step + '|' + state.status + '|' + state.myRole;
+        var roleAnimClass = '';
+        if (state._lastRoleAnimKey !== roleAnimKey) {
+            state._lastRoleAnimKey = roleAnimKey;
+            roleAnimClass = ' role-card-anim';
+        }
         html += '<div class="apple-role ' + evilClass + '">';
-        html += '<img src="' + h_esc(getRoleImage(state.myRole)) + '" class="role-img role-card-anim" style="display:block; margin:0 auto;">';
+        html += '<img src="' + h_esc(getRoleImage(state.myRole)) + '" class="role-img' + roleAnimClass + '" style="display:block; margin:0 auto;">';
         html += '<div style="font-size:1.2rem;">' + h_esc(ROLE_MAP[state.myRole] || state.myRole) + '</div>';
 
         // Lancelot alignment
@@ -1271,7 +1281,7 @@ function renderStep3() {
         var meta = getVisionPanelMeta();
         html += '<div class="mt-md">';
         html += '<div class="fw-600 text-sm mb-sm">你的视野</div>';
-        html += '<div class="vision-intel-card vision-theme-' + meta.theme + '">';
+        html += '<div class="vision-intel-card vision-theme-' + meta.theme + (roleAnimClass ? ' anim-in' : '') + '">';
         html += '<div class="vision-intel-content">';
         html += '<div class="vision-intel-title">' + h_esc(meta.title) + '</div>';
         html += '<div class="vision-intel-subtitle">' + h_esc(meta.subtitle) + '</div>';
@@ -1302,11 +1312,11 @@ function renderStep3() {
 
     // Mission Progress
     html += '<div class="card mb-md text-center">';
-    html += '<div class="dots mb-md">';
+    html += '<div class="apple-dots mb-md">';
     for (var mi = 1; mi <= 5; mi++) {
         var dotClass = getMissionStatusClass(mi);
         var swapActive = state.lancelotSwapReveal[mi - 1] === true;
-        var dotClasses = 'dot ' + dotClass;
+        var dotClasses = 'apple-dot ' + dotClass;
 
         if (mi === state.missionHistory.length + 1 && !dotClass) {
             dotClasses += ' current';
