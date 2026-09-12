@@ -560,7 +560,9 @@ var state = {
     history: [],
     cacheBuster: Date.now(),
     // Role-card animation plays only when role view changes, not on every 1s rebuild
-    _lastRoleAnimKey: null
+    _lastRoleAnimKey: null,
+    _renderedStep: null,
+    _renderedStatus: null
 };
 
 var ROLE_MAP = {
@@ -743,7 +745,7 @@ async function fetchAndUpdate() {
                 state.step = 3;
             }
         } catch (e) { /* silent */ }
-        renderUI();
+        renderUI({ preserveFocusedName: true });
         return;
     }
 
@@ -815,7 +817,7 @@ async function fetchAndUpdate() {
         }
     } catch (e) { /* silent */ }
 
-    renderUI();
+    renderUI({ preserveFocusedName: true });
 }
 
 // ---- Leaderboard ----
@@ -1070,13 +1072,20 @@ window.avalon_toggleTeamMember = function(playerName) {
 };
 
 // ---- Render UI ----
-function renderUI() {
+function renderUI(options) {
     var content = document.getElementById('avalon-content');
     if (!content) return;
 
-    // Save name input value before rebuild
+    // Keep stable lobby polls from replacing the focused mobile input.
     var nameEl = document.getElementById('avalon-name-input');
     if (nameEl) state.myName = nameEl.value;
+    if (
+        options && options.preserveFocusedName &&
+        nameEl &&
+        document.activeElement === nameEl &&
+        state._renderedStep === state.step &&
+        state._renderedStatus === state.status
+    ) return;
 
     var html = '';
 
@@ -1094,6 +1103,8 @@ function renderUI() {
     }
 
     content.innerHTML = html;
+    state._renderedStep = state.step;
+    state._renderedStatus = state.status;
 
     // Restore name input
     var nameInput = document.getElementById('avalon-name-input');
@@ -1102,6 +1113,8 @@ function renderUI() {
         nameInput.addEventListener('input', function() {
             state.myName = this.value;
             localStorage.setItem('avalon_name', this.value);
+            var joinButton = document.getElementById('avalon-join-button');
+            if (joinButton) joinButton.disabled = !this.value;
         });
     }
 
@@ -1197,10 +1210,10 @@ function renderStep1() {
         html += '</div>';
         html += '<div class="text-muted text-sm mt-sm">已加入: ' + h_esc(state.allPlayers.join(', ')) + '</div>';
         html += '</div>';
-        html += '<button class="btn btn-primary btn-block" onclick="avalon_joinGame()"' + (!state.myName ? ' disabled' : '') + '>加入房间</button>';
+        html += '<button id="avalon-join-button" class="btn btn-primary btn-block" onclick="avalon_joinGame()"' + (!state.myName ? ' disabled' : '') + '>加入房间</button>';
     } else if (state.status === 'active' || state.status === 'assassin' || state.status === 'ended') {
         html += '<div class="alert alert-info mb-md">游戏已开始或已结束，输入名字进入</div>';
-        html += '<button class="btn btn-primary btn-block" style="background: var(--apple-orange);" onclick="avalon_joinGame()"' + (!state.myName ? ' disabled' : '') + '>进入房间</button>';
+        html += '<button id="avalon-join-button" class="btn btn-primary btn-block" style="background: var(--apple-orange);" onclick="avalon_joinGame()"' + (!state.myName ? ' disabled' : '') + '>进入房间</button>';
     } else if (state.status === 'empty') {
         html += '<div class="text-center text-muted" style="padding: var(--space-lg) 0;">当前无房间，请先创建</div>';
     }
